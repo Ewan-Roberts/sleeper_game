@@ -1,5 +1,6 @@
 const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
+const { ProgressBar   } = require('../../view/progress_bar');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
@@ -41,6 +42,11 @@ class Transition_Room {
 
       visuals.addChild(level_names);
     });
+
+    const bar = new ProgressBar();
+    bar.percentage = 10;
+    bar.animate_positive();
+    //setInterval(() => console.log(bar.percentage),200);
 
     const level_text = new Text(
       'THE HUB',

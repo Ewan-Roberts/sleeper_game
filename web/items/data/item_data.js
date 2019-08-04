@@ -365,6 +365,28 @@ const items = [
     image_name: 'skull_cap_bone',
   },
   {
+    name: 'gas_canister',
+    id:   25,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a gas canister',
+    description: 'there is some left',
+    image_name: 'Gasoline_Canister',
+  },
+  {
+    name: 'oil_canister',
+    id:   25,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a small gas canister',
+    description: 'some cheap fuel',
+    image_name: 'Industrial_oil_canister',
+  },
+  {
     name: 'rat_leg_bone',
     id:   26,
     rank: 0,

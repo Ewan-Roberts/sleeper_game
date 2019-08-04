@@ -26,6 +26,10 @@ class Inventory extends View_Inventory {
     this.populate_slots(this.items);
   }
 
+  contains(name) {
+    return this.items.some(item => item.name === name);
+  }
+
   populate_with(items) {
     this.items = items.map(name => Item_Manager.get_item(name));
 
@@ -68,12 +72,13 @@ class Inventory extends View_Inventory {
   }
 
   give_item(item) {
+    if(!item) return;
     this.items.push(item);
   }
 
-  take_items(name) {
-    const index = this.items.getIndexof(name);
-    const result = this.items.splice(index,1);
+  take_item(name) {
+    const index = this.items.indexOf(name);
+    const [result] = this.items.splice(index,1);
     console.log(result);
     return result;
   }

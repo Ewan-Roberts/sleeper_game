@@ -115,7 +115,7 @@ function get_dev_config(name) {
   }
 }
 
-const env = get_dev_config('prod');
+const env = get_dev_config('dev_medium');
 
 module.exports = {
   env,
@@ -4341,7 +4341,7 @@ module.exports = function (PIXI)
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":300}],34:[function(require,module,exports){
+},{"timers":302}],34:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
 },{}],35:[function(require,module,exports){
@@ -16131,7 +16131,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":294}],86:[function(require,module,exports){
+},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":296}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19932,7 +19932,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":40,"path":294}],104:[function(require,module,exports){
+},{"../../Shader":40,"path":296}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25770,7 +25770,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":301}],121:[function(require,module,exports){
+},{"url":303}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30365,7 +30365,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":61,"../../core/const":42,"path":294}],139:[function(require,module,exports){
+},{"../../core":61,"../../core/const":42,"path":296}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30449,7 +30449,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":61,"path":294}],140:[function(require,module,exports){
+},{"../../core":61,"path":296}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31612,7 +31612,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":61,"path":294}],147:[function(require,module,exports){
+},{"../../core":61,"path":296}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31720,7 +31720,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":61,"path":294}],148:[function(require,module,exports){
+},{"../../core":61,"path":296}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31774,7 +31774,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":61,"path":294}],149:[function(require,module,exports){
+},{"../../core":61,"path":296}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31950,7 +31950,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":61,"path":294}],151:[function(require,module,exports){
+},{"../../core":61,"path":296}],151:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -34617,7 +34617,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":137,"path":294,"resource-loader":190}],159:[function(require,module,exports){
+},{"../extras":137,"path":296,"resource-loader":190}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34980,7 +34980,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":61,"resource-loader":190,"url":301}],162:[function(require,module,exports){
+},{"../core":61,"resource-loader":190,"url":303}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36720,7 +36720,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":61,"../Mesh":163,"path":294,"pixi-gl-core":20}],170:[function(require,module,exports){
+},{"../../core":61,"../Mesh":163,"path":296,"pixi-gl-core":20}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43877,7 +43877,7 @@ module.exports = {
 
 
 
-},{"../../effects/blood":216,"../../engine/damage_handler":225,"../../view/button":284,"../animations/rat":200,"../attributes/animation":209,"../attributes/inventory":210,"../attributes/vitals":213,"../types/path":215}],204:[function(require,module,exports){
+},{"../../effects/blood":216,"../../engine/damage_handler":225,"../../view/button":285,"../animations/rat":200,"../attributes/animation":209,"../attributes/inventory":210,"../attributes/vitals":213,"../types/path":215}],204:[function(require,module,exports){
 const { LogicZombie              } = require('./logic_zombie');
 const { random_word         } = require('../../effects/floor_word.js');
 const { FadeSprite          } = require('../../effects/fade_sprite.js');
@@ -44004,7 +44004,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math.js":282,"../animations/bird":198,"../attributes/animation":209,"../types/path":215,"pixi.js":151}],207:[function(require,module,exports){
+},{"../../utils/math.js":283,"../animations/bird":198,"../attributes/animation":209,"../types/path":215,"pixi.js":151}],207:[function(require,module,exports){
 const { PathSprite    } = require('../types/path');
 const { Animation     } = require('../attributes/animation');
 const { rodent_frames } = require('../animations/rat');
@@ -44037,6 +44037,7 @@ const { Inventory       } = require('../attributes/inventory');
 const { Vitals          } = require('../attributes/vitals');
 const { human_frames    } = require('../animations/human');
 const { damage_events   } = require('../../engine/damage_handler');
+const { item_events     } = require('../../engine/item_handler');
 const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
 const event               = require('events');
@@ -44063,6 +44064,13 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
+
+    item_events.on('give', ({id,item}) => {
+      console.log('heeeeeeeeeee');
+      console.log(id);
+      if(this.id !== id) return;
+      this.inventory.give_item(item);
+    });
 
     this.events.on('give_item', item => this.inventory.give_item(item));
     this.events.on('check_items', callback => {
@@ -44136,7 +44144,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":216,"../../engine/damage_handler":225,"../../engine/pixi_containers":230,"../../items/item_manager":237,"../animations/human":199,"../attributes/animation":209,"../attributes/inventory":210,"../attributes/keyboard":211,"../attributes/mouse":212,"../attributes/vitals":213,"events":293,"pixi.js":151}],209:[function(require,module,exports){
+},{"../../effects/blood":216,"../../engine/damage_handler":225,"../../engine/item_handler":226,"../../engine/pixi_containers":230,"../../items/item_manager":237,"../animations/human":199,"../attributes/animation":209,"../attributes/inventory":210,"../attributes/keyboard":211,"../attributes/mouse":212,"../attributes/vitals":213,"events":295,"pixi.js":151}],209:[function(require,module,exports){
 const { radian } = require('../../utils/math');
 
 class Animation {
@@ -44184,7 +44192,7 @@ module.exports = {
   Animation,
 };
 
-},{"../../utils/math":282}],210:[function(require,module,exports){
+},{"../../utils/math":283}],210:[function(require,module,exports){
 const { Item_Manager   } = require('../../items/item_manager');
 const { View_Inventory } = require('../../view/view_inventory');
 const { Fade           } = require('../../effects/fade');
@@ -44211,6 +44219,10 @@ class Inventory extends View_Inventory {
   populate() {
     if(this.items.length === 0) return;
     this.populate_slots(this.items);
+  }
+
+  contains(name) {
+    return this.items.some(item => item.name === name);
   }
 
   populate_with(items) {
@@ -44255,12 +44267,13 @@ class Inventory extends View_Inventory {
   }
 
   give_item(item) {
+    if(!item) return;
     this.items.push(item);
   }
 
-  take_items(name) {
-    const index = this.items.getIndexof(name);
-    const result = this.items.splice(index,1);
+  take_item(name) {
+    const index = this.items.indexOf(name);
+    const [result] = this.items.splice(index,1);
     console.log(result);
     return result;
   }
@@ -44271,7 +44284,7 @@ module.exports = {
 };
 
 
-},{"../../effects/fade":218,"../../items/item_manager":237,"../../view/view_inventory":290}],211:[function(require,module,exports){
+},{"../../effects/fade":218,"../../items/item_manager":237,"../../view/view_inventory":292}],211:[function(require,module,exports){
 const { keyboardManager } = require('pixi.js');
 const { env             } = require('../../../config');
 const { viewport        } = require('../../engine/app');
@@ -44514,7 +44527,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../../config":1,"../../engine/app":223,"../../engine/pixi_containers":230,"../../view/interaction_menu":286,"../../view/view_player_inventory":291,"pixi.js":151}],212:[function(require,module,exports){
+},{"../../../config":1,"../../engine/app":223,"../../engine/pixi_containers":230,"../../view/interaction_menu":287,"../../view/view_player_inventory":293,"pixi.js":151}],212:[function(require,module,exports){
 const { Sprite, Texture, tweenManager } = require('pixi.js');
 const { radian, random_bound } = require('../../utils/math');
 const { screen      } = require('../../engine/app');
@@ -44652,7 +44665,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../engine/app":223,"../../engine/melee":227,"../../engine/pixi_containers":230,"../../engine/ranged":231,"../../utils/math":282,"pixi.js":151}],213:[function(require,module,exports){
+},{"../../engine/app":223,"../../engine/melee":227,"../../engine/pixi_containers":230,"../../engine/ranged":231,"../../utils/math":283,"pixi.js":151}],213:[function(require,module,exports){
 const { env } = require('../../../config');
 
 class Vitals {
@@ -44889,7 +44902,7 @@ module.exports = {
   LogicSprite,
 };
 
-},{"../../../config":1,"../../effects/blood":216,"../../engine/damage_handler":225,"../../engine/melee":227,"../../engine/pathfind":229,"../../engine/pixi_containers":230,"../../utils/line":280,"../../utils/line_of_sight":281,"../../utils/math":282,"../../view/button":284,"../attributes/inventory":210,"../attributes/vitals":213,"pixi.js":151}],215:[function(require,module,exports){
+},{"../../../config":1,"../../effects/blood":216,"../../engine/damage_handler":225,"../../engine/melee":227,"../../engine/pathfind":229,"../../engine/pixi_containers":230,"../../utils/line":281,"../../utils/line_of_sight":282,"../../utils/math":283,"../../view/button":285,"../attributes/inventory":210,"../attributes/vitals":213,"pixi.js":151}],215:[function(require,module,exports){
 const { Texture, tween, tweenManager, extras } = require('pixi.js');
 
 const { enemys    } = require('../../engine/pixi_containers');
@@ -44967,7 +44980,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":230,"../../utils/line":280,"../../utils/math":282,"pixi.js":151}],216:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../utils/line":281,"../../utils/math":283,"pixi.js":151}],216:[function(require,module,exports){
 const { Sprite, Texture } = require('pixi.js');
 const { decals } = require('../engine/pixi_containers');
 const { random_bound } = require('../utils/math.js');
@@ -45001,7 +45014,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":230,"../utils/math.js":282,"pixi.js":151}],217:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"../utils/math.js":283,"pixi.js":151}],217:[function(require,module,exports){
 const { backgrounds } = require('../engine/pixi_containers');
 const { random_bound } = require('../utils/math');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
@@ -45038,7 +45051,7 @@ module.exports = {
   Debris,
 };
 
-},{"../engine/pixi_containers":230,"../utils/math":282,"pixi.js":151}],218:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"../utils/math":283,"pixi.js":151}],218:[function(require,module,exports){
 const { tweenManager } = require('pixi.js');
 
 class Fade {
@@ -45464,7 +45477,7 @@ module.exports = {
   Overlay_Dialog,
 };
 
-},{"../effects/fade_sprite":219,"../effects/floor_word":220,"../engine/pixi_containers":230,"../utils/time.js":283,"pixi.js":151}],223:[function(require,module,exports){
+},{"../effects/fade_sprite":219,"../effects/floor_word":220,"../engine/pixi_containers":230,"../utils/time.js":284,"pixi.js":151}],223:[function(require,module,exports){
 (function (global){
 const { env      } = require('../../config');
 const { Viewport } = require('pixi-viewport');
@@ -45564,7 +45577,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../../config":1,"../character/archetypes/player":208,"../level/types/level_factory":267,"./pixi_containers":230}],225:[function(require,module,exports){
+},{"../../config":1,"../character/archetypes/player":208,"../level/types/level_factory":268,"./pixi_containers":230}],225:[function(require,module,exports){
 const event = require('events');
 
 const damage_events = new event();
@@ -45574,8 +45587,9 @@ module.exports = {
   damage_events,
 };
 
-},{"events":293}],226:[function(require,module,exports){
+},{"events":295}],226:[function(require,module,exports){
 const event = require('events');
+const item_events = new event();
 
 class Items {
   constructor(id) {
@@ -45612,9 +45626,10 @@ class Items {
 
 module.exports = {
   Items,
+  item_events,
 };
 
-},{"events":293}],227:[function(require,module,exports){
+},{"events":295}],227:[function(require,module,exports){
 const { tweenManager } = require('pixi.js');
 const { Sprite, Texture } = require('pixi.js');
 const { guis } = require('./pixi_containers');
@@ -45776,7 +45791,7 @@ module.exports = {
   pathfind,
 };
 
-},{"../utils/grid":279,"./pixi_containers":230,"easystarjs":4}],230:[function(require,module,exports){
+},{"../utils/grid":280,"./pixi_containers":230,"easystarjs":4}],230:[function(require,module,exports){
 const { Container } = require('pixi.js');
 const { viewport } = require('./app');
 
@@ -45981,7 +45996,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":282,"./damage_handler":225,"./pixi_containers":230,"pixi.js":151}],232:[function(require,module,exports){
+},{"../utils/math":283,"./damage_handler":225,"./pixi_containers":230,"pixi.js":151}],232:[function(require,module,exports){
 const { visuals } = require('../engine/pixi_containers');
 const { Caption } = require('../view/caption');
 const { Text    } = require('pixi.js');
@@ -46190,7 +46205,7 @@ module.exports = {
   SpeechText,
 };
 
-},{"../engine/pixi_containers":230,"../view/caption":285,"pixi.js":151}],233:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"../view/caption":286,"pixi.js":151}],233:[function(require,module,exports){
 const { sound } = require('pixi.js');
 const { env   } = require('../../config');
 const { sound_muted, volume_multiplier } = env;
@@ -46341,7 +46356,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/line":280,"../utils/math":282,"pixi.js":151}],235:[function(require,module,exports){
+},{"../utils/line":281,"../utils/math":283,"pixi.js":151}],235:[function(require,module,exports){
 require('./utils/globals');
 
 const { loader } = require('./engine/packer');
@@ -46356,7 +46371,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":224,"./engine/packer":228,"./utils/globals":278}],236:[function(require,module,exports){
+},{"./engine/boot_loader.js":224,"./engine/packer":228,"./utils/globals":279}],236:[function(require,module,exports){
 
 //https://www.uihere.com/free-graphics/search?q=knife
 const items = [
@@ -46724,6 +46739,28 @@ const items = [
     image_name: 'skull_cap_bone',
   },
   {
+    name: 'gas_canister',
+    id:   25,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a gas canister',
+    description: 'there is some left',
+    image_name: 'Gasoline_Canister',
+  },
+  {
+    name: 'oil_canister',
+    id:   25,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a small gas canister',
+    description: 'some cheap fuel',
+    image_name: 'Industrial_oil_canister',
+  },
+  {
     name: 'rat_leg_bone',
     id:   26,
     rank: 0,
@@ -46837,14 +46874,14 @@ module.exports = {
 };
 
 
-},{"../engine/app":223,"../utils/math":282,"./data/item_data":236,"pixi.js":151}],238:[function(require,module,exports){
+},{"../engine/app":223,"../utils/math":283,"./data/item_data":236,"pixi.js":151}],238:[function(require,module,exports){
 module.exports={"grid":[{"height":2514,"id":223,"rotation":0,"type":"","width":3740,"x":844,"y":144}],"background":[{"gid":1,"height":2540,"id":244,"rotation":0,"type":"","width":3763,"x":926,"y":2735,"image_name":"grass_tile"}],"decal":[],"roof":[],"shroud":[],"prey":[{"height":0,"id":257,"point":true,"rotation":0,"type":"","width":0,"x":2600,"y":398,"equip":"rat_teeth"},{"height":0,"id":258,"point":true,"rotation":0,"type":"","width":0,"x":2973,"y":393,"equip":"rat_teeth"},{"height":0,"id":259,"point":true,"rotation":0,"type":"","width":0,"x":3265,"y":394,"equip":"rat_teeth"},{"height":0,"id":260,"point":true,"rotation":0,"type":"","width":0,"x":3464,"y":403,"equip":"rat_teeth"}],"item":[{"height":96,"id":235,"rotation":-526,"type":"","width":80,"x":3042,"y":1016,"equip_on_click":true,"image_name":"bow_00","label":true,"label_action":"Take","label_description":"Old Bow","label_image":"take_icon"},{"height":28,"id":262,"rotation":-414,"type":"","width":77,"x":2477,"y":663,"equip_on_click":true,"image_name":"rusty_knife","label":true,"label_action":"Pick up","label_description":"Rusty Knife","label_image":"take_icon"}],"walls":[{"gid":3,"height":36,"id":250,"rotation":0,"type":"","width":1190,"x":2374,"y":1984,"image_name":"dot"},{"gid":3,"height":1172,"id":251,"rotation":0,"type":"","width":29,"x":3534,"y":1980,"image_name":"dot"},{"gid":3,"height":654,"id":252,"rotation":0,"type":"","width":29,"x":2377,"y":1973,"image_name":"dot"},{"gid":3,"height":36,"id":254,"rotation":0,"type":"","width":228,"x":1870,"y":1414,"image_name":"dot"},{"gid":3,"height":36,"id":255,"rotation":0,"type":"","width":834,"x":2404,"y":1360,"image_name":"dot"}],"lights":[],"player":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":2693,"y":865,"equip":"rat_teeth"}],"floor":[],"collision":[{"height":77,"id":186,"rotation":64,"type":"","width":77,"x":2087,"y":950,"image_name":"chair_03"},{"gid":4,"height":136,"id":256,"rotation":0,"type":"","width":272,"x":1821,"y":1409,"image_name":"barricade_1"}],"door":[{"height":33,"id":231,"rotation":-1,"type":"","width":141,"x":3304,"y":819,"door":true,"health":50,"image_name":"door_01"}],"exit_pad":[{"height":183,"id":15,"rotation":0,"type":"","width":217,"x":3729,"y":1491},{"height":183,"id":207,"rotation":0,"type":"","width":217,"x":2973,"y":1646},{"height":134,"id":236,"rotation":0,"type":"","width":141,"x":2607,"y":1435}]}
 },{}],239:[function(require,module,exports){
 module.exports={"background":[],"floor":[],"decal":[{"gid":42,"height":1339,"id":606,"rotation":262,"type":"","width":229,"x":5518,"y":275,"image_name":"dirt_road"},{"gid":42,"height":1322,"id":607,"rotation":301,"type":"","width":224,"x":4218,"y":437,"image_name":"dirt_road"},{"gid":17,"height":448,"id":608,"rotation":0,"type":"","width":493,"x":4555,"y":930,"image_name":"fog_00"},{"gid":45,"height":840,"id":609,"rotation":-180,"type":"","width":980,"x":3914,"y":-261,"image_name":"88423-Rock_13_7x6"},{"gid":17,"height":800,"id":610,"rotation":0,"type":"","width":800,"x":4354,"y":584,"image_name":"fog_00"},{"gid":38,"height":560,"id":611,"rotation":-180,"type":"","width":420,"x":4136,"y":111,"image_name":"88435-Rock_6_3x4"},{"gid":41,"height":420,"id":612,"rotation":0,"type":"","width":560,"x":4046,"y":317,"image_name":"88421-Rock_12_4x3"},{"gid":46,"height":420,"id":613,"rotation":0,"type":"","width":420,"x":4537,"y":220,"image_name":"88425-Rock_1_3x3"},{"gid":37,"height":280,"id":614,"rotation":-180,"type":"","width":420,"x":3923,"y":-29,"image_name":"88427-Rock_2_3x2"},{"gid":43,"height":280,"id":615,"rotation":0,"type":"","width":280,"x":4430,"y":286,"image_name":"88437-Rock_7_2x2"},{"gid":36,"height":700,"id":616,"rotation":-180,"type":"","width":980,"x":4967,"y":279,"image_name":"88439-Rock_8_7x5"},{"gid":35,"height":280,"id":617,"rotation":-180,"type":"","width":280,"x":4684,"y":275,"image_name":"88441-Rock_9_2x2"},{"gid":44,"height":560,"id":618,"rotation":0,"type":"","width":840,"x":3643,"y":253,"image_name":"88433-Rock_5_6x4"},{"gid":40,"height":420,"id":619,"rotation":-180,"type":"","width":420,"x":4189,"y":106,"image_name":"88419-Rock_11_3x3"},{"gid":39,"height":420,"id":620,"rotation":-180,"type":"","width":420,"x":3981,"y":86,"image_name":"88417-Rock_10_3x3"},{"gid":47,"height":15,"id":621,"rotation":36,"type":"","width":200,"x":3796,"y":2518,"image_name":"dots"},{"gid":47,"height":15,"id":622,"rotation":-156,"type":"","width":200,"x":3819,"y":2515,"image_name":"dots"},{"gid":48,"height":30,"id":623,"rotation":193,"type":"","width":77,"x":3642,"y":2429,"image_name":"arrow_00"},{"gid":47,"height":15,"id":624,"rotation":44,"type":"","width":200,"x":3944,"y":2626,"image_name":"dots"}],"collision":[],"item":[{"gid":49,"height":47,"id":628,"rotation":-41,"type":"","width":129,"x":1211,"y":489,"image_name":"spear-png-spear-png-1600_582","dialog_on_click":"This fucking things about to break...","equip_on_click":true,"label":true,"label_action":"Pick up","label_description":"Makeshift spear","label_image":"gear_icon","remove_on_click":true}],"ranbir":[{"height":0,"id":629,"point":true,"rotation":0,"type":"","width":0,"x":2205,"y":423}],"door":[{"gid":24,"height":21,"id":528,"rotation":-330,"type":"","width":99,"x":1831,"y":226,"image_name":"door_01","clickable":true,"dialog_on_click":"Why is this open now...","label":true,"label_action":"Open","label_description":"Door","label_image":"gear_icon","open_rotation":1}],"debris":[{"gid":50,"height":84,"id":632,"rotation":0,"type":"","width":54,"x":1649,"y":447,"image_name":"wood_rubble"},{"gid":50,"height":45,"id":633,"rotation":0,"type":"","width":63,"x":1656,"y":411,"image_name":"wood_rubble"},{"gid":50,"height":24,"id":634,"rotation":0,"type":"","width":84,"x":1675,"y":397,"image_name":"wood_rubble"},{"gid":50,"height":33,"id":635,"rotation":0,"type":"","width":84,"x":1663,"y":415,"image_name":"wood_rubble"}],"roof":[],"slow_pad":[],"exit_pad":[{"height":100,"id":578,"rotation":0,"type":"","width":190,"x":1327,"y":780,"cutscene":false,"level_name":"ranbir_flat_1","spawn_id":137}],"path_rat":[{"height":0,"id":627,"polyline":[{"x":0,"y":0},{"x":107,"y":94},{"x":122,"y":241},{"x":24,"y":327},{"x":-204,"y":376},{"x":-277,"y":236},{"x":-280,"y":48},{"x":-106,"y":-61},{"x":0,"y":-69}],"rotation":0,"type":"","width":0,"x":1719,"y":259}],"shroud":[],"walls":[{"gid":9,"height":21,"id":409,"rotation":0,"type":"","width":397,"x":1135,"y":148,"image_name":"dot"},{"gid":9,"height":17,"id":414,"rotation":0,"type":"","width":393,"x":1145,"y":988,"image_name":"dot"},{"gid":9,"height":66,"id":418,"rotation":0,"type":"","width":17,"x":1835,"y":224,"image_name":"dot"},{"gid":9,"height":490,"id":419,"rotation":0,"type":"","width":17,"x":1938,"y":925,"image_name":"dot"},{"gid":9,"height":616,"id":567,"rotation":0,"type":"","width":17,"x":823,"y":732,"image_name":"dot"},{"gid":9,"height":380,"id":568,"rotation":0,"type":"","width":17,"x":1055,"y":790,"image_name":"dot"}],"lights_fairy":[],"player_spawn":[{"height":0,"id":137,"point":true,"rotation":0,"type":"","width":0,"x":1399,"y":385}]}
 },{}],240:[function(require,module,exports){
 module.exports={"background":[{"gid":23,"height":1442,"id":463,"rotation":0,"type":"","width":2488,"x":-1903,"y":374,"image_name":"grass_tile"}],"lights":[],"click_pad":[{"height":168,"id":125,"rotation":0,"type":"","width":240,"x":1290,"y":-212}],"walls":[{"gid":42,"height":31,"id":528,"rotation":-36,"type":"","width":372,"x":1949,"y":-98,"image_name":"dot","hidden":true},{"gid":42,"height":33,"id":529,"rotation":-37,"type":"","width":367,"x":2059,"y":49,"image_name":"dot","hidden":true},{"gid":42,"height":179,"id":530,"rotation":-37,"type":"","width":31,"x":2044,"y":36,"image_name":"dot","hidden":true}],"floor":[{"gid":43,"height":946,"id":537,"rotation":-90,"type":"","width":591,"x":2555,"y":27,"image_name":"RT01_TarmacGrungeDash_25x40[Modern, city, map, Map tile, street, road, asphalt, paved, 2 lane, blacktop, seamless]"},{"gid":45,"height":644,"id":540,"rotation":270,"type":"","width":644,"x":1521,"y":32,"image_name":"RT01_TarmacGrungeL_40x40[Modern, city, map, Map tile, street, road, asphalt, blacktop, black top, paved, corner, turn, intersection, seamless]"},{"gid":46,"height":119,"id":545,"rotation":-270,"type":"","width":596,"x":1512,"y":-551,"image_name":"cross_walk"},{"gid":11,"height":950,"id":431,"rotation":0,"type":"","width":594,"x":867,"y":-691,"image_name":"road_long"},{"gid":58,"height":280,"id":599,"rotation":0,"type":"","width":2800,"x":611,"y":304,"image_name":"road_00"},{"gid":43,"height":946,"id":544,"rotation":-90,"type":"","width":591,"x":4356,"y":28,"image_name":"RT01_TarmacGrungeDash_25x40[Modern, city, map, Map tile, street, road, asphalt, paved, 2 lane, blacktop, seamless]"},{"gid":43,"height":946,"id":542,"rotation":90,"type":"","width":591,"x":2466,"y":-563,"image_name":"RT01_TarmacGrungeDash_25x40[Modern, city, map, Map tile, street, road, asphalt, paved, 2 lane, blacktop, seamless]"},{"gid":46,"height":119,"id":546,"rotation":-540,"type":"","width":597,"x":1462,"y":-701,"image_name":"cross_walk"},{"gid":11,"height":954,"id":536,"rotation":0,"type":"","width":596,"x":867,"y":-1640,"image_name":"road_long"},{"gid":46,"height":119,"id":648,"rotation":-540,"type":"","width":597,"x":1464,"y":-2059,"image_name":"cross_walk"},{"gid":58,"height":280,"id":600,"rotation":0,"type":"","width":2800,"x":1453,"y":-549,"image_name":"road_00"},{"gid":58,"height":280,"id":601,"rotation":90,"type":"","width":2800,"x":613,"y":-2757,"image_name":"road_00"},{"gid":65,"height":280,"id":633,"rotation":0,"type":"","width":140,"x":880,"y":-2323,"image_name":"42099-Slum Road Transistion 2 East"},{"gid":66,"height":362,"id":651,"rotation":180,"type":"","width":362,"x":1063,"y":-2598,"image_name":"59487-Brick Road Damage 8"},{"gid":24,"height":280,"id":619,"rotation":-90,"type":"","width":560,"x":908,"y":-1845,"image_name":"rubble_05"},{"gid":59,"height":517,"id":603,"rotation":0,"type":"","width":345,"x":552,"y":-1576,"image_name":"95190-stairs_stone_2c_2x3"},{"gid":65,"height":280,"id":638,"rotation":-180,"type":"","width":140,"x":623,"y":-566,"image_name":"42099-Slum Road Transistion 2 East"},{"gid":34,"height":238,"id":639,"rotation":0,"type":"","width":99,"x":891,"y":-65,"image_name":"floor_decal_01"},{"gid":66,"height":362,"id":640,"rotation":0,"type":"","width":362,"x":1171,"y":-2343,"image_name":"59487-Brick Road Damage 8"},{"gid":67,"height":280,"id":641,"rotation":0,"type":"","width":140,"x":1314,"y":-830,"image_name":"59484-Brick Road Damage 3"},{"gid":34,"height":238,"id":642,"rotation":0,"type":"","width":99,"x":1332,"y":-1065,"image_name":"floor_decal_01"},{"gid":34,"height":238,"id":643,"rotation":0,"type":"","width":99,"x":618,"y":-2385,"image_name":"floor_decal_01"},{"gid":66,"height":362,"id":644,"rotation":-540,"type":"","width":362,"x":1692,"y":-750,"image_name":"59487-Brick Road Damage 8"},{"gid":34,"height":238,"id":646,"rotation":0,"type":"","width":99,"x":719,"y":-683,"image_name":"floor_decal_01"},{"gid":66,"height":362,"id":647,"rotation":-540,"type":"","width":362,"x":1017,"y":-1078,"image_name":"59487-Brick Road Damage 8"},{"gid":24,"height":280,"id":649,"rotation":0,"type":"","width":560,"x":787,"y":-2322,"image_name":"rubble_05"}],"prey":[{"height":0,"id":390,"polyline":[{"x":0,"y":0},{"x":660,"y":-813},{"x":1626,"y":-1434},{"x":2783,"y":-2066},{"x":3539,"y":-2741}],"rotation":0,"type":"","width":0,"x":99,"y":219},{"height":0,"id":395,"polyline":[{"x":0,"y":0},{"x":294,"y":-300},{"x":524,"y":-565},{"x":759,"y":-771},{"x":935,"y":-971},{"x":1153,"y":-1206},{"x":1459,"y":-1465},{"x":1547,"y":-1724},{"x":1718,"y":-1965},{"x":1829,"y":-2153},{"x":2029,"y":-2394}],"rotation":0,"type":"","width":0,"x":1212,"y":488},{"height":0,"id":397,"polyline":[{"x":0,"y":0},{"x":126,"y":-162},{"x":220,"y":-353},{"x":274,"y":-646},{"x":274,"y":-876},{"x":278,"y":-1255},{"x":346,"y":-1529},{"x":400,"y":-1763},{"x":397,"y":-1998},{"x":361,"y":-2351},{"x":411,"y":-2449},{"x":530,"y":-2467},{"x":750,"y":-2467},{"x":1269,"y":-2441},{"x":1482,"y":-2427},{"x":1709,"y":-2481},{"x":1789,"y":-2614},{"x":1857,"y":-2889},{"x":1872,"y":-3091},{"x":1857,"y":-3801}],"rotation":0,"type":"","width":0,"x":256,"y":483},{"height":0,"id":566,"polyline":[{"x":0,"y":0},{"x":660,"y":-813},{"x":1626,"y":-1434},{"x":2783,"y":-2066},{"x":3539,"y":-2741}],"rotation":0,"type":"","width":0,"x":-282,"y":1175}],"decal":[{"gid":27,"height":800,"id":549,"rotation":0,"type":"","width":800,"x":1005,"y":-22,"image_name":"fog_00"},{"gid":33,"height":595,"id":499,"rotation":29,"type":"","width":268,"x":838,"y":58,"image_name":"concrete_decal_00"},{"gid":25,"height":121,"id":471,"rotation":0,"type":"","width":126,"x":786,"y":-37,"image_name":"litter_00"},{"gid":25,"height":121,"id":472,"rotation":-223,"type":"","width":126,"x":2339,"y":-359,"image_name":"litter_00"},{"gid":26,"height":238,"id":473,"rotation":0,"type":"","width":399,"x":454,"y":192,"image_name":"floor_decal_03"},{"gid":30,"height":599,"id":486,"rotation":-2,"type":"","width":369,"x":695,"y":330,"image_name":"Scorch-d"},{"gid":26,"height":238,"id":475,"rotation":-269,"type":"","width":399,"x":716,"y":-944,"image_name":"floor_decal_03"},{"gid":26,"height":238,"id":476,"rotation":900,"type":"","width":399,"x":597,"y":-943,"image_name":"floor_decal_03"},{"gid":27,"height":800,"id":477,"rotation":0,"type":"","width":800,"x":1088,"y":-48,"image_name":"fog_00"},{"gid":27,"height":448,"id":479,"rotation":0,"type":"","width":493,"x":974,"y":355,"image_name":"fog_00"},{"gid":30,"height":317,"id":487,"rotation":-2,"type":"","width":195,"x":719,"y":-613,"image_name":"Scorch-d"},{"gid":31,"height":496,"id":489,"rotation":0,"type":"","width":542,"x":1593,"y":345,"image_name":"Scorch-a"},{"gid":31,"height":496,"id":491,"rotation":-218,"type":"","width":542,"x":2138,"y":-811,"image_name":"Scorch-a"},{"gid":24,"height":280,"id":470,"rotation":-180,"type":"","width":560,"x":1800,"y":0,"image_name":"rubble_05"},{"gid":34,"height":135,"id":500,"rotation":-269,"type":"","width":56,"x":1073,"y":36,"image_name":"floor_decal_01","tint":"0xa8a8a8"},{"gid":27,"height":800,"id":550,"rotation":0,"type":"","width":800,"x":2471,"y":26,"image_name":"fog_00"},{"gid":24,"height":280,"id":564,"rotation":0,"type":"","width":560,"x":1448,"y":-390,"image_name":"rubble_05"},{"gid":53,"height":189,"id":572,"rotation":11,"type":"","width":102,"x":2285,"y":62,"image_name":"1hopscotch2","tint":"0xffffff"},{"gid":48,"height":57,"id":576,"rotation":0,"type":"","width":57,"x":2251,"y":-261,"image_name":"pallet_00"},{"gid":48,"height":57,"id":577,"rotation":-304,"type":"","width":57,"x":2286,"y":-229,"image_name":"pallet_00"},{"gid":54,"height":348,"id":582,"rotation":-306,"type":"","width":174,"x":1957,"y":-116,"image_name":"seamless_concrete","tint":"0x4a3a28"},{"gid":57,"height":46,"id":586,"rotation":-13,"type":"","width":222,"x":1924,"y":-151,"image_name":"ladder_00"},{"gid":31,"height":496,"id":627,"rotation":-200,"type":"","width":542,"x":1182,"y":-2364,"image_name":"Scorch-a"},{"gid":60,"height":29,"id":607,"rotation":-214,"type":"","width":136,"x":718,"y":-1890,"image_name":"door_01"},{"gid":26,"height":375,"id":622,"rotation":-270,"type":"","width":630,"x":575,"y":-2650,"image_name":"floor_decal_03"},{"gid":27,"height":800,"id":623,"rotation":0,"type":"","width":800,"x":441,"y":-1163,"image_name":"fog_00"},{"gid":63,"height":271,"id":625,"rotation":153,"type":"","width":135,"x":906,"y":-2037,"image_name":"VTDD Rug Mouldering 1 2x4 [tapestry,flooring,decay,disintegrate,fantasy,dungeon,lair,tile]"},{"gid":64,"height":159,"id":626,"rotation":14,"type":"","width":159,"x":743,"y":-1940,"image_name":"trash_can_02"},{"gid":31,"height":496,"id":637,"rotation":-200,"type":"","width":542,"x":1179,"y":-2778,"image_name":"Scorch-a"}],"door":[],"second_floor":[{"gid":5,"height":1077,"id":420,"rotation":0,"type":"","width":881,"x":-253,"y":-1524,"image_name":"concrete_roof"},{"gid":6,"height":1106,"id":421,"rotation":-270,"type":"","width":737,"x":358,"y":-3326,"image_name":"tar_roof"},{"gid":16,"height":150,"id":444,"rotation":101,"type":"","width":485,"x":2439,"y":-305,"image_name":"shipping_container_00"},{"gid":16,"height":144,"id":446,"rotation":89,"type":"","width":391,"x":2582,"y":-649,"image_name":"shipping_container_00"},{"gid":38,"height":842,"id":509,"rotation":0,"type":"","width":1420,"x":1399,"y":1034,"image_name":"BT01_ConcreteRoofGrunge_23"},{"gid":19,"height":1142,"id":451,"rotation":91,"type":"","width":879,"x":331,"y":119,"image_name":"roof_00"},{"gid":6,"height":1106,"id":454,"rotation":-270,"type":"","width":737,"x":2822,"y":191,"image_name":"tar_roof"},{"gid":5,"height":1140,"id":456,"rotation":90,"type":"","width":941,"x":2052,"y":-1570,"image_name":"concrete_roof"},{"gid":21,"height":698,"id":459,"rotation":90,"type":"","width":1917,"x":1441,"y":-3495,"image_name":"gravel_roof"},{"gid":38,"height":581,"id":508,"rotation":0,"type":"","width":921,"x":-114,"y":-944,"image_name":"BT01_ConcreteRoofGrunge_23"},{"gid":19,"height":1571,"id":455,"rotation":91,"type":"","width":1392,"x":-1576,"y":-2304,"image_name":"roof_00"},{"gid":21,"height":827,"id":507,"rotation":-180,"type":"","width":1917,"x":5114,"y":-1449,"image_name":"gravel_roof"},{"gid":38,"height":608,"id":602,"rotation":90,"type":"","width":948,"x":1450,"y":-1579,"image_name":"BT01_ConcreteRoofGrunge_23"},{"gid":32,"height":300,"id":495,"rotation":-270,"type":"","width":1165,"x":558,"y":-957,"image_name":"long_broken"}],"collision":[{"gid":50,"height":153,"id":621,"rotation":-271,"type":"","width":85,"x":607,"y":-1713,"image_name":"88270-Desk_1_1x2"},{"gid":7,"height":89,"id":588,"rotation":335,"type":"","width":282,"x":-709,"y":-256,"image_name":"Worn_ome"},{"gid":17,"height":341,"id":589,"rotation":226,"type":"","width":168,"x":1051,"y":-963,"image_name":"car_02"},{"gid":18,"height":260,"id":590,"rotation":-249,"type":"","width":362,"x":837,"y":-176,"image_name":"car_00"},{"gid":20,"height":182,"id":591,"rotation":284,"type":"","width":365,"x":1384,"y":-976,"image_name":"car_01"},{"gid":22,"height":83,"id":592,"rotation":-318,"type":"","width":166,"x":948,"y":68,"image_name":"dumpster_00"},{"gid":55,"height":56,"id":593,"rotation":-302,"type":"","width":56,"x":2030,"y":-44,"image_name":"box_06"},{"gid":56,"height":49,"id":594,"rotation":-211,"type":"","width":49,"x":2041,"y":-111,"image_name":"box_03"},{"gid":70,"height":108,"id":657,"rotation":-480,"type":"","width":215,"x":1509,"y":169,"image_name":"barricade_1"},{"gid":71,"height":72,"id":658,"rotation":0,"type":"","width":199,"x":1193,"y":20,"image_name":"88486-Table_Long_1_3x1"}],"player_spawn":[{"height":0,"id":137,"point":true,"rotation":0,"type":"","width":0,"x":1099,"y":19},{"height":0,"id":609,"point":true,"rotation":0,"type":"","width":0,"x":710,"y":-1898}],"christmas_lights":[{"gid":61,"height":34,"id":614,"rotation":-734,"type":"","width":347,"x":588,"y":-1948,"image_name":"christmas_lights"},{"gid":61,"height":34,"id":615,"rotation":-888,"type":"","width":347,"x":1224,"y":-2000,"image_name":"christmas_lights"},{"gid":61,"height":34,"id":616,"rotation":-844,"type":"","width":347,"x":1401,"y":-1721,"image_name":"christmas_lights"}],"exit_pad":[{"height":815,"id":15,"rotation":0,"type":"","width":100,"x":-2268,"y":-1222,"level_name":"park"},{"height":202,"id":177,"rotation":0,"type":"","width":279,"x":-261,"y":-220,"entry_id":383,"level_name":"intro"},{"height":251,"id":344,"rotation":0,"type":"","width":783,"x":33,"y":-3474,"level_name":"archer"},{"height":144,"id":608,"rotation":0,"type":"","width":50,"x":627,"y":-1986,"level_name":"ranbir_flat_0","spawn_id":137}],"item":[{"gid":69,"height":71,"id":656,"rotation":0,"type":"","width":71,"x":1071,"y":-22,"image_name":"52164_Bear_Trap_4","dialog_on_click":"Something tried to get in last night","label":true,"label_action":"Take","label_description":"Bear trap","label_image":"gear_icon","remove_on_click":true}],"roof":[{"gid":72,"height":658,"id":661,"rotation":-360,"type":"","width":150,"x":772,"y":253,"image_name":"shadow_line"},{"gid":13,"height":252,"id":559,"rotation":-179,"type":"","width":84,"x":1570,"y":-633,"image_name":"street_light_00"},{"gid":12,"height":306,"id":432,"rotation":19,"type":"","width":144,"x":62,"y":-253,"image_name":"RuinedBridge1_dgw_tt"},{"gid":13,"height":252,"id":434,"rotation":-14,"type":"","width":84,"x":713,"y":185,"image_name":"street_light_00"},{"gid":72,"height":638,"id":713,"rotation":-360,"type":"","width":145,"x":787,"y":-896,"image_name":"shadow_line"},{"gid":72,"height":1027,"id":714,"rotation":-180,"type":"","width":145,"x":1471,"y":-1649,"image_name":"shadow_line"},{"gid":14,"height":19,"id":435,"rotation":-280,"type":"","width":211,"x":617,"y":-999,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":13,"id":436,"rotation":-278,"type":"","width":175,"x":648,"y":-987,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":20,"id":437,"rotation":-1,"type":"","width":857,"x":736,"y":-1216,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":15,"height":541,"id":443,"rotation":234,"type":"","width":203,"x":2358,"y":-178,"image_name":"truck_00"},{"gid":14,"height":20,"id":438,"rotation":-1,"type":"","width":857,"x":736,"y":-1253,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":37,"height":200,"id":504,"rotation":-449,"type":"","width":300,"x":417,"y":-2214,"image_name":"awning_blue","tint":"0x838B8B"},{"gid":72,"height":1311,"id":712,"rotation":-90,"type":"","width":232,"x":2698,"y":226,"image_name":"shadow_line"},{"gid":14,"height":18,"id":439,"rotation":146,"type":"","width":204,"x":1579,"y":-1362,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":19,"id":464,"rotation":-258,"type":"","width":211,"x":648,"y":79,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":16,"id":440,"rotation":54,"type":"","width":337,"x":2052,"y":-1,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":14,"id":465,"rotation":-263,"type":"","width":261,"x":619,"y":34,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":13,"id":441,"rotation":51,"type":"","width":380,"x":2045,"y":-38,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":4,"height":957,"id":414,"rotation":0,"type":"","width":1162,"x":-531,"y":264,"image_name":"tree_11"},{"gid":36,"height":280,"id":503,"rotation":34,"type":"","width":280,"x":1408,"y":-785,"image_name":"rug_01"},{"gid":35,"height":224,"id":502,"rotation":-295,"type":"","width":225,"x":1605,"y":-930,"image_name":"tarp_1","tint":"0xa8a8a8"},{"gid":39,"height":772,"id":510,"rotation":0,"type":"","width":735,"x":-398,"y":-250,"image_name":"95227-tree_6_6x6"},{"gid":1,"height":840,"id":511,"rotation":0,"type":"","width":840,"x":65,"y":-310,"image_name":"95223-tree_2_6x6"},{"gid":49,"height":141,"id":556,"rotation":299,"type":"","width":189,"x":2131,"y":-11,"image_name":"dirty_matress"},{"gid":14,"height":13,"id":442,"rotation":50,"type":"","width":345,"x":2078,"y":-22,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":48,"height":116,"id":557,"rotation":-45,"type":"","width":116,"x":617,"y":-1056,"image_name":"pallet_00","tint":"0x4a3a28"},{"gid":50,"height":112,"id":558,"rotation":0,"type":"","width":62,"x":1535,"y":-1110,"image_name":"88270-Desk_1_1x2"},{"gid":13,"height":252,"id":560,"rotation":-179,"type":"","width":84,"x":3232,"y":-615,"image_name":"street_light_00"},{"gid":13,"height":252,"id":561,"rotation":-359,"type":"","width":84,"x":1811,"y":96,"image_name":"street_light_00"},{"gid":13,"height":252,"id":562,"rotation":-359,"type":"","width":84,"x":3140,"y":87,"image_name":"street_light_00"},{"gid":13,"height":252,"id":563,"rotation":-269,"type":"","width":84,"x":724,"y":-2115,"image_name":"street_light_00"},{"gid":62,"height":96,"id":624,"rotation":0,"type":"","width":127,"x":626,"y":-1963,"image_name":"telephone-cable","tint":"0x000000"},{"gid":72,"height":1107,"id":715,"rotation":-360,"type":"","width":145,"x":605,"y":-1494,"image_name":"shadow_line"},{"gid":14,"height":20,"id":628,"rotation":27,"type":"","width":857,"x":718,"y":-2645,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":20,"id":629,"rotation":-11,"type":"","width":857,"x":503,"y":-2207,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":20,"id":630,"rotation":-16,"type":"","width":857,"x":481,"y":-2282,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":14,"height":20,"id":631,"rotation":-11,"type":"","width":780,"x":761,"y":-1471,"image_name":"Plank-Weathered Grey_4","tint":"0x4a3a28"},{"gid":68,"height":760,"id":652,"rotation":0,"type":"","width":791,"x":530,"y":-1986,"image_name":"95229-tree_8_5x5"},{"gid":57,"height":95,"id":655,"rotation":-2,"type":"","width":704,"x":729,"y":-1194,"image_name":"ladder_00"},{"gid":72,"height":1099,"id":660,"rotation":-90,"type":"","width":232,"x":1529,"y":224,"image_name":"shadow_line"},{"gid":72,"height":446,"id":662,"rotation":-360,"type":"","width":145,"x":782,"y":-487,"image_name":"shadow_line"},{"gid":72,"height":651,"id":709,"rotation":-270,"type":"","width":145,"x":1420,"y":-654,"image_name":"shadow_line"},{"gid":72,"height":808,"id":710,"rotation":-270,"type":"","width":145,"x":1964,"y":-653,"image_name":"shadow_line"},{"gid":72,"height":413,"id":711,"rotation":-181,"type":"","width":84,"x":2594,"y":-666,"image_name":"shadow_line"}],"truck_pad":[{"height":152,"id":575,"rotation":-34,"type":"","width":33,"x":2252,"y":-315},{"height":150,"id":587,"rotation":-34,"type":"","width":33,"x":2222,"y":-293}],"shroud":[]}
 },{}],241:[function(require,module,exports){
-module.exports={"background":[{"gid":24,"height":391,"id":431,"rotation":0,"type":"","width":251,"x":1515,"y":1145,"image_name":"tile_floor"},{"gid":43,"height":905,"id":514,"rotation":0,"type":"","width":686,"x":839,"y":1157,"image_name":"wood_planks_vertical"}],"player_spawn":[{"height":0,"id":137,"point":true,"rotation":0,"type":"","width":0,"x":1365,"y":975},{"height":0,"id":383,"point":true,"rotation":0,"type":"","width":0,"x":1111,"y":424},{"height":0,"id":564,"point":true,"rotation":0,"type":"","width":0,"x":1198,"y":748}],"exit_pad":[{"height":85,"id":177,"rotation":0,"type":"","width":125,"x":1076,"y":145,"level_name":"street","spawn_id":137}],"decal":[{"gid":27,"height":343,"id":516,"rotation":53,"type":"","width":343,"x":790,"y":480,"image_name":"fog_00"},{"gid":27,"height":175,"id":519,"rotation":332,"type":"","width":175,"x":1445,"y":492,"image_name":"fog_00"},{"gid":29,"height":98,"id":438,"rotation":0,"type":"","width":104,"x":1025,"y":331,"image_name":"wood_decal_01","alpha":0.6},{"gid":38,"height":124,"id":452,"rotation":270,"type":"","width":52,"x":1134,"y":246,"image_name":"floor_decal_01"},{"gid":37,"height":145,"id":449,"rotation":90,"type":"","width":61,"x":1016,"y":214,"image_name":"wall_crumble"},{"gid":19,"height":280,"id":422,"rotation":40,"type":"","width":280,"x":1059,"y":1024,"image_name":"rug_01"},{"gid":25,"height":392,"id":434,"rotation":0,"type":"","width":339,"x":1425,"y":1151,"image_name":"floor_decal_02"},{"gid":27,"height":449,"id":554,"rotation":90,"type":"","width":449,"x":1127,"y":562,"image_name":"fog_00"},{"gid":27,"height":800,"id":436,"rotation":0,"type":"","width":800,"x":765,"y":988,"image_name":"fog_00"},{"gid":28,"height":70,"id":437,"rotation":-180,"type":"","width":127,"x":1523,"y":725,"image_name":"wood_decal_00"},{"gid":30,"height":120,"id":440,"rotation":-360,"type":"","width":80,"x":853,"y":705,"image_name":"wood_decal_02"},{"gid":31,"height":101,"id":441,"rotation":0,"type":"","width":101,"x":1372,"y":502,"image_name":"wood_decal_03"},{"gid":27,"height":343,"id":517,"rotation":0,"type":"","width":343,"x":-25,"y":1812,"image_name":"fog_00"},{"gid":27,"height":415,"id":520,"rotation":0,"type":"","width":415,"x":952,"y":796,"image_name":"fog_00"},{"gid":27,"height":343,"id":553,"rotation":53,"type":"","width":343,"x":1072,"y":527,"image_name":"fog_00"},{"gid":27,"height":449,"id":555,"rotation":90,"type":"","width":449,"x":915,"y":384,"image_name":"fog_00"},{"gid":50,"height":425,"id":556,"rotation":360,"type":"","width":245,"x":964,"y":596,"image_name":"fireplace-light","alpha":0.4}],"floor":[{"gid":49,"height":299,"id":544,"rotation":184,"type":"","width":329,"x":1360,"y":428,"image_name":"carpet-hole_chg"},{"gid":21,"height":366,"id":425,"rotation":-90,"type":"","width":400,"x":1186,"y":617,"image_name":"Scorch-a"},{"gid":22,"height":395,"id":426,"rotation":0,"type":"","width":243,"x":835,"y":795,"image_name":"Scorch-d"},{"gid":35,"height":83,"id":445,"rotation":18,"type":"","width":124,"x":1522,"y":1092,"image_name":"rug_1"},{"gid":48,"height":268,"id":545,"rotation":-1170,"type":"","width":535,"x":1773,"y":773,"image_name":"Overlay_Fire001","alpha":0.8,"tint":"0x392613"},{"gid":34,"height":209,"id":558,"rotation":15,"type":"","width":104,"x":834,"y":1041,"image_name":"rug_00"},{"gid":51,"height":116,"id":563,"rotation":0,"type":"","width":157,"x":849,"y":1038,"image_name":"dirty_matress"},{"gid":5,"height":42,"id":561,"rotation":0,"type":"","width":42,"x":875,"y":925,"image_name":"box_06"},{"gid":10,"height":49,"id":562,"rotation":-273,"type":"","width":42,"x":1020,"y":925,"image_name":"chair_00"}],"collision":[{"gid":9,"height":211,"id":551,"rotation":-307,"type":"","width":211,"x":787,"y":636,"image_name":"table_chairs"},{"gid":5,"height":32,"id":207,"rotation":710,"type":"","width":36,"x":1249,"y":370,"image_name":"box_06"},{"gid":3,"height":60,"id":86,"rotation":-440,"type":"","width":163,"x":900,"y":425,"image_name":"wood_table"},{"gid":10,"height":42,"id":395,"rotation":-270,"type":"","width":42,"x":1211,"y":965,"image_name":"chair_00"},{"gid":12,"height":70,"id":397,"rotation":0,"type":"","width":71,"x":1529,"y":330,"image_name":"fridge_00"},{"gid":13,"height":63,"id":398,"rotation":0,"type":"","width":63,"x":1602,"y":322,"image_name":"stove_00"},{"gid":10,"height":38,"id":399,"rotation":-495,"type":"","width":38,"x":1389,"y":484,"image_name":"chair_00"},{"gid":14,"height":90,"id":400,"rotation":180,"type":"","width":180,"x":1377,"y":250,"image_name":"barricade_1"},{"gid":15,"height":79,"id":401,"rotation":-180,"type":"","width":98,"x":1516,"y":252,"image_name":"stove_01"},{"gid":40,"height":51,"id":559,"rotation":0,"type":"","width":44,"x":848,"y":567,"image_name":"88490-Table_Round_2x2"},{"gid":16,"height":53,"id":403,"rotation":180,"type":"","width":79,"x":1646,"y":1090,"image_name":"sink_04"},{"gid":20,"height":92,"id":424,"rotation":0,"type":"","width":92,"x":1536,"y":862,"image_name":"toilet_00"},{"gid":32,"height":341,"id":442,"rotation":0,"type":"","width":38,"x":841,"y":749,"image_name":"shelf_00"},{"gid":33,"height":12,"id":443,"rotation":180,"type":"","width":107,"x":1659,"y":1137,"image_name":"mirror_00"},{"gid":39,"height":209,"id":453,"rotation":92,"type":"","width":129,"x":1297,"y":1032,"image_name":"88254-Cot_1_1x2"},{"gid":44,"height":147,"id":515,"rotation":4,"type":"","width":81,"x":1140,"y":917,"image_name":"88270-Desk_1_1x2"},{"gid":45,"height":69,"id":524,"rotation":30,"type":"","width":137,"x":995,"y":208,"image_name":"dumpster_00"},{"gid":40,"height":53,"id":552,"rotation":0,"type":"","width":46,"x":1241,"y":352,"image_name":"88490-Table_Round_2x2"},{"gid":2,"height":109,"id":560,"rotation":0,"type":"","width":138,"x":946,"y":1137,"image_name":"bookcase_00"},{"gid":54,"height":108,"id":592,"rotation":90,"type":"","width":216,"x":1643,"y":768,"image_name":"MI01_FurnitureShower_05x10[shower, standing shower, shower stall, bathroom, water closet]"},{"gid":53,"height":40,"id":593,"rotation":-180,"type":"","width":25,"x":1712,"y":766,"image_name":"Shower_Head_Set_dcp"},{"gid":17,"height":107,"id":596,"rotation":0,"type":"","width":64,"x":1603,"y":686,"image_name":"table_00"}],"walls":[{"gid":18,"height":21,"id":408,"rotation":0,"type":"","width":222,"x":826,"y":258,"image_name":"dot"},{"gid":18,"height":21,"id":409,"rotation":0,"type":"","width":637,"x":1134,"y":258,"image_name":"dot"},{"gid":18,"height":21,"id":410,"rotation":0,"type":"","width":142,"x":837,"y":768,"image_name":"dot"},{"gid":18,"height":19,"id":411,"rotation":0,"type":"","width":220,"x":1072,"y":770,"image_name":"dot"},{"gid":18,"height":18,"id":412,"rotation":0,"type":"","width":387,"x":1376,"y":770,"image_name":"dot"},{"gid":18,"height":909,"id":413,"rotation":0,"type":"","width":16,"x":827,"y":1159,"image_name":"dot"},{"gid":18,"height":17,"id":414,"rotation":0,"type":"","width":945,"x":826,"y":1165,"image_name":"dot"},{"gid":18,"height":908,"id":415,"rotation":0,"type":"","width":18,"x":1752,"y":1161,"image_name":"dot"},{"gid":18,"height":256,"id":418,"rotation":0,"type":"","width":17,"x":1510,"y":510,"image_name":"dot"},{"gid":18,"height":281,"id":419,"rotation":0,"type":"","width":17,"x":1511,"y":890,"image_name":"dot"},{"gid":18,"height":175,"id":420,"rotation":0,"type":"","width":18,"x":1512,"y":1149,"image_name":"dot"},{"gid":18,"height":380,"id":421,"rotation":0,"type":"","width":23,"x":1119,"y":1149,"image_name":"dot"}],"item":[{"gid":5,"height":52,"id":258,"rotation":-526,"type":"","width":52,"x":1734,"y":271,"image_name":"box_06","container":true,"items":"[\"empty\"]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":5,"height":44,"id":261,"rotation":-549,"type":"","width":44,"x":890,"y":422,"image_name":"box_06","container":true,"items":"[\"empty\"]","label":true,"label_action":"Examine","label_description":"small box","label_image":"eye_icon"},{"gid":8,"height":20,"id":263,"rotation":-657,"type":"","width":154,"x":1168,"y":258,"image_name":"bookcase","container":true,"items":"[\"old_book\"]","label":true,"label_action":"Examine","label_description":"bookcase","label_image":"eye_icon"},{"gid":1,"height":122,"id":303,"rotation":90,"type":"note","width":239,"x":1132,"y":909,"image_name":"messy_table","collision":true,"container":true,"dialog_on_click":"We know locking the door does nothing...","image_on_click":"keys_brass","label":true,"label_action":"Read","label_description":"Desk","label_image":"eye_icon"},{"gid":4,"height":17,"id":304,"rotation":-18,"type":"note","width":12,"x":1639,"y":663,"image_name":"full-note-written-small","image_on_click":"torn-paper","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","post_open_dialog":"So i opened this note and now i am talking about that I have ... ","text":"Text under the spear","text_colour":"black"},{"gid":4,"height":27,"id":327,"rotation":-427,"type":"note","width":19,"x":964,"y":654,"image_name":"full-note-written-small","image_on_click":"note_sticky","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","text":"Get fuel..."},{"gid":52,"height":146,"id":566,"rotation":107,"type":"","width":146,"x":1378,"y":298,"image_name":"Burnt_book_SC_R99","dialog_on_click":"I need to get this fire going again","label":true,"label_action":"Examine","label_description":"Pile of books","label_image":"eye_icon"},{"gid":56,"height":47,"id":601,"rotation":-41,"type":"","width":129,"x":1612,"y":705,"image_name":"spear-png-spear-png-1600_582","dialog_on_click":"This things about to break...","label":true,"label_action":"Pick up","label_description":"Makeshift spear","label_image":"gear_icon","remove_on_click":true},{"gid":57,"height":24,"id":602,"rotation":0,"type":"","width":25,"x":1572,"y":315,"image_name":"can1","dialog_on_click":"Last can left...","label":true,"label_action":"Take","label_description":"Can of food","label_image":"gear_icon","remove_on_click":true}],"white_hands":[{"gid":47,"height":40,"id":532,"rotation":-90,"type":"","width":40,"x":1203,"y":1028,"image_name":"right_hand"}],"click_pad":[{"height":78,"id":381,"rotation":359,"type":"","width":176,"x":1000,"y":237,"label":true,"label_action":"Pry open","label_description":"Dumpster","label_image":"take_icon"}],"door":[{"gid":46,"height":16,"id":527,"rotation":-180,"type":"","width":85,"x":1377,"y":754,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Study Door","label_image":"take_icon","open_rotation":"-1"},{"gid":46,"height":21,"id":528,"rotation":-180,"type":"","width":99,"x":1076,"y":749,"image_name":"door_01","clickable":false,"dialog_on_click":"We never found the key ...","label":true,"label_action":"Unlock","label_description":"Locked Door","label_image":"gear_icon","open_rotation":"-1"},{"gid":46,"height":16,"id":590,"rotation":-450,"type":"","width":85,"x":1528,"y":974,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Study Door","label_image":"take_icon","open_rotation":"-1"}],"roof":[{"gid":42,"height":399,"id":508,"rotation":0,"type":"","width":385,"x":1134,"y":1157,"image_name":"shadow_square_large","alpha":0.7},{"gid":42,"height":507,"id":509,"rotation":0,"type":"","width":685,"x":836,"y":758,"image_name":"shadow_square_large","alpha":0.7},{"gid":42,"height":398,"id":510,"rotation":0,"type":"","width":317,"x":822,"y":1156,"image_name":"shadow_square_large","alpha":1},{"gid":42,"height":494,"id":511,"rotation":0,"type":"","width":248,"x":1520,"y":743,"image_name":"shadow_square_large","alpha":0.8},{"gid":42,"height":414,"id":512,"rotation":0,"type":"","width":250,"x":1518,"y":1157,"image_name":"shadow_square_large","alpha":0.7}],"shroud":[{"gid":41,"height":398,"id":461,"rotation":0,"type":"","width":306,"x":826,"y":1164,"image_name":"black_dot","alpha":0.7},{"gid":41,"height":523,"id":462,"rotation":0,"type":"","width":694,"x":828,"y":761,"image_name":"black_dot","remove_on_enter":true},{"gid":41,"height":515,"id":463,"rotation":0,"type":"","width":257,"x":1514,"y":753,"image_name":"black_dot","remove_on_enter":true},{"gid":41,"height":423,"id":464,"rotation":0,"type":"","width":250,"x":1521,"y":1164,"image_name":"black_dot","remove_on_enter":true}]}
+module.exports={"background":[{"gid":24,"height":391,"id":431,"rotation":0,"type":"","width":251,"x":1515,"y":1145,"image_name":"tile_floor"},{"gid":43,"height":905,"id":514,"rotation":0,"type":"","width":686,"x":839,"y":1157,"image_name":"wood_planks_vertical"}],"player_spawn":[{"height":0,"id":137,"point":true,"rotation":0,"type":"","width":0,"x":1365,"y":975},{"height":0,"id":383,"point":true,"rotation":0,"type":"","width":0,"x":1111,"y":424},{"height":0,"id":564,"point":true,"rotation":0,"type":"","width":0,"x":1198,"y":748}],"exit_pad":[{"height":85,"id":177,"rotation":0,"type":"","width":125,"x":1076,"y":145,"level_name":"street","spawn_id":137}],"decal":[{"gid":27,"height":343,"id":516,"rotation":53,"type":"","width":343,"x":790,"y":480,"image_name":"fog_00"},{"gid":27,"height":175,"id":519,"rotation":332,"type":"","width":175,"x":1445,"y":492,"image_name":"fog_00"},{"gid":29,"height":98,"id":438,"rotation":0,"type":"","width":104,"x":1025,"y":331,"image_name":"wood_decal_01","alpha":0.6},{"gid":38,"height":124,"id":452,"rotation":270,"type":"","width":52,"x":1134,"y":246,"image_name":"floor_decal_01"},{"gid":37,"height":145,"id":449,"rotation":90,"type":"","width":61,"x":1016,"y":214,"image_name":"wall_crumble"},{"gid":19,"height":280,"id":422,"rotation":40,"type":"","width":280,"x":1059,"y":1024,"image_name":"rug_01"},{"gid":25,"height":392,"id":434,"rotation":0,"type":"","width":339,"x":1425,"y":1151,"image_name":"floor_decal_02"},{"gid":27,"height":449,"id":554,"rotation":90,"type":"","width":449,"x":1127,"y":562,"image_name":"fog_00"},{"gid":27,"height":800,"id":436,"rotation":0,"type":"","width":800,"x":765,"y":988,"image_name":"fog_00"},{"gid":28,"height":70,"id":437,"rotation":-180,"type":"","width":127,"x":1523,"y":725,"image_name":"wood_decal_00"},{"gid":30,"height":120,"id":440,"rotation":-360,"type":"","width":80,"x":853,"y":705,"image_name":"wood_decal_02"},{"gid":31,"height":101,"id":441,"rotation":0,"type":"","width":101,"x":1372,"y":502,"image_name":"wood_decal_03"},{"gid":27,"height":343,"id":517,"rotation":0,"type":"","width":343,"x":-25,"y":1812,"image_name":"fog_00"},{"gid":27,"height":415,"id":520,"rotation":0,"type":"","width":415,"x":952,"y":796,"image_name":"fog_00"},{"gid":27,"height":343,"id":553,"rotation":53,"type":"","width":343,"x":1072,"y":527,"image_name":"fog_00"},{"gid":27,"height":449,"id":555,"rotation":90,"type":"","width":449,"x":915,"y":384,"image_name":"fog_00"},{"gid":50,"height":425,"id":556,"rotation":360,"type":"","width":245,"x":964,"y":596,"image_name":"fireplace-light","alpha":0.4}],"floor":[{"gid":49,"height":299,"id":544,"rotation":184,"type":"","width":329,"x":1360,"y":428,"image_name":"carpet-hole_chg"},{"gid":21,"height":366,"id":425,"rotation":-90,"type":"","width":400,"x":1186,"y":617,"image_name":"Scorch-a"},{"gid":22,"height":395,"id":426,"rotation":0,"type":"","width":243,"x":835,"y":795,"image_name":"Scorch-d"},{"gid":35,"height":83,"id":445,"rotation":18,"type":"","width":124,"x":1522,"y":1092,"image_name":"rug_1"},{"gid":48,"height":268,"id":545,"rotation":-1170,"type":"","width":535,"x":1773,"y":773,"image_name":"Overlay_Fire001","alpha":0.8,"tint":"0x392613"},{"gid":34,"height":209,"id":558,"rotation":15,"type":"","width":104,"x":834,"y":1041,"image_name":"rug_00"},{"gid":51,"height":116,"id":563,"rotation":0,"type":"","width":157,"x":849,"y":1038,"image_name":"dirty_matress"},{"gid":5,"height":42,"id":561,"rotation":0,"type":"","width":42,"x":875,"y":925,"image_name":"box_06"},{"gid":10,"height":49,"id":562,"rotation":-273,"type":"","width":42,"x":1020,"y":925,"image_name":"chair_00"}],"collision":[{"gid":9,"height":211,"id":551,"rotation":-307,"type":"","width":211,"x":787,"y":636,"image_name":"table_chairs"},{"gid":5,"height":32,"id":207,"rotation":710,"type":"","width":36,"x":1249,"y":370,"image_name":"box_06"},{"gid":3,"height":60,"id":86,"rotation":-440,"type":"","width":163,"x":900,"y":425,"image_name":"wood_table"},{"gid":10,"height":42,"id":395,"rotation":-270,"type":"","width":42,"x":1211,"y":965,"image_name":"chair_00"},{"gid":12,"height":70,"id":397,"rotation":0,"type":"","width":71,"x":1529,"y":330,"image_name":"fridge_00"},{"gid":13,"height":63,"id":398,"rotation":0,"type":"","width":63,"x":1602,"y":322,"image_name":"stove_00"},{"gid":10,"height":38,"id":399,"rotation":-495,"type":"","width":38,"x":1389,"y":484,"image_name":"chair_00"},{"gid":14,"height":90,"id":400,"rotation":180,"type":"","width":180,"x":1377,"y":250,"image_name":"barricade_1"},{"gid":15,"height":79,"id":401,"rotation":-180,"type":"","width":98,"x":1516,"y":252,"image_name":"stove_01"},{"gid":40,"height":51,"id":559,"rotation":0,"type":"","width":44,"x":848,"y":567,"image_name":"88490-Table_Round_2x2"},{"gid":16,"height":53,"id":403,"rotation":180,"type":"","width":79,"x":1646,"y":1090,"image_name":"sink_04"},{"gid":20,"height":92,"id":424,"rotation":0,"type":"","width":92,"x":1536,"y":862,"image_name":"toilet_00"},{"gid":32,"height":341,"id":442,"rotation":0,"type":"","width":38,"x":841,"y":749,"image_name":"shelf_00"},{"gid":33,"height":12,"id":443,"rotation":180,"type":"","width":107,"x":1659,"y":1137,"image_name":"mirror_00"},{"gid":39,"height":209,"id":453,"rotation":92,"type":"","width":129,"x":1297,"y":1032,"image_name":"88254-Cot_1_1x2"},{"gid":44,"height":147,"id":515,"rotation":4,"type":"","width":81,"x":1140,"y":917,"image_name":"88270-Desk_1_1x2"},{"gid":45,"height":69,"id":524,"rotation":30,"type":"","width":137,"x":995,"y":208,"image_name":"dumpster_00"},{"gid":40,"height":53,"id":552,"rotation":0,"type":"","width":46,"x":1241,"y":352,"image_name":"88490-Table_Round_2x2"},{"gid":2,"height":109,"id":560,"rotation":0,"type":"","width":138,"x":946,"y":1137,"image_name":"bookcase_00"},{"gid":54,"height":108,"id":592,"rotation":90,"type":"","width":216,"x":1643,"y":768,"image_name":"MI01_FurnitureShower_05x10[shower, standing shower, shower stall, bathroom, water closet]"},{"gid":53,"height":40,"id":593,"rotation":-180,"type":"","width":25,"x":1712,"y":766,"image_name":"Shower_Head_Set_dcp"},{"gid":17,"height":107,"id":596,"rotation":0,"type":"","width":64,"x":1603,"y":686,"image_name":"table_00"}],"item":[{"gid":5,"height":52,"id":258,"rotation":-526,"type":"","width":52,"x":1734,"y":271,"image_name":"box_06","container":true,"items":"[\"empty\",\"oil_canister\"]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":5,"height":44,"id":261,"rotation":-549,"type":"","width":44,"x":890,"y":422,"image_name":"box_06","container":true,"items":"[\"empty\",\"gas_canister\"]","label":true,"label_action":"Examine","label_description":"small box","label_image":"eye_icon"},{"gid":8,"height":20,"id":263,"rotation":-657,"type":"","width":154,"x":1168,"y":258,"image_name":"bookcase","container":true,"items":"[\"old_book\"]","label":true,"label_action":"Examine","label_description":"bookcase","label_image":"eye_icon"},{"gid":1,"height":122,"id":303,"rotation":90,"type":"note","width":239,"x":1132,"y":909,"image_name":"messy_table","collision":true,"container":true,"dialog_on_click":"We know locking the door does nothing...","image_on_click":"keys_brass","label":true,"label_action":"Read","label_description":"Desk","label_image":"eye_icon"},{"gid":4,"height":17,"id":304,"rotation":-18,"type":"note","width":12,"x":1639,"y":663,"image_name":"full-note-written-small","image_on_click":"torn-paper","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","post_open_dialog":"So i opened this note and now i am talking about that I have ... ","text":"Text under the spear","text_colour":"black"},{"gid":4,"height":27,"id":327,"rotation":-427,"type":"note","width":19,"x":964,"y":654,"image_name":"full-note-written-small","image_on_click":"note_sticky","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","text":"Get fuel..."},{"gid":52,"height":146,"id":566,"rotation":107,"type":"","width":146,"x":1378,"y":298,"image_name":"Burnt_book_SC_R99","dialog_on_click":"I need to get this fire going again","label":true,"label_action":"Examine","label_description":"Pile of books","label_image":"eye_icon"},{"gid":56,"height":47,"id":601,"rotation":-41,"type":"","width":129,"x":1612,"y":705,"image_name":"spear-png-spear-png-1600_582","dialog_on_click":"This things about to break...","label":true,"label_action":"Pick up","label_description":"Makeshift spear","label_image":"gear_icon","remove_on_click":true},{"gid":57,"height":24,"id":602,"rotation":0,"type":"","width":25,"x":1572,"y":315,"image_name":"can1","dialog_on_click":"Last can left...","label":true,"label_action":"Take","label_description":"Can of food","label_image":"gear_icon","remove_on_click":true}],"generator":[{"gid":58,"height":131,"id":605,"rotation":0,"type":"","width":131,"x":1112,"y":748,"image_name":"gsv190","container":true,"label":true,"label_action":"Fill","label_description":"Generator","label_image":"gear_icon"}],"walls":[{"gid":18,"height":21,"id":408,"rotation":0,"type":"","width":222,"x":826,"y":258,"image_name":"dot"},{"gid":18,"height":21,"id":409,"rotation":0,"type":"","width":637,"x":1134,"y":258,"image_name":"dot"},{"gid":18,"height":21,"id":410,"rotation":0,"type":"","width":142,"x":837,"y":768,"image_name":"dot"},{"gid":18,"height":19,"id":411,"rotation":0,"type":"","width":220,"x":1072,"y":770,"image_name":"dot"},{"gid":18,"height":18,"id":412,"rotation":0,"type":"","width":387,"x":1376,"y":770,"image_name":"dot"},{"gid":18,"height":909,"id":413,"rotation":0,"type":"","width":16,"x":827,"y":1159,"image_name":"dot"},{"gid":18,"height":17,"id":414,"rotation":0,"type":"","width":945,"x":826,"y":1165,"image_name":"dot"},{"gid":18,"height":908,"id":415,"rotation":0,"type":"","width":18,"x":1752,"y":1161,"image_name":"dot"},{"gid":18,"height":256,"id":418,"rotation":0,"type":"","width":17,"x":1510,"y":510,"image_name":"dot"},{"gid":18,"height":281,"id":419,"rotation":0,"type":"","width":17,"x":1511,"y":890,"image_name":"dot"},{"gid":18,"height":175,"id":420,"rotation":0,"type":"","width":18,"x":1512,"y":1149,"image_name":"dot"},{"gid":18,"height":380,"id":421,"rotation":0,"type":"","width":23,"x":1119,"y":1149,"image_name":"dot"}],"white_hands":[{"gid":47,"height":40,"id":532,"rotation":-90,"type":"","width":40,"x":1203,"y":1028,"image_name":"right_hand"}],"click_pad":[{"height":78,"id":381,"rotation":359,"type":"","width":176,"x":1000,"y":237,"label":true,"label_action":"Pry open","label_description":"Dumpster","label_image":"take_icon"}],"door":[{"gid":46,"height":16,"id":527,"rotation":-180,"type":"","width":85,"x":1377,"y":754,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Study Door","label_image":"take_icon","open_rotation":"-1"},{"gid":46,"height":21,"id":528,"rotation":-180,"type":"","width":99,"x":1076,"y":749,"image_name":"door_01","clickable":false,"dialog_on_click":"We never found the key ...","label":true,"label_action":"Unlock","label_description":"Locked Door","label_image":"gear_icon","open_rotation":"-1"},{"gid":46,"height":16,"id":590,"rotation":-450,"type":"","width":85,"x":1528,"y":974,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Study Door","label_image":"take_icon","open_rotation":"-1"}],"roof":[{"gid":42,"height":399,"id":508,"rotation":0,"type":"","width":385,"x":1134,"y":1157,"image_name":"shadow_square_large","alpha":0.7},{"gid":42,"height":507,"id":509,"rotation":0,"type":"","width":685,"x":836,"y":758,"image_name":"shadow_square_large","alpha":0.7},{"gid":42,"height":398,"id":510,"rotation":0,"type":"","width":317,"x":822,"y":1156,"image_name":"shadow_square_large","alpha":1},{"gid":42,"height":494,"id":511,"rotation":0,"type":"","width":248,"x":1520,"y":743,"image_name":"shadow_square_large","alpha":0.8},{"gid":42,"height":414,"id":512,"rotation":0,"type":"","width":250,"x":1518,"y":1157,"image_name":"shadow_square_large","alpha":0.7}],"shroud":[{"gid":41,"height":398,"id":461,"rotation":0,"type":"","width":306,"x":826,"y":1164,"image_name":"black_dot","alpha":0.7},{"gid":41,"height":523,"id":462,"rotation":0,"type":"","width":694,"x":828,"y":761,"image_name":"black_dot","remove_on_enter":true},{"gid":41,"height":515,"id":463,"rotation":0,"type":"","width":257,"x":1514,"y":753,"image_name":"black_dot","remove_on_enter":true},{"gid":41,"height":423,"id":464,"rotation":0,"type":"","width":250,"x":1521,"y":1164,"image_name":"black_dot","remove_on_enter":true}]}
 },{}],242:[function(require,module,exports){
 module.exports={"background":[{"height":1606,"id":51,"rotation":0,"type":"","width":2433,"x":1107,"y":806}],"prey":[{"height":0,"id":215,"polyline":[{"x":0,"y":0},{"x":-31,"y":-122},{"x":-12,"y":-432},{"x":93,"y":-576},{"x":659,"y":-638},{"x":793,"y":-320},{"x":721,"y":-64}],"rotation":0,"type":"","width":0,"x":1991,"y":1822},{"height":0,"id":216,"polyline":[{"x":0,"y":0},{"x":-178,"y":-176},{"x":-426,"y":-205},{"x":-713,"y":-541},{"x":-965,"y":-616}],"rotation":0,"type":"","width":0,"x":2685,"y":1917}],"walls":[{"height":37,"id":56,"rotation":0,"type":"","width":485,"x":1403,"y":1427},{"height":240,"id":174,"rotation":0,"type":"","width":27,"x":1888,"y":1426},{"height":240,"id":175,"rotation":0,"type":"","width":27,"x":1888,"y":1820}],"door":[{"height":27,"id":205,"rotation":-269,"type":"","width":148,"x":1904,"y":1669,"clickable":true,"door":true,"image_name":"door_01"}],"collision":[{"height":300,"id":159,"rotation":-268,"type":"","width":150,"x":2240,"y":1467,"image_name":"table_00"},{"height":58,"id":198,"rotation":-270,"type":"","width":65,"x":1996,"y":1858,"image_name":"electric_box_00"},{"height":300,"id":208,"rotation":-268,"type":"","width":150,"x":2592,"y":1472,"image_name":"table_00"},{"height":300,"id":209,"rotation":-268,"type":"","width":150,"x":2223,"y":1836,"image_name":"table_00"},{"height":300,"id":210,"rotation":-268,"type":"","width":150,"x":2592,"y":1846,"image_name":"table_00"},{"height":59,"id":213,"rotation":-431,"type":"","width":75,"x":2379,"y":1879,"container":true,"image_name":"dumpster_00","shadow":true}],"exit_pad":[{"height":350,"id":15,"rotation":0,"type":"","width":201,"x":1161,"y":1420,"level_name":"archer"},{"height":419,"id":170,"rotation":0,"type":"","width":135,"x":2796,"y":1636,"level_name":"transition"}],"lights":[{"height":0,"id":62,"point":true,"rotation":0,"type":"","width":0,"x":1832,"y":1665},{"height":0,"id":188,"point":true,"rotation":0,"type":"","width":0,"x":2257,"y":1831,"off":true},{"height":0,"id":193,"point":true,"rotation":0,"type":"","width":0,"x":1933,"y":1808},{"height":0,"id":194,"point":true,"rotation":0,"type":"","width":0,"x":1933,"y":1808}],"item":[{"height":80,"id":169,"rotation":-538,"type":"","width":80,"x":2023,"y":1580,"container":true,"image_name":"box_06","label":true,"label_action":"Examine","label_description":"Box of shit","label_image":"eye_icon","random":true},{"height":80,"id":181,"rotation":-526,"type":"","width":80,"x":2142,"y":1579,"container":true,"image_name":"box_06","items":"[\"blood\",\"old_helmet\",\"blood\"]","label":true,"label_action":"Take","label_description":"Some other shit","label_image":"take_icon"},{"height":96,"id":182,"rotation":-526,"type":"","width":80,"x":2394,"y":1600,"equip_on_click":true,"image_name":"bow_00","label":true,"label_action":"Take","label_description":"Old Bow","label_image":"take_icon"},{"height":28,"id":183,"rotation":-414,"type":"","width":77,"x":2428,"y":1582,"equip_on_click":true,"image_name":"rusty_knife","label":true,"label_action":"Pick up","label_description":"Rusty Knife","label_image":"take_icon"},{"height":47,"id":207,"rotation":-526,"type":"note","width":39,"x":2211,"y":1584,"image_name":"full-note-written-small","image_on_click":"note","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","post_open_dialog":"So i opened this note and now i am talking about that I have ... ","text":"Be careful of the night, trust, lorium ipsum people..."},{"height":58,"id":212,"rotation":-256,"type":"","width":65,"x":2375,"y":1863,"image_name":"electric_box_00"}],"click_pad":[{"height":54,"id":184,"rotation":0,"type":"","width":78,"x":2304,"y":1832},{"height":59,"id":200,"rotation":0,"type":"","width":66,"x":1942,"y":1841},{"height":62,"id":214,"rotation":0,"type":"","width":77,"x":2025,"y":1839},{"height":62,"id":217,"rotation":0,"type":"","width":77,"x":2502,"y":1547}],"player":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":2191,"y":1807}],"roof":[{"height":188,"id":187,"rotation":361,"type":"","width":63,"x":2227,"y":1798,"fade":0.5,"image_name":"street_light_00"}],"floor":[],"shroud":[],"decal":[]}
 },{}],243:[function(require,module,exports){
@@ -47042,7 +47079,7 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":289,"pixi.js":151}],254:[function(require,module,exports){
+},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":285,"../../view/caption":286,"../../view/overlay_object":290,"pixi.js":151}],254:[function(require,module,exports){
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
 const { env  } = require('../../../config');
@@ -47275,7 +47312,7 @@ module.exports = {
   Door,
 };
 
-},{"../../character/attributes/vitals":213,"../../engine/damage_handler":225,"../../engine/pixi_containers":230,"../../view/button":284,"../../view/caption":285,"./floor":258,"pixi.js":151}],258:[function(require,module,exports){
+},{"../../character/attributes/vitals":213,"../../engine/damage_handler":225,"../../engine/pixi_containers":230,"../../view/button":285,"../../view/caption":286,"./floor":258,"pixi.js":151}],258:[function(require,module,exports){
 const { backgrounds     } = require('../../engine/pixi_containers');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 
@@ -47306,6 +47343,7 @@ const { Background  } = require('../elements/background');
 const { Chest       } = require('../elements/chest');
 const { Door        } = require('../elements/door');
 const { Roof        } = require('../elements/ceiling');
+const { Generator   } = require('../elements/shrine');
 const { Shroud      } = require('../elements/shroud');
 const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
@@ -47324,9 +47362,10 @@ module.exports = {
   Shroud,
   Collision,
   Floor,
+  Generator,
 };
 
-},{"../elements/background":250,"../elements/border":251,"../elements/ceiling":252,"../elements/chest":253,"../elements/collision":255,"../elements/decals":256,"../elements/door":257,"../elements/floor":258,"../elements/pad":260,"../elements/shroud":261,"../elements/wall":262}],260:[function(require,module,exports){
+},{"../elements/background":250,"../elements/border":251,"../elements/ceiling":252,"../elements/chest":253,"../elements/collision":255,"../elements/decals":256,"../elements/door":257,"../elements/floor":258,"../elements/pad":260,"../elements/shrine":261,"../elements/shroud":262,"../elements/wall":263}],260:[function(require,module,exports){
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { pads            } = require('../../engine/pixi_containers');
 const { Level_Factory   } = require('../types/level_factory');
@@ -47380,7 +47419,91 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../../config":1,"../../engine/pixi_containers":230,"../types/level_factory":267,"events":293,"pixi.js":151}],261:[function(require,module,exports){
+},{"../../../config":1,"../../engine/pixi_containers":230,"../types/level_factory":268,"events":295,"pixi.js":151}],261:[function(require,module,exports){
+const { collisions } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
+const { Inventory  } = require('../../character/attributes/inventory');
+const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { Button    } = require('../../view/button');
+
+class Shrine extends Sprite {
+  constructor(data) {
+    super(Texture.fromImage(data.image_name || 'bunny'));
+    this.id          = data.id;
+    this.inventory   = new Inventory();
+    this.height      = data.height;
+    this.width       = data.width;
+    this.rotation    = data.rotation * DEG_TO_RAD;
+    this.tint        = 0xA9A9A9;
+    this.interactive = true;
+
+    this.anchor.set(0, 1);
+    this.position.copy(data);
+
+    collisions.addChild(this);
+  }
+
+  give_blood(vial) {
+    if(vial) this.inventory.give_item(vial);
+  }
+
+  get enough_blood() {
+    return (this.inventory.size > 1);
+  }
+}
+
+class Generator extends Sprite {
+  constructor(data) {
+    super(Texture.fromImage(data.image_name || 'bunny'));
+    this.id          = data.id;
+    this.inventory   = new Inventory();
+    this.height      = data.height;
+    this.width       = data.width;
+    this.rotation    = data.rotation * DEG_TO_RAD;
+    this.tint        = 0xA9A9A9;
+    this.interactive = true;
+
+    this.anchor.set(0, 1);
+    this.position.copy(data);
+    this.on('click', ()=>console.log('hting'));
+    this.label(data);
+
+    items.addChild(this);
+  }
+
+  give_blood(vial) {
+    if(vial) this.inventory.give_item(vial);
+  }
+
+  get enough_blood() {
+    return (this.inventory.size > 1);
+  }
+
+  label(data) {
+    this.tint = 0xd3d3d3;
+    this.button = new Button(data);
+    this.on('mouseover', () => {
+      this.tint = 0xffffff;
+      this.button.set_position(this);
+      this.button.visible = true;
+    });
+    this.on('mouseout', () => {
+      this.tint = 0xd3d3d3;
+      this.button.visible = false;
+    });
+    this.on('click', () => {
+      this.tint = 0xd3d3d3;
+      this.button.visible = false;
+    });
+  }
+}
+
+module.exports = {
+  Shrine,
+  Generator,
+};
+
+},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":285,"pixi.js":151}],262:[function(require,module,exports){
 const { shrouds } = require('../../engine/pixi_containers');
 const { Fade    } = require('../../effects/fade');
 const { env     } = require('../../../config');
@@ -47413,7 +47536,7 @@ module.exports = {
   Shroud,
 };
 
-},{"../../../config":1,"../../effects/fade":218,"../../engine/pixi_containers":230,"pixi.js":151}],262:[function(require,module,exports){
+},{"../../../config":1,"../../effects/fade":218,"../../engine/pixi_containers":230,"pixi.js":151}],263:[function(require,module,exports){
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { collisions      } = require('../../engine/pixi_containers');
 
@@ -47442,7 +47565,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":230,"pixi.js":151}],263:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"pixi.js":151}],264:[function(require,module,exports){
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
 const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
@@ -47486,7 +47609,7 @@ module.exports = {
   Defend_Room,
 };
 
-},{"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../engine/pathfind.js":229,"../data/defend_room.json":238,"../elements/pad":260,"./level_factory":267}],264:[function(require,module,exports){
+},{"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../engine/pathfind.js":229,"../data/defend_room.json":238,"../elements/pad":260,"./level_factory":268}],265:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
 const { Player       } = require('../../character/archetypes/player');
 const { LogicRat     } = require('../../character/archetypes/logic_rat');
@@ -47586,7 +47709,7 @@ module.exports = {
   Dev_Room,
 };
 
-},{"../../../config":1,"../../character/archetypes/logic_rat":203,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../character/types/path":215,"../../effects/debris":217,"../../effects/fade_sprite.js":219,"../../effects/floor_word":220,"../../engine/pixi_containers":230,"../../utils/math.js":282,"../../utils/time.js":283,"../data/dev_room.json":239,"../elements":259,"pixi.js":151}],265:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/logic_rat":203,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../character/types/path":215,"../../effects/debris":217,"../../effects/fade_sprite.js":219,"../../effects/floor_word":220,"../../engine/pixi_containers":230,"../../utils/math.js":283,"../../utils/time.js":284,"../data/dev_room.json":239,"../elements":259,"pixi.js":151}],266:[function(require,module,exports){
 const { visuals         } = require('../../engine/pixi_containers');
 const { sound, filters  } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
@@ -47612,6 +47735,7 @@ const {
   Shroud,
   Collision,
   Floor,
+  Generator,
 } = require('../elements');
 
 const white_filter = new filters.ColorMatrixFilter();
@@ -47633,6 +47757,7 @@ class Intro {
     this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.items       = this.data.item.map(data => new Chest(data));
+    this.generator   = new Generator(this.data.generator[0]);
 
     this.study_desk  = this.items.find(item => item.id === 303);
     this.locked_door = this.doors.find(door => door.id === 528);
@@ -47684,6 +47809,18 @@ class Intro {
     this.study_door.on('click', () => {
       this.main_room_shroud.fade_out_destroy();
       this.locked_door.interactive = true;
+    });
+
+    this.generator.on('click', () => {
+      console.log(this.player);
+      console.log(this.player.inventory.contains('gas_canister'));
+      const poo = this.player.inventory.take_item('gas_canister');
+      console.log(poo);
+      console.log(this.player.inventory.contains('gas_canister'));
+      this.generator.inventory.give_item(poo);
+      console.log(this.generator.inventory);
+
+      console.log('hew');
     });
 
     this.locked_door.on('click', () => {
@@ -47739,7 +47876,7 @@ module.exports = {
   Intro,
 };
 
-},{"../../../config":1,"../../effects/fade_sprite.js":219,"../../engine/app":223,"../../engine/app.js":223,"../../engine/pixi_containers":230,"../../engine/tween":234,"../../view/button":284,"../data/intro_room.json":241,"../elements":259,"../elements/click_pad":254,"pixi.js":151}],266:[function(require,module,exports){
+},{"../../../config":1,"../../effects/fade_sprite.js":219,"../../engine/app":223,"../../engine/app.js":223,"../../engine/pixi_containers":230,"../../engine/tween":234,"../../view/button":285,"../data/intro_room.json":241,"../elements":259,"../elements/click_pad":254,"pixi.js":151}],267:[function(require,module,exports){
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 
@@ -47761,7 +47898,7 @@ module.exports = {
   Items_Room,
 };
 
-},{"../../character/archetypes/player":208,"../data/items_room.json":242,"./level_factory":267}],267:[function(require,module,exports){
+},{"../../character/archetypes/player":208,"../data/items_room.json":242,"./level_factory":268}],268:[function(require,module,exports){
 const { clear_level_containers } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
@@ -47858,7 +47995,7 @@ module.exports = {
   Level_Factory,
 };
 
-},{"../../engine/pixi_containers":230,"../elements":259,"../elements/background":250,"../elements/ceiling":252,"../elements/chest":253,"../elements/collision":255,"../elements/decals":256,"../elements/door":257,"../elements/floor":258,"../elements/shroud":261,"../elements/wall":262,"./defend_room":263,"./dev_room":264,"./intro":265,"./item_room":266,"./park_room":268,"./ranbir_flat_0":269,"./ranbir_flat_1":270,"./ranbir_flat_2":271,"./ranbir_room":272,"./simple_room":273,"./start":274,"./street":275,"./transition_room":276,"pixi.js":151}],268:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../elements":259,"../elements/background":250,"../elements/ceiling":252,"../elements/chest":253,"../elements/collision":255,"../elements/decals":256,"../elements/door":257,"../elements/floor":258,"../elements/shroud":262,"../elements/wall":263,"./defend_room":264,"./dev_room":265,"./intro":266,"./item_room":267,"./park_room":269,"./ranbir_flat_0":270,"./ranbir_flat_1":271,"./ranbir_flat_2":272,"./ranbir_room":273,"./simple_room":274,"./start":275,"./street":276,"./transition_room":277,"pixi.js":151}],269:[function(require,module,exports){
 //const { pathfind    } = require('../../engine/pathfind.js');
 //const { LogicRat    } = require('../../character/archetypes/logic_rat');
 
@@ -47950,7 +48087,7 @@ module.exports = {
   Park_Room,
 };
 
-},{"../../../config":1,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/path_rat":207,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../data/park_room.json":243,"../elements":259}],269:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/path_rat":207,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../data/park_room.json":243,"../elements":259}],270:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
 const { Player       } = require('../../character/archetypes/player');
 const { viewport    } = require('../../engine/app');
@@ -48048,7 +48185,7 @@ module.exports = {
   Ranbir_Floor_0,
 };
 
-},{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":282,"../../utils/time.js":283,"../data/ranbir_flat_0.json":245,"../elements":259}],270:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":283,"../../utils/time.js":284,"../data/ranbir_flat_0.json":245,"../elements":259}],271:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
 const { filters      } = require('pixi.js');
 const { Player       } = require('../../character/archetypes/player');
@@ -48147,7 +48284,7 @@ module.exports = {
   Ranbir_Floor_1,
 };
 
-},{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":282,"../../utils/time.js":283,"../data/ranbir_flat_1.json":246,"../elements":259,"pixi.js":151}],271:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":283,"../../utils/time.js":284,"../data/ranbir_flat_1.json":246,"../elements":259,"pixi.js":151}],272:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
 const { filters      } = require('pixi.js');
 const { Player       } = require('../../character/archetypes/player');
@@ -48267,7 +48404,7 @@ module.exports = {
   Ranbir_Floor_2,
 };
 
-},{"../../../config":1,"../../character/archetypes/player":208,"../../utils/math.js":282,"../../utils/time.js":283,"../data/ranbir_flat_2.json":247,"../elements":259,"pixi-viewport":35,"pixi.js":151}],272:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/player":208,"../../utils/math.js":283,"../../utils/time.js":284,"../data/ranbir_flat_2.json":247,"../elements":259,"pixi-viewport":35,"pixi.js":151}],273:[function(require,module,exports){
 const { renderer      } = require('../../engine/app');
 //const { viewport      } = require('../../engine/app');
 const { Dialog_Script } = require('../../engine/script_generator');
@@ -48544,7 +48681,7 @@ module.exports = {
   Ranbir_Room,
 };
 
-},{"../../../config":1,"../../character/animations/zombie":201,"../../character/archetypes/logic_human":202,"../../character/attributes/animation":209,"../../effects/fade_sprite.js":219,"../../effects/nightmare.js":221,"../../engine/app":223,"../../engine/pixi_containers":230,"../../engine/script_generator":232,"../../utils/math.js":282,"../../utils/time.js":283,"../../view/caption":285,"../data/ranbir_flat.json":244,"../elements":259,"./level_factory":267,"pixi.js":151}],273:[function(require,module,exports){
+},{"../../../config":1,"../../character/animations/zombie":201,"../../character/archetypes/logic_human":202,"../../character/attributes/animation":209,"../../effects/fade_sprite.js":219,"../../effects/nightmare.js":221,"../../engine/app":223,"../../engine/pixi_containers":230,"../../engine/script_generator":232,"../../utils/math.js":283,"../../utils/time.js":284,"../../view/caption":286,"../data/ranbir_flat.json":244,"../elements":259,"./level_factory":268,"pixi.js":151}],274:[function(require,module,exports){
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 const { Trigger_Pad   } = require('../elements');
@@ -48583,7 +48720,7 @@ module.exports = {
 };
 
 
-},{"../../../config":1,"../../character/archetypes/player":208,"../elements":259,"./level_factory":267}],274:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/player":208,"../elements":259,"./level_factory":268}],275:[function(require,module,exports){
 const { screen      } = require('../../engine/app');
 const { renderer    } = require('../../engine/app');
 const { stage       } = require('../../engine/app');
@@ -48948,7 +49085,7 @@ module.exports = {
   Start_Room,
 };
 
-},{"../../../config":1,"../../character/archetypes/logic_stalker":204,"../../character/archetypes/path_crow":206,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../effects/floor_word.js":220,"../../effects/nightmare.js":221,"../../effects/overlay_dialog.js":222,"../../engine/app":223,"../../engine/pixi_containers":230,"../../engine/pixi_containers.js":230,"../../utils/math.js":282,"../../utils/time.js":283,"../../view/microphone_box":288,"../../view/wasd_keys":292,"../data/start.json":248,"../elements":259,"./level_factory":267,"pixi.js":151}],275:[function(require,module,exports){
+},{"../../../config":1,"../../character/archetypes/logic_stalker":204,"../../character/archetypes/path_crow":206,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../effects/floor_word.js":220,"../../effects/nightmare.js":221,"../../effects/overlay_dialog.js":222,"../../engine/app":223,"../../engine/pixi_containers":230,"../../engine/pixi_containers.js":230,"../../utils/math.js":283,"../../utils/time.js":284,"../../view/microphone_box":289,"../../view/wasd_keys":294,"../data/start.json":248,"../elements":259,"./level_factory":268,"pixi.js":151}],276:[function(require,module,exports){
 const { players  } = require('../../engine/pixi_containers');
 const { sound    } = require('pixi.js');
 const { flash_at } = require('../../effects/fade_sprite.js');
@@ -49067,9 +49204,10 @@ module.exports = {
   Street,
 };
 
-},{"../../../config":1,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../engine/pixi_containers":230,"../../utils/math.js":282,"../../utils/time.js":283,"../data/home_street.json":240,"../elements":259,"pixi.js":151}],276:[function(require,module,exports){
+},{"../../../config":1,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../engine/pixi_containers":230,"../../utils/math.js":283,"../../utils/time.js":284,"../data/home_street.json":240,"../elements":259,"pixi.js":151}],277:[function(require,module,exports){
 const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
+const { ProgressBar   } = require('../../view/progress_bar');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
@@ -49112,6 +49250,11 @@ class Transition_Room {
       visuals.addChild(level_names);
     });
 
+    const bar = new ProgressBar();
+    bar.percentage = 10;
+    bar.animate_positive();
+    //setInterval(() => console.log(bar.percentage),200);
+
     const level_text = new Text(
       'THE HUB',
       {
@@ -49138,7 +49281,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":230,"../data/transition_room.json":249,"../elements":259,"./level_factory":267,"pixi.js":151}],277:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../view/progress_bar":291,"../data/transition_room.json":249,"../elements":259,"./level_factory":268,"pixi.js":151}],278:[function(require,module,exports){
 (function (global){
 class Select {
   constructor(name){
@@ -49237,7 +49380,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],278:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 global.window.PIXI.default = PIXI;
@@ -49271,7 +49414,7 @@ global.dev = () => {
 // 20/ 29;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/app":223,"../engine/pixi_containers":230,"pixi.js":151}],279:[function(require,module,exports){
+},{"../engine/app":223,"../engine/pixi_containers":230,"pixi.js":151}],280:[function(require,module,exports){
 const { Sprite     } = require('pixi.js');
 const { Texture    } = require('pixi.js');
 const { grids      } = require('../engine/pixi_containers');
@@ -49407,7 +49550,7 @@ module.exports = {
   Grid,
 };
 
-},{"../../config":1,"../engine/pixi_containers":230,"pixi.js":151}],280:[function(require,module,exports){
+},{"../../config":1,"../engine/pixi_containers":230,"pixi.js":151}],281:[function(require,module,exports){
 const { Graphics } = require('pixi.js');
 const { guis     } = require('../engine/pixi_containers');
 
@@ -49436,7 +49579,7 @@ module.exports = {
   draw_line,
 };
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],281:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":151}],282:[function(require,module,exports){
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
 class Sight {
   static _getCenter(o, dimension, axis) {
@@ -49521,7 +49664,7 @@ module.exports = {
 };
 
 
-},{}],282:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 (function (global){
 function distance_between(point_1, point_2) {
   const dx = point_2.x - point_1.x;
@@ -49580,14 +49723,14 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],283:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 module.exports = {
   sleep,
 };
 
-},{}],284:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 const {Text,Sprite} = require('pixi.js');
 const { guis      } = require('../engine/pixi_containers');
 
@@ -49660,7 +49803,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],285:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":151}],286:[function(require,module,exports){
 const { select } = require('../utils/dom');
 const dialog_caption_holder = select('.dialog_caption_holder');
 
@@ -49692,7 +49835,7 @@ module.exports = {
 };
 
 
-},{"../utils/dom":277}],286:[function(require,module,exports){
+},{"../utils/dom":278}],287:[function(require,module,exports){
 (function (global){
 const { Item_Manager } = require('../items/item_manager');
 const { Items        } = require('../engine/item_handler');
@@ -49795,7 +49938,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/item_handler":226,"../items/item_manager":237,"../utils/dom":277}],287:[function(require,module,exports){
+},{"../engine/item_handler":226,"../items/item_manager":237,"../utils/dom":278}],288:[function(require,module,exports){
 (function (global){
 const { select, select_all } = require('../utils/dom');
 const category_enum = {
@@ -49856,7 +49999,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/dom":277}],288:[function(require,module,exports){
+},{"../utils/dom":278}],289:[function(require,module,exports){
 const { stage   } = require('../engine/app');
 const { Text    } = require('pixi.js');
 const { Sprite  } = require('pixi.js');
@@ -49945,7 +50088,7 @@ module.exports = {
   MicrophonePrompt,
 };
 
-},{"../engine/app":223,"pixi.js":151}],289:[function(require,module,exports){
+},{"../engine/app":223,"pixi.js":151}],290:[function(require,module,exports){
 (function (global){
 const { Texture, Sprite, Text }= require('pixi.js');
 const { guis     } = require('../engine/pixi_containers');
@@ -50029,9 +50172,89 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../effects/fade":218,"../engine/app":223,"../engine/pixi_containers":230,"pixi.js":151}],290:[function(require,module,exports){
+},{"../effects/fade":218,"../engine/app":223,"../engine/pixi_containers":230,"pixi.js":151}],291:[function(require,module,exports){
+const { stage        } = require('../engine/app');
+const { viewport     } = require('../engine/app');
+const { Sprite       } = require('pixi.js');
+const { Texture      } = require('pixi.js');
+const { Container    } = require('pixi.js');
+const { tweenManager } = require('pixi.js');
+
+class ProgressBar extends Container {
+  constructor() {
+    super();
+    this.bar = new Sprite(Texture.WHITE);
+    this.background = new Sprite(Texture.WHITE);
+
+    this.x = viewport.center.x;
+    this.y = viewport.bottom;
+
+    this.addChild(
+      this.background,
+      this.bar
+    );
+
+    stage.addChild(this);
+
+    this._set_position();
+  }
+
+  _set_position() {
+    this.background.width = 500;
+    this.background.height = 30;
+    this.background.anchor.set(0.5, 1);
+    this.background.alpha = 0.3;
+
+    this.bar.width = 0;
+    this.bar.height = 15;
+    this.bar.x -= this.background.width/2 - 10;
+    this.bar.y -= 5;
+    this.bar.anchor.set(0, 1);
+    this.bar.tint = 0xd3d3d3;
+  }
+
+  set percentage(percentage) {
+    const maximum_width = this.background.width;
+    const amount = (maximum_width/100)*percentage;
+    this.bar.width = amount;
+  }
+
+  get percentage() {
+    const maximum_width = this.background.width;
+    const percentage = (this.bar.width/maximum_width)*100;
+    return percentage;
+  }
+
+  animate_positive() {
+    const maximum_width = this.background.width;
+    const percentage = (this.bar.width/maximum_width);
+    const total = 10000;
+
+    const to_remove = total * percentage;
+
+    const time = total - to_remove;
+
+    this.tween_bar = tweenManager.createTween(this.bar);
+    this.tween_bar.time = time;
+    this.tween_bar.to({
+      width: maximum_width - 20,
+    });
+    this.tween_bar.start();
+    this.tween_bar.expire = true;
+  }
+
+  render() {
+  }
+}
+
+module.exports = {
+  ProgressBar,
+};
+
+},{"../engine/app":223,"pixi.js":151}],292:[function(require,module,exports){
 const {Text,Sprite,Container,Texture}= require('pixi.js');
 const { guis          } = require('../engine/pixi_containers');
+const { item_events   } = require('../engine/item_handler');
 const { Fade          } = require('../effects/fade');
 
 class Slot extends Sprite {
@@ -50140,7 +50363,7 @@ class View_Inventory {
     loot.forEach((loot_item, slot) => {
       const item = new Item(loot_item);
       item.click = () => {
-        //player_events.emit('give_item', loot_item);
+        item_events.emit('give', { id: 1, item: loot_item });
         description.visible = false;
         title.visible = false;
         item.destroy();
@@ -50170,7 +50393,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":218,"../engine/pixi_containers":230,"pixi.js":151}],291:[function(require,module,exports){
+},{"../effects/fade":218,"../engine/item_handler":226,"../engine/pixi_containers":230,"pixi.js":151}],293:[function(require,module,exports){
 (function (global){
 const { Sprite       } = require('pixi.js');
 const { renderer     } = require('../engine/app');
@@ -50329,7 +50552,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/app":223,"../items/item_manager":237,"../utils/dom":277,"./item_menu":287,"pixi.js":151}],292:[function(require,module,exports){
+},{"../engine/app":223,"../items/item_manager":237,"../utils/dom":278,"./item_menu":288,"pixi.js":151}],294:[function(require,module,exports){
 const { visuals    } = require('../engine/pixi_containers');
 const { FadeSprite } = require('../effects/fade_sprite.js');
 const { Text       } = require('pixi.js');
@@ -50429,7 +50652,7 @@ module.exports = {
   WASD,
 };
 
-},{"../effects/fade_sprite.js":219,"../engine/pixi_containers":230,"pixi.js":151}],293:[function(require,module,exports){
+},{"../effects/fade_sprite.js":219,"../engine/pixi_containers":230,"pixi.js":151}],295:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -50954,7 +51177,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],294:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -51260,7 +51483,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":295}],295:[function(require,module,exports){
+},{"_process":297}],297:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -51446,7 +51669,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],296:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -51983,7 +52206,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],297:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -52069,7 +52292,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],298:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -52156,13 +52379,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],299:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":297,"./encode":298}],300:[function(require,module,exports){
+},{"./decode":299,"./encode":300}],302:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -52241,7 +52464,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":295,"timers":300}],301:[function(require,module,exports){
+},{"process/browser.js":297,"timers":302}],303:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -52975,7 +53198,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":302,"punycode":296,"querystring":299}],302:[function(require,module,exports){
+},{"./util":304,"punycode":298,"querystring":301}],304:[function(require,module,exports){
 'use strict';
 
 module.exports = {

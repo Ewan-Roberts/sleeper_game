@@ -23,6 +23,7 @@ const {
   Shroud,
   Collision,
   Floor,
+  Generator,
 } = require('../elements');
 
 const white_filter = new filters.ColorMatrixFilter();
@@ -44,6 +45,7 @@ class Intro {
     this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.items       = this.data.item.map(data => new Chest(data));
+    this.generator   = new Generator(this.data.generator[0]);
 
     this.study_desk  = this.items.find(item => item.id === 303);
     this.locked_door = this.doors.find(door => door.id === 528);
@@ -95,6 +97,18 @@ class Intro {
     this.study_door.on('click', () => {
       this.main_room_shroud.fade_out_destroy();
       this.locked_door.interactive = true;
+    });
+
+    this.generator.on('click', () => {
+      console.log(this.player);
+      console.log(this.player.inventory.contains('gas_canister'));
+      const poo = this.player.inventory.take_item('gas_canister');
+      console.log(poo);
+      console.log(this.player.inventory.contains('gas_canister'));
+      this.generator.inventory.give_item(poo);
+      console.log(this.generator.inventory);
+
+      console.log('hew');
     });
 
     this.locked_door.on('click', () => {

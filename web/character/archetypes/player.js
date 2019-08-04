@@ -8,6 +8,7 @@ const { Inventory       } = require('../attributes/inventory');
 const { Vitals          } = require('../attributes/vitals');
 const { human_frames    } = require('../animations/human');
 const { damage_events   } = require('../../engine/damage_handler');
+const { item_events     } = require('../../engine/item_handler');
 const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
 const event               = require('events');
@@ -34,6 +35,13 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
+
+    item_events.on('give', ({id,item}) => {
+      console.log('heeeeeeeeeee');
+      console.log(id);
+      if(this.id !== id) return;
+      this.inventory.give_item(item);
+    });
 
     this.events.on('give_item', item => this.inventory.give_item(item));
     this.events.on('check_items', callback => {

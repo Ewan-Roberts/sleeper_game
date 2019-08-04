@@ -1,4 +1,5 @@
 const event = require('events');
+const item_events = new event();
 
 class Items {
   constructor(id) {
@@ -35,4 +36,5 @@ class Items {
 
 module.exports = {
   Items,
+  item_events,
 };
