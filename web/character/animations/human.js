@@ -25,7 +25,7 @@ class PlayerAnimation {
   }
 
   _set_sound() {
-    this.walk_sound = sound.find('walk_normal', {loop: true});
+    this.walk_sound = sound.find('walk_normal');
     this.walk_sound.loop = true;
     this.walk_sound.volume = 0.05;
   }

@@ -8,6 +8,7 @@ const { Inventory       } = require('../attributes/inventory');
 const { Vitals          } = require('../attributes/vitals');
 const { human_frames    } = require('../animations/human');
 const { damage_events   } = require('../../engine/damage_handler');
+const { item_events     } = require('../../engine/item_handler');
 const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
 const event               = require('events');
@@ -35,6 +36,11 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
 
+    item_events.on('give', ({id,item}) => {
+      if(this.id !== id) return;
+      this.inventory.give_item(item);
+    });
+
     this.events.on('give_item', item => this.inventory.give_item(item));
     this.events.on('check_items', callback => {
       const result = this.inventory.take_items('blood');
@@ -49,9 +55,7 @@ class Player extends extras.AnimatedSprite {
       this.animation.idle();
     });
 
-    console.log('players');
     players.addChild(this);
-    console.log(players);
 
     damage_events.on('damage', data => this.damage(data));
     this._set_sounds();
@@ -59,7 +63,6 @@ class Player extends extras.AnimatedSprite {
 
   _set_sounds() {
     this.walk_sound = sound.find('walk_normal', {loop: true});
-    this.walk_sound.loop = true;
     this.walk_sound.volume = 0.05;
   }
 
@@ -87,7 +90,7 @@ class Player extends extras.AnimatedSprite {
     this.animation.idle = () => {
       this.walk_sound.stop();
       this.animation.switch(this.animation.prefix + '_idle');
-    }
+    };
   }
 
   // mixin sounds to animations
@@ -97,7 +100,7 @@ class Player extends extras.AnimatedSprite {
         this.walk_sound.play();
       }
       this.animation.switch(this.animation.prefix + '_walk');
-    }
+    };
   }
 
   add_component(component) {

@@ -69,7 +69,6 @@ visuals.name   = 'visuals';
 visuals.zIndex = close;
 //visuals.interactiveChildren = false;
 
-
 const pads  = new Container();
 pads.name   = 'pad_container';
 pads.zIndex = close;

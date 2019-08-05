@@ -1,17 +1,21 @@
 const { items        } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
+const { sound        } = require('pixi.js');
 
 const { Element } = require('./model');
 const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
 
 const { damage_events } = require('../../engine/damage_handler');
+const { Vitals        } = require('../../character/attributes/vitals');
 const { Floor         } = require('./floor');
 
 class Door extends Element {
   constructor(data) {
     super(data);
     this.interactive = true;
+    this.add_component(new Vitals());
+
     this.rotation_on_interaction = data.open_rotation || 2;
 
     items.addChild(this);
@@ -42,10 +46,28 @@ class Door extends Element {
     if(data.label) this.overlay(data);
     if(data.door)  this.pathfind_logic();
 
+    damage_events.on('damage', data => this.damage(data));
+
     this._set_sound();
   }
 
+  damage({id, damage}) {
+    if(this.id !== id) return;
+    this.vitals.damage(damage);
+    this.wood_thump.play();
+
+    if(!this.vitals.alive) this.kill();
+  }
+
+  kill() {
+    console.log('door destroy');
+  }
+
   _set_sound() {
+    // TODO better sound
+    this.wood_thump = sound.find('thud_1');
+    this.wood_thump.volume = 0.5;
+
     this.locked_door_effect = sound.find('door_locked');
     this.locked_door_effect.volume = 0.1;
   }
@@ -113,6 +135,10 @@ class Door extends Element {
       }
     });
   }
+  add_component(component) {
+    this[component.name] = component;
+  }
+
 }
 
 module.exports = {

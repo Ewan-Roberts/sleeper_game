@@ -3,7 +3,7 @@ const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
-const { distance_between, random_bound} = require('../../utils/math');
+const { distance_between, random_bound } = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -12,6 +12,7 @@ const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood            } = require('../../effects/blood');
 const { env              } = require('../../../config');
+const { MeleeBox         } = require('../../engine/melee');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -33,7 +34,6 @@ class LogicSprite extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.rotation_offset = 0;
     this.position.copy(data);
-    console.log(data);
     this.height = data.height || 100;
     this.width = data.width || 100;
 
@@ -47,7 +47,7 @@ class LogicSprite extends extras.AnimatedSprite {
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) new Blood(this.position);
 
-    if(this.vitals.alive) this.kill();
+    if(!this.vitals.alive) this.kill();
   }
 
   kill() {
@@ -140,6 +140,8 @@ class LogicSprite extends extras.AnimatedSprite {
         // TODO
         if(!this.target) throw 'set an enemy';
         this.animation.face_point(this.target);
+        this.melee = new MeleeBox();
+        //this.melee.slash(50, 20, this);
 
         damage_events.emit('damage', {id: this.target.id, damage: 10});
         return;
@@ -151,9 +153,11 @@ class LogicSprite extends extras.AnimatedSprite {
         this.tween.path.lineTo(this.target.x, this.target.y);
         this.animation.move();
 
-        this.tween.time = random_bound(90, 500);
+        this.tween.time = 200;
+        //this.tween.time = random_bound(2000, 3000);
       } else {
         await this._pathfind();
+        //this.tween.time = this.tween.path.length * this.speed;
         this.tween.time = 4000;
       }
 
@@ -173,6 +177,7 @@ class LogicSprite extends extras.AnimatedSprite {
   add_component(component) {
     this[component.name] = component;
   }
+
 
   //render_text(text) {
   //  //this.current_text = new SpeechText(text,this.point);

@@ -11,8 +11,15 @@ class Trigger_Pad extends Element {
       image_name: 'black_dot',
       alpha: env.visable_pads?0.4:0,
     });
-    this.speed = 30;
     this.events = new event();
+    this.speed = 30;
+    if(data.speed) {
+      this.speed    = 2;
+    } else {
+      this.speed    = (env.dev)?25:4;
+    }
+
+    this.anchor.set(0);
 
     const {level_name, spawn_id} = data;
     if(level_name) {
@@ -34,7 +41,7 @@ class Trigger_Pad extends Element {
     this.tint  = 0xffff00;
     this.events.once(name, () => {
       callback();
-      this.destroy();
+      //this.destroy();
     });
   }
 }

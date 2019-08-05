@@ -27,6 +27,7 @@ const Sound = sound.add({
   thud_7:             'audio/thud_7.mp3',
   woman_weeping:      'audio/woman_weeping.mp3',
   crazy_woman_repent: 'audio/crazy_woman_repent.mp3',
+  generator_sound:    'audio/generator_sound.mp3',
 });
 
 sound.random_sound_from = array => {

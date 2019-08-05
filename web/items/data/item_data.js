@@ -19,6 +19,23 @@ const items = [
     image_name:     'rusty_knife',
   },
   {
+    name:           'rusty_knife',
+    animation_name: 'knife',
+    id:             1,
+    rank:           0,
+    cost:           50,
+    category:       'weapon',
+    range:          20,
+    damage:         20,
+    speed:          400,
+    condition:      100,
+
+    visual_name:    'rusty knife',
+    description:    'The rusty knife someone sharpened on what looks like a rock',
+    // TODO place holder
+    image_name:     'spear-png-spear-png-1600_582',
+  },
+  {
     name:           'dev_knife',
     animation_name: 'knife',
     id:             2,
@@ -346,6 +363,28 @@ const items = [
     visual_name: 'rat bone chip',
     description: 'a bone chip of a rat',
     image_name: 'skull_cap_bone',
+  },
+  {
+    name: 'gas_canister',
+    id:   25,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a gas canister',
+    description: 'there is some left',
+    image_name: 'Gasoline_Canister',
+  },
+  {
+    name: 'oil_canister',
+    id:   25,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a small gas canister',
+    description: 'some cheap fuel',
+    image_name: 'Industrial_oil_canister',
   },
   {
     name: 'rat_leg_bone',

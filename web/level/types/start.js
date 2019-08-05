@@ -60,8 +60,8 @@ class Cursor extends Sprite {
   constructor() {
     super(Texture.fromImage('cursor'));
 
-    this.width  /= 10;
-    this.height /= 10;
+    this.width  = 20;
+    this.height = 23;
 
     stage.addChild(this);
   }
@@ -86,8 +86,6 @@ class Start_Room  {
     this.border      = this.data.border.map(data => new Border(data));
     this.hill_area   = this.data.hill_area.map(data => new Trigger_Pad(data));
 
-    this.cursor = new Cursor();
-    this.cursor.visible = false;
 
     this.gore_layer  = this.data.gore_layer.map(item => {
       const gore_item = new Floor(item);
@@ -105,9 +103,8 @@ class Start_Room  {
     this.microphone_prompt = new MicrophonePrompt();
     this.script            = new Overlay_Dialog([
       '...',
-      '...lets try...',
-      'survive this time...',
-      'on this lovely day',
+      '...Pixi.js you say...',
+      'lets give it a shot',
     ], this.player);
 
     this.crows     = this.data.birds.map(unit => new PathCrow(unit));
@@ -143,6 +140,7 @@ class Start_Room  {
 
   _set_elements() {
     this.player.position.copy(this.data.player_spawn[1]);
+    viewport.moveCenter(this.player.x, this.player.y);
     keyboardManager.enable();
 
     this.controls_prompt.set_position(this.data.control_prompt[0]);
@@ -164,21 +162,22 @@ class Start_Room  {
     pulse_sprites(this.data.blood_trail);
 
     yield;
-    this.cursor.visible = true;
-    this.cursor.position.copy(this.player);
 
     this.microphone_prompt.render();
-    this.microphone_prompt.allow_button.click = () => this.generator.next();
-    this.microphone_prompt.allow_button_2.click = () => this.generator.next();
 
+    this.cursor = new Cursor();
+    this.cursor.visible = true;
+    this.cursor.position.copy(this.player);
     const tween = tweenManager.createTween(this.cursor);
-    tween.time = 7000;
+    tween.time = 5000;
     tween.to({
       x: this.microphone_prompt.allow_button.x,
       y: this.microphone_prompt.allow_button.y,
     });
     tween.start();
-    tween.on('end', () => this.generator.next());
+    tween.on('end', () => {
+      this.generator.next();
+    });
 
     const { interaction } = renderer.plugins;
     interaction.cursorStyles.pointer = "url('/dot.png'), auto";
@@ -226,7 +225,7 @@ class Start_Room  {
   async _start() {
     this.theme_song.play();
     keyboardManager.disable();
-    flash_at(this.player, 2000, 0xffffff, 'out');
+    flash_at(this.player, 10000, 0xffffff, 'out');
 
     await sleep(5000);
     this.controls_prompt.fade_in(2000);
@@ -241,8 +240,8 @@ class Start_Room  {
     this.player.events.on('hit', () => {
       flash_at(this.player, 500);
 
-      volume += 0.07;
-      distortion_amount += 0.02;
+      volume += 0.04;
+      distortion_amount += 0.01;
       distortion_filter.amount = distortion_amount;
 
       const thud   = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
@@ -250,7 +249,7 @@ class Start_Room  {
       thud.volume  = volume;
       thud.play();
 
-      this.whisper_effect.volume = volume + 0.02;
+      this.whisper_effect.volume = volume + 0.04;
     });
     this.player.events.once('killed', () => this.generator.next());
 
@@ -295,21 +294,23 @@ class Start_Room  {
   }
 
   async _leave() {
+    keyboardManager.disable();
     Nightmare.off();
 
     this.thud_1_effect.play();
     await sleep(300);
     const video = new Video(this.player);
 
-    await sleep(11450);
+    await sleep(11650);
 
     const game_title  = new Text(
-      'DEAD SET ON LIFE', {
+      'LORIUM GAMES', {
         fontSize: 200,
         fill: 'white',
-      });
-    game_title.width  = 1300;
-    game_title.height = 180;
+      }
+    );
+    game_title.width  = video.width -100;
+    game_title.height = 170;
     game_title.anchor.set(0.5);
     game_title.position.copy(this.player);
     shrouds.addChild(game_title);
@@ -318,12 +319,13 @@ class Start_Room  {
 
     game_title.destroy();
     const company_name  = new Text(
-      'LORIUM IPSUM', {
+      'CREATIVE TITLE', {
         fontSize: 200,
         fill: 'white',
-      });
-    company_name.width  = 1000;
-    company_name.height = 180;
+      }
+    );
+    company_name.width  = video.width -100;
+    company_name.height = 170;
     company_name.anchor.set(0.5);
     company_name.position.copy(this.player);
     shrouds.addChild(company_name);

@@ -252,11 +252,12 @@ class Ranbir_Room  {
   }
 
   async _start() {
+    keyboardManager.enable();
     const intro_white = fill_screen_at(this.player, 0xffffff);
     intro_white.fade_out(1000);
-    this.ranbir.logic_start();
-    this.player.events.once('killed', () => this.generator.next());
-    await flicker(this.light_shroud);
+    //this.ranbir.logic_start();
+    //this.player.events.once('killed', () => this.generator.next());
+    flicker(this.light_shroud);
   }
 
   _ranbir() {

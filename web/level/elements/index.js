@@ -4,6 +4,7 @@ const { Background  } = require('../elements/background');
 const { Chest       } = require('../elements/chest');
 const { Door        } = require('../elements/door');
 const { Roof        } = require('../elements/ceiling');
+const { Generator   } = require('../elements/shrine');
 const { Shroud      } = require('../elements/shroud');
 const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
@@ -22,4 +23,5 @@ module.exports = {
   Shroud,
   Collision,
   Floor,
+  Generator,
 };

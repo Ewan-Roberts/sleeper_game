@@ -7,6 +7,7 @@ const { Click_Pad  } = require('../elements/click_pad');
 const { Button     } = require('../../view/button');
 const { players    } = require('../../engine/pixi_containers');
 const { Tween      } = require('../../engine/tween');
+const { viewport   } = require('../../engine/app');
 const { FadeSprite } = require('../../effects/fade_sprite.js');
 const { flash_at   } = require('../../effects/fade_sprite.js');
 const { env        } = require('../../../config');
@@ -22,6 +23,7 @@ const {
   Shroud,
   Collision,
   Floor,
+  Generator,
 } = require('../elements');
 
 const white_filter = new filters.ColorMatrixFilter();
@@ -33,7 +35,6 @@ class Intro {
     this.data   = require('../data/intro_room.json');
     this.player = players.children[0];
 
-    console.log(this.data.exit_pad);
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
     this.roofs       = this.data.roof.map(data => new Roof(data));
@@ -44,6 +45,7 @@ class Intro {
     this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.items       = this.data.item.map(data => new Chest(data));
+    this.generator   = new Generator(this.data.generator[0]);
 
     this.study_desk  = this.items.find(item => item.id === 303);
     this.locked_door = this.doors.find(door => door.id === 528);
@@ -82,7 +84,8 @@ class Intro {
     renderer.backgroundColor = 0x000000;
     this.theme_song.play();
 
-    this.player.position.copy(this.data.player_spawn[0]);
+    this.player.position.copy(this.data.player_spawn.find(spawn=>spawn.id===137));
+    viewport.moveCenter(this.player.x, this.player.y);
 
     this.study_desk.on('click', () => {
       this.keys_effect.play();
@@ -94,6 +97,18 @@ class Intro {
     this.study_door.on('click', () => {
       this.main_room_shroud.fade_out_destroy();
       this.locked_door.interactive = true;
+    });
+
+    this.generator.on('click', () => {
+      console.log(this.player);
+      console.log(this.player.inventory.contains('gas_canister'));
+      const poo = this.player.inventory.take_item('gas_canister');
+      console.log(poo);
+      console.log(this.player.inventory.contains('gas_canister'));
+      this.generator.inventory.give_item(poo);
+      console.log(this.generator.inventory);
+
+      console.log('hew');
     });
 
     this.locked_door.on('click', () => {
@@ -109,6 +124,7 @@ class Intro {
       this.dumpster.tint = 0xffffff;
       button.visible = true;
     });
+
     pad.on('mouseout', () => {
       this.dumpster.tint = 0xd3d3d3;
       button.visible = false;
@@ -118,20 +134,20 @@ class Intro {
     this.spear.click = () => {
       pad.interactive = true;
     };
-    console.log('3333444444444444444444');
 
-    pad.click = () => {
+    pad.on('click', () => {
       const tween_it = new Tween(this.dumpster);
       tween_it.to({x: this.dumpster.x - 45, y:this.dumpster.y - 20});
       tween_it.time = 1000;
       tween_it.start();
       button.destroy();
       pad.interactive = false;
-    };
+    });
   }
 
   _set_dev_settings() {
     this.player.position.copy(this.data.player_spawn[1]);
+    viewport.moveCenter(this.player.x, this.player.y);
 
     this.theme_song.volume = 0;
     this.theme_song.stop();

@@ -1,5 +1,6 @@
 const {Text,Sprite,Container,Texture}= require('pixi.js');
 const { guis          } = require('../engine/pixi_containers');
+const { item_events   } = require('../engine/item_handler');
 const { Fade          } = require('../effects/fade');
 
 class Slot extends Sprite {
@@ -108,7 +109,7 @@ class View_Inventory {
     loot.forEach((loot_item, slot) => {
       const item = new Item(loot_item);
       item.click = () => {
-        //player_events.emit('give_item', loot_item);
+        item_events.emit('give', { id: 1, item: loot_item });
         description.visible = false;
         title.visible = false;
         item.destroy();

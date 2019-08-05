@@ -58,9 +58,19 @@ class FloorWord extends Text {
   }
 }
 
-
-//const word_poo = ['KILL','DIE','RUN!!','hahahHa','<script>','DIE',')(1ll','dIE','GO'];
-const default_words = ['Math.random()','<h2>','</html>','function() { 4>>','if(true){...','RUN','hahahHa','</head>','<script>','<div>','i++','DIE'];
+const default_words = [
+  'Math.random()',
+  '<h2>','</html>',
+  'function() { 4>>',
+  'if(true){...',
+  'RUN',
+  'hahahHa',
+  '</head>',
+  '<script>',
+  '<div>',
+  'i++',
+  'DIE',
+];
 
 const bounds = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const random_text = (array) => array[Math.floor(Math.random()*array.length)];

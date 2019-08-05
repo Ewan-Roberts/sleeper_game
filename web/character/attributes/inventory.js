@@ -26,8 +26,19 @@ class Inventory extends View_Inventory {
     this.populate_slots(this.items);
   }
 
-  populate_with(items) {
+  contains(name) {
+    return this.items.some(item => item.name === name);
+  }
+
+  populate_with_items(items) {
     this.items = items.map(name => Item_Manager.get_item(name));
+
+    this.populate_slots(this.items);
+  }
+
+  populate_with_item(name) {
+    const item = Item_Manager.get_item(name);
+    this.items.push(item);
 
     this.populate_slots(this.items);
   }
@@ -68,12 +79,13 @@ class Inventory extends View_Inventory {
   }
 
   give_item(item) {
+    if(!item) return;
     this.items.push(item);
   }
 
-  take_items(name) {
-    const index = this.items.getIndexof(name);
-    const result = this.items.splice(index,1);
+  take_item(name) {
+    const index = this.items.indexOf(name);
+    const [result] = this.items.splice(index,1);
     console.log(result);
     return result;
   }
