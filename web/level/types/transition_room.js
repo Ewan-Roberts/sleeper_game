@@ -69,34 +69,33 @@ class Transition_Room {
 
     this.player.inventory.populate_with_item('gas_canister');
 
-    let fuel = 20;
-
     generator.on('click', () => {
       if(this.player.inventory.contains('gas_canister')) {
         const fuel_item = this.player.inventory.take_item('gas_canister');
-        generator.inventory.give_item(fuel_item);
         keyboardManager.disable();
         bar.visible = true;
-        bar.animate_increase(fuel);
+
+        generator.fuel = fuel_item.condition;
+        bar.animate_increase(fuel_item.condition);
         lights.forEach(light => light.turn_on());
       }
     });
 
-    generator.tween.on('end', () =>
-      lights.forEach(light =>
-        light.turn_off()));
+    generator.end(() => {
+      lights.forEach(light => {
+        light.turn_off();
+      });
+    });
 
     bar.complete(() => {
       Caption.render('Its filled');
-      generator.fuel = fuel;
       generator.make_ready();
-      fuel = null;
       keyboardManager.enable();
     });
 
     keyboardManager.on('pressed', () => {
       const relative_distance = distance_between(this.player, generator);
-      if(relative_distance<200) {
+      if(relative_distance < 200) {
         generator.tint = 0x008b00;
         generator.interactive = true;
       } else {

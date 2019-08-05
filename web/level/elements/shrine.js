@@ -2,7 +2,6 @@ const { collisions } = require('../../engine/pixi_containers');
 const { items } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
 const { Element    } = require('./model');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { sound } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 const { Button    } = require('../../view/button');
@@ -13,6 +12,7 @@ class Shrine extends Element {
     super(data);
     this.inventory   = new Inventory();
     this.interactive = true;
+    this.max = 100;
 
     collisions.addChild(this);
   }
@@ -26,20 +26,14 @@ class Shrine extends Element {
   }
 }
 
-class Generator extends Sprite {
+class Generator extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name || 'bunny'));
-    this.id          = data.id;
+    super(data);
     this.inventory   = new Inventory();
-    this.height      = data.height;
-    this.width       = data.width;
-    this.rotation    = data.rotation * DEG_TO_RAD;
     this.tint        = 0xA9A9A9;
     this.interactive = true;
     this._fuel = 0;
 
-    this.anchor.set(0, 1);
-    this.position.copy(data);
     this.label(data);
 
     items.addChild(this);
@@ -74,6 +68,10 @@ class Generator extends Sprite {
     this.tween.on('end', () => this.make_empty());
   }
 
+  end(func) {
+    this.tween.on('end', () => func);
+  }
+
   state_handler() {
     switch(this.state) {
       case 'running' : return this.make_ready();
@@ -93,6 +91,10 @@ class Generator extends Sprite {
   }
 
   set fuel(value) {
+    if((this._fuel + value) > this.max) {
+      return Caption.render('No fuel');
+    }
+
     this._fuel = value;
   }
 
