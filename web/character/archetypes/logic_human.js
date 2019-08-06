@@ -8,7 +8,6 @@ class LogicHuman extends LogicSprite {
     super(data);
     this.add_component(new Animation(this, human_frames));
     this.scripts = {};
-    this.anchor.set(0.5);
   }
 
   add_script(name, array){

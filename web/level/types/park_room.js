@@ -22,7 +22,7 @@ const {
 } = require('../elements');
 
 
-class Park_Room  {
+class ParkRoom  {
   constructor() {
     this.name   = 'defend_room';
     this.data   = require('../data/park_room.json');
@@ -86,5 +86,5 @@ class Park_Room  {
 }
 
 module.exports = {
-  Park_Room,
+  ParkRoom,
 };

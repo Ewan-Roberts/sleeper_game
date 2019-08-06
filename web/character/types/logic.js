@@ -3,7 +3,7 @@ const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
-const { distance_between, random_bound } = require('../../utils/math');
+const { distance_between } = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -29,6 +29,7 @@ class LogicSprite extends extras.AnimatedSprite {
     super([Texture.fromFrame(data.image_name || 'bird_8')]);
     this.name = 'zombie';
     this.id   = data.id;
+    this.anchor.set(0.5);
 
     this.add_component(new Inventory(data));
     this.add_component(new Vitals());

@@ -2,10 +2,10 @@ const { collisions } = require('../../engine/pixi_containers');
 const { items } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
 const { Element    } = require('./model');
-const { sound } = require('pixi.js');
+const { sound      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
-const { Button    } = require('../../view/button');
-const { Caption   } = require('../../view/caption');
+const { Button     } = require('../../view/button');
+const { Caption    } = require('../../view/caption');
 
 class Shrine extends Element {
   constructor(data) {
@@ -40,32 +40,32 @@ class Generator extends Element {
 
     this.tween = tweenManager.createTween();
     this._set_sounds();
-    this.make_empty();
+    this.empty();
 
     this.on('click', () => this.state_handler());
   }
 
-  make_empty() {
+  empty() {
     this.button.action_label.text = 'Fill';
     this._fuel = 0;
     this.state = 'empty';
     this.running_sound.stop();
   }
 
-  make_ready() {
+  ready() {
     if(this._fuel <=0) return Caption.render('No fuel');
     this.button.action_label.text = 'Start';
     this.running_sound.stop();
     this.state = 'ready';
   }
 
-  make_running() {
+  run() {
     this.button.action_label.text = 'Turn off';
     this.state = 'running';
     this.tween.time = 400 * this._fuel;
     this.tween.start();
     this.running_sound.play();
-    this.tween.on('end', () => this.make_empty());
+    this.tween.on('end', () => this.empty());
   }
 
   end(func) {
@@ -74,9 +74,9 @@ class Generator extends Element {
 
   state_handler() {
     switch(this.state) {
-      case 'running' : return this.make_ready();
-      case 'ready'   : return this.make_running();
-      case 'empty'   : return this.make_ready();
+      case 'running' : return this.ready();
+      case 'ready'   : return this.running();
+      case 'empty'   : return this.ready();
     }
   }
 

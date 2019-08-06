@@ -4,7 +4,7 @@ const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
 
-class Defend_Room  {
+class DefendRoom  {
   constructor() {
     this.name     = 'defend_room';
     this.player   = new Player();
@@ -38,5 +38,5 @@ class Defend_Room  {
 }
 
 module.exports = {
-  Defend_Room,
+  DefendRoom,
 };

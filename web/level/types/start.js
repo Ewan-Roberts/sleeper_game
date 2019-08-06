@@ -67,7 +67,7 @@ class Cursor extends Sprite {
   }
 }
 
-class Start_Room  {
+class StartRoom  {
   constructor() {
     this.name   = 'starter_room';
     this.data   = require('../data/start.json');
@@ -359,5 +359,5 @@ class Start_Room  {
 }
 
 module.exports = {
-  Start_Room,
+  StartRoom,
 };

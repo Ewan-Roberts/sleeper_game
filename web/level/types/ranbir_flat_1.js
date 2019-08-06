@@ -54,7 +54,7 @@ async function flicker(light) {
   await flicker(light);
 }
 
-class Ranbir_Floor_1 {
+class RanbirFloor1 {
   constructor() {
     this.name   = 'ranbir_flat_1';
     this.data   = require('../data/ranbir_flat_1.json');
@@ -93,5 +93,5 @@ class Ranbir_Floor_1 {
 }
 
 module.exports = {
-  Ranbir_Floor_1,
+  RanbirFloor1,
 };

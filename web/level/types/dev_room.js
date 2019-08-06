@@ -28,7 +28,7 @@ const {
 } = require('../elements');
 
 let first = false;
-class Dev_Room {
+class DevRoom {
   constructor(spawn_id) {
     this.name   = 'dev_room';
     this.data   = require('../data/dev_room.json');
@@ -94,5 +94,5 @@ class Dev_Room {
 }
 
 module.exports = {
-  Dev_Room,
+  DevRoom,
 };

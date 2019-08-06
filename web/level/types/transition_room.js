@@ -7,7 +7,7 @@ const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 const { keyboardManager } = require('pixi.js');
-//const { Simple_Room   } = require('./simple_room');
+//const { SimpleRoom   } = require('./simple_room');
 
 const {
   Floor,
@@ -28,7 +28,7 @@ class Light extends Floor {
   }
 }
 
-class Transition_Room {
+class TransitionRoom {
   constructor() {
     this.name   = 'transition_room';
     this.data   = require('../data/transition_room.json');
@@ -62,7 +62,6 @@ class Transition_Room {
     const bar = new ProgressBar();
     bar.visible = false;
 
-
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
     const generator = new Generator(this.data.generator[0]);
@@ -89,7 +88,7 @@ class Transition_Room {
 
     bar.complete(() => {
       Caption.render('Its filled');
-      generator.make_ready();
+      generator.ready();
       keyboardManager.enable();
     });
 
@@ -125,6 +124,6 @@ class Transition_Room {
 }
 
 module.exports = {
-  Transition_Room,
+  TransitionRoom,
 };
 

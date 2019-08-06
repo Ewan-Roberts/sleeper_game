@@ -43801,7 +43801,6 @@ class LogicHuman extends LogicSprite {
     super(data);
     this.add_component(new Animation(this, human_frames));
     this.scripts = {};
-    this.anchor.set(0.5);
   }
 
   add_script(name, array){
@@ -43956,7 +43955,6 @@ class LogicZombie extends LogicSprite {
   constructor(data) {
     super(data);
     this.add_component(new Animation(this, zombie_frames));
-    this.anchor.set(0.5);
     this.animationSpeed = 0.30;
   }
 }
@@ -43981,10 +43979,14 @@ class PathCrow extends PathSprite {
     this.width  = 65;
     this.height = 30;
     this.add_component(new Animation(this, bird_frames));
-    this.fly_sound = sound.find('birds_fly_away');
-    this.fly_sound.volume = 0.40;
     this.wait();
     this.animationSpeed = 0.25;
+    this._set_sound();
+  }
+
+  _set_sound() {
+    this.fly_sound = sound.find('birds_fly_away');
+    this.fly_sound.volume = 0.40;
   }
 
   wait() {
@@ -44722,7 +44724,7 @@ const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
-const { distance_between, random_bound } = require('../../utils/math');
+const { distance_between } = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -44748,6 +44750,7 @@ class LogicSprite extends extras.AnimatedSprite {
     super([Texture.fromFrame(data.image_name || 'bird_8')]);
     this.name = 'zombie';
     this.id   = data.id;
+    this.anchor.set(0.5);
 
     this.add_component(new Inventory(data));
     this.add_component(new Vitals());
@@ -46871,7 +46874,7 @@ class Border extends Element {
       alpha: (env.visable_borders)?0.2:0,
     });
 
-      borders.addChild(this);
+    borders.addChild(this);
   }
 }
 
@@ -46904,13 +46907,11 @@ const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-const { Element } = require('./model');
+const { Element   } = require('./model');
 
 class Chest extends Element {
   constructor(data) {
     super(data);
-    this.anchor.set(0, 1);
     this.interactive = true;
 
     // TODO handle player acquisition better
@@ -46967,7 +46968,7 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":286,"../../view/caption":287,"../../view/overlay_object":291,"./model":260,"pixi.js":151}],254:[function(require,module,exports){
+},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":286,"../../view/caption":287,"../../view/overlay_object":291,"./model":260}],254:[function(require,module,exports){
 const { pads    } = require('../../engine/pixi_containers');
 const { env     } = require('../../../config');
 const { Element } = require('./model');
@@ -46978,10 +46979,10 @@ class Click_Pad extends Element {
       ...data,
       image_name: 'black_dot',
       alpha: (env.dev)?0.2:0,
+      tint: 0xffff00,
     });
     this.interactive = true;
     this.buttonMode  = true;
-    this.tint  = 0xffff00;
 
     pads.addChild(this);
   }
@@ -47303,10 +47304,10 @@ const { collisions } = require('../../engine/pixi_containers');
 const { items } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
 const { Element    } = require('./model');
-const { sound } = require('pixi.js');
+const { sound      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
-const { Button    } = require('../../view/button');
-const { Caption   } = require('../../view/caption');
+const { Button     } = require('../../view/button');
+const { Caption    } = require('../../view/caption');
 
 class Shrine extends Element {
   constructor(data) {
@@ -47341,32 +47342,32 @@ class Generator extends Element {
 
     this.tween = tweenManager.createTween();
     this._set_sounds();
-    this.make_empty();
+    this.empty();
 
     this.on('click', () => this.state_handler());
   }
 
-  make_empty() {
+  empty() {
     this.button.action_label.text = 'Fill';
     this._fuel = 0;
     this.state = 'empty';
     this.running_sound.stop();
   }
 
-  make_ready() {
+  ready() {
     if(this._fuel <=0) return Caption.render('No fuel');
     this.button.action_label.text = 'Start';
     this.running_sound.stop();
     this.state = 'ready';
   }
 
-  make_running() {
+  run() {
     this.button.action_label.text = 'Turn off';
     this.state = 'running';
     this.tween.time = 400 * this._fuel;
     this.tween.start();
     this.running_sound.play();
-    this.tween.on('end', () => this.make_empty());
+    this.tween.on('end', () => this.empty());
   }
 
   end(func) {
@@ -47375,9 +47376,9 @@ class Generator extends Element {
 
   state_handler() {
     switch(this.state) {
-      case 'running' : return this.make_ready();
-      case 'ready'   : return this.make_running();
-      case 'empty'   : return this.make_ready();
+      case 'running' : return this.ready();
+      case 'ready'   : return this.running();
+      case 'empty'   : return this.ready();
     }
   }
 
@@ -47426,7 +47427,6 @@ module.exports = {
 },{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":286,"../../view/caption":287,"./model":260,"pixi.js":151}],263:[function(require,module,exports){
 const { shrouds } = require('../../engine/pixi_containers');
 const { Fade    } = require('../../effects/fade');
-const { env     } = require('../../../config');
 const { Element } = require('./model');
 
 class Shroud extends Element {
@@ -47437,7 +47437,6 @@ class Shroud extends Element {
     });
     this.remove_on_enter = data.remove_on_enter;
     this.alpha_on_enter  = data.alpha_on_enter;
-    this.anchor.set(0, 1);
 
     shrouds.addChild(this);
   }
@@ -47452,20 +47451,17 @@ module.exports = {
   Shroud,
 };
 
-},{"../../../config":1,"../../effects/fade":218,"../../engine/pixi_containers":230,"./model":260}],264:[function(require,module,exports){
+},{"../../effects/fade":218,"../../engine/pixi_containers":230,"./model":260}],264:[function(require,module,exports){
 const { collisions } = require('../../engine/pixi_containers');
-const { Element } = require('./model');
+const { Element    } = require('./model');
 
 class Wall extends Element {
   constructor(data) {
     super({
       ...data,
       image_name:'black_dot',
+      tint: 0x000000,
     });
-    this.tint  = 0x000000;
-    this.alpha = (data.hidden)?0:data.alpha || 1;
-
-    this.anchor.set(0, 1);
 
     collisions.addChild(this);
   }
@@ -47484,7 +47480,7 @@ const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
 
-class Defend_Room  {
+class DefendRoom  {
   constructor() {
     this.name     = 'defend_room';
     this.player   = new Player();
@@ -47518,7 +47514,7 @@ class Defend_Room  {
 }
 
 module.exports = {
-  Defend_Room,
+  DefendRoom,
 };
 
 },{"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../engine/pathfind.js":229,"../data/defend_room.json":238,"../elements/pad":261,"./level_factory":269}],266:[function(require,module,exports){
@@ -47552,7 +47548,7 @@ const {
 } = require('../elements');
 
 let first = false;
-class Dev_Room {
+class DevRoom {
   constructor(spawn_id) {
     this.name   = 'dev_room';
     this.data   = require('../data/dev_room.json');
@@ -47618,7 +47614,7 @@ class Dev_Room {
 }
 
 module.exports = {
-  Dev_Room,
+  DevRoom,
 };
 
 },{"../../../config":1,"../../character/archetypes/logic_rat":203,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../character/types/path":215,"../../effects/debris":217,"../../effects/fade_sprite.js":219,"../../effects/floor_word":220,"../../engine/pixi_containers":230,"../../utils/math.js":284,"../../utils/time.js":285,"../data/dev_room.json":239,"../elements":259,"pixi.js":151}],267:[function(require,module,exports){
@@ -47792,7 +47788,7 @@ module.exports = {
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 
-class Items_Room {
+class ItemsRoom {
   constructor() {
     this.name     = 'item_room';
     this.player   = new Player();
@@ -47807,7 +47803,7 @@ class Items_Room {
 }
 
 module.exports = {
-  Items_Room,
+  ItemsRoom,
 };
 
 },{"../../character/archetypes/player":208,"../data/items_room.json":242,"./level_factory":269}],269:[function(require,module,exports){
@@ -47829,34 +47825,34 @@ class Level_Factory {
   static create(level_name, spawn_id) {
     this.clear();
 
-    const { Intro           } = require('./intro');
-    const { Items_Room      } = require('./item_room');
-    const { Street          } = require('./street');
-    const { Transition_Room } = require('./transition_room');
-    const { Defend_Room     } = require('./defend_room');
-    const { Park_Room       } = require('./park_room');
-    const { Start_Room      } = require('./start');
-    const { Simple_Room     } = require('./simple_room');
-    const { Ranbir_Room     } = require('./ranbir_room');
-    const { Dev_Room        } = require('./dev_room');
-    const { Ranbir_Floor_0  } = require('./ranbir_flat_0');
-    const { Ranbir_Floor_1  } = require('./ranbir_flat_1');
-    const { Ranbir_Floor_2  } = require('./ranbir_flat_2');
+    const { Intro          } = require('./intro');
+    const { ItemsRoom      } = require('./item_room');
+    const { Street         } = require('./street');
+    const { TransitionRoom } = require('./transition_room');
+    const { DefendRoom     } = require('./defend_room');
+    const { ParkRoom       } = require('./park_room');
+    const { StartRoom      } = require('./start');
+    const { SimpleRoom     } = require('./simple_room');
+    const { RanbirRoom     } = require('./ranbir_room');
+    const { DevRoom        } = require('./dev_room');
+    const { RanbirFloor0  } = require('./ranbir_flat_0');
+    const { RanbirFloor1  } = require('./ranbir_flat_1');
+    const { RanbirFloor2  } = require('./ranbir_flat_2');
 
     switch(level_name) {
       case 'intro'     : return new Intro();
-      case 'item'      : return new Items_Room();
+      case 'item'      : return new ItemsRoom();
       case 'street'    : return new Street(spawn_id);
-      case 'transition': return new Transition_Room();
-      case 'defend'    : return new Defend_Room();
-      case 'start'     : return new Start_Room();
-      case 'park'      : return new Park_Room();
-      case 'ranbir_flat'  : return new Ranbir_Room();
-      case 'ranbir_flat_0': return new Ranbir_Floor_0(spawn_id);
-      case 'ranbir_flat_1': return new Ranbir_Floor_1(spawn_id);
-      case 'ranbir_flat_2': return new Ranbir_Floor_2(spawn_id);
-      case 'dev':           return new Dev_Room(spawn_id);
-      default: new Simple_Room(level_name);
+      case 'transition': return new TransitionRoom();
+      case 'defend'    : return new DefendRoom();
+      case 'start'     : return new StartRoom();
+      case 'park'      : return new ParkRoom();
+      case 'ranbir_flat'  : return new RanbirRoom();
+      case 'ranbir_flat_0': return new RanbirFloor0(spawn_id);
+      case 'ranbir_flat_1': return new RanbirFloor1(spawn_id);
+      case 'ranbir_flat_2': return new RanbirFloor2(spawn_id);
+      case 'dev'          : return new DevRoom(spawn_id);
+      default: new SimpleRoom(level_name);
     }
   }
 
@@ -47933,7 +47929,7 @@ const {
 } = require('../elements');
 
 
-class Park_Room  {
+class ParkRoom  {
   constructor() {
     this.name   = 'defend_room';
     this.data   = require('../data/park_room.json');
@@ -47997,7 +47993,7 @@ class Park_Room  {
 }
 
 module.exports = {
-  Park_Room,
+  ParkRoom,
 };
 
 },{"../../../config":1,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/path_rat":207,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../data/park_room.json":243,"../elements":259}],271:[function(require,module,exports){
@@ -48054,7 +48050,7 @@ async function flicker(light) {
 
 let first = false;
 
-class Ranbir_Floor_0 {
+class RanbirFloor0 {
   constructor(spawn_id) {
     this.name   = 'ranbir_flat_1';
     this.data   = require('../data/ranbir_flat_0.json');
@@ -48095,7 +48091,7 @@ class Ranbir_Floor_0 {
 }
 
 module.exports = {
-  Ranbir_Floor_0,
+  RanbirFloor0,
 };
 
 },{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":284,"../../utils/time.js":285,"../data/ranbir_flat_0.json":245,"../elements":259}],272:[function(require,module,exports){
@@ -48155,7 +48151,7 @@ async function flicker(light) {
   await flicker(light);
 }
 
-class Ranbir_Floor_1 {
+class RanbirFloor1 {
   constructor() {
     this.name   = 'ranbir_flat_1';
     this.data   = require('../data/ranbir_flat_1.json');
@@ -48194,7 +48190,7 @@ class Ranbir_Floor_1 {
 }
 
 module.exports = {
-  Ranbir_Floor_1,
+  RanbirFloor1,
 };
 
 },{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":284,"../../utils/time.js":285,"../data/ranbir_flat_1.json":246,"../elements":259,"pixi.js":151}],273:[function(require,module,exports){
@@ -48276,7 +48272,7 @@ async function flicker(light, hands) {
   await flicker(light);
 }
 
-class Ranbir_Floor_2 {
+class RanbirFloor2 {
   constructor() {
     this.name   = 'ranbir_flat_2';
     this.data   = require('../data/ranbir_flat_2.json');
@@ -48314,7 +48310,7 @@ class Ranbir_Floor_2 {
 }
 
 module.exports = {
-  Ranbir_Floor_2,
+  RanbirFloor2,
 };
 
 },{"../../../config":1,"../../character/archetypes/player":208,"../../utils/math.js":284,"../../utils/time.js":285,"../data/ranbir_flat_2.json":247,"../elements":259,"pixi-viewport":35,"pixi.js":151}],274:[function(require,module,exports){
@@ -48463,7 +48459,7 @@ class Christina extends LogicHuman {
 
 }
 
-class Ranbir_Room  {
+class RanbirRoom  {
   constructor() {
     this.name   = 'ranbir_flat';
     this.data   = require('../data/ranbir_flat.json');
@@ -48617,7 +48613,7 @@ class Ranbir_Room  {
 }
 
 module.exports = {
-  Ranbir_Room,
+  RanbirRoom,
 };
 
 },{"../../../config":1,"../../character/animations/zombie":201,"../../character/archetypes/logic_human":202,"../../character/attributes/animation":209,"../../effects/fade_sprite.js":219,"../../effects/nightmare.js":221,"../../engine/app":223,"../../engine/pixi_containers":230,"../../engine/script_generator":232,"../../utils/math.js":284,"../../utils/time.js":285,"../../view/caption":287,"../data/ranbir_flat.json":244,"../elements":259,"./level_factory":269,"pixi.js":151}],275:[function(require,module,exports){
@@ -48626,7 +48622,7 @@ const { Player        } = require('../../character/archetypes/player');
 const { Trigger_Pad   } = require('../elements');
 const { env           } = require('../../../config');
 
-class Simple_Room {
+class SimpleRoom {
   constructor() {
     console.log('generating simple room');
     this.name   = 'simple_room';
@@ -48655,7 +48651,7 @@ class Simple_Room {
 }
 
 module.exports = {
-  Simple_Room,
+  SimpleRoom,
 };
 
 
@@ -48729,7 +48725,7 @@ class Cursor extends Sprite {
   }
 }
 
-class Start_Room  {
+class StartRoom  {
   constructor() {
     this.name   = 'starter_room';
     this.data   = require('../data/start.json');
@@ -49021,7 +49017,7 @@ class Start_Room  {
 }
 
 module.exports = {
-  Start_Room,
+  StartRoom,
 };
 
 },{"../../../config":1,"../../character/archetypes/logic_stalker":204,"../../character/archetypes/path_crow":206,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../effects/floor_word.js":220,"../../effects/nightmare.js":221,"../../effects/overlay_dialog.js":222,"../../engine/app":223,"../../engine/pixi_containers":230,"../../engine/pixi_containers.js":230,"../../utils/math.js":284,"../../utils/time.js":285,"../../view/microphone_box":290,"../../view/wasd_keys":295,"../data/start.json":248,"../elements":259,"./level_factory":269,"pixi.js":151}],277:[function(require,module,exports){
@@ -49153,7 +49149,7 @@ const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 const { keyboardManager } = require('pixi.js');
-//const { Simple_Room   } = require('./simple_room');
+//const { SimpleRoom   } = require('./simple_room');
 
 const {
   Floor,
@@ -49174,7 +49170,7 @@ class Light extends Floor {
   }
 }
 
-class Transition_Room {
+class TransitionRoom {
   constructor() {
     this.name   = 'transition_room';
     this.data   = require('../data/transition_room.json');
@@ -49208,41 +49204,39 @@ class Transition_Room {
     const bar = new ProgressBar();
     bar.visible = false;
 
-
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
     const generator = new Generator(this.data.generator[0]);
 
     this.player.inventory.populate_with_item('gas_canister');
 
-    let fuel = 20;
-
     generator.on('click', () => {
       if(this.player.inventory.contains('gas_canister')) {
         const fuel_item = this.player.inventory.take_item('gas_canister');
-        generator.inventory.give_item(fuel_item);
         keyboardManager.disable();
         bar.visible = true;
-        bar.animate_increase(fuel);
+
+        generator.fuel = fuel_item.condition;
+        bar.animate_increase(fuel_item.condition);
         lights.forEach(light => light.turn_on());
       }
     });
 
-    generator.tween.on('end', () =>
-      lights.forEach(light =>
-        light.turn_off()));
+    generator.end(() => {
+      lights.forEach(light => {
+        light.turn_off();
+      });
+    });
 
     bar.complete(() => {
       Caption.render('Its filled');
-      generator.fuel = fuel;
-      generator.make_ready();
-      fuel = null;
+      generator.ready();
       keyboardManager.enable();
     });
 
     keyboardManager.on('pressed', () => {
       const relative_distance = distance_between(this.player, generator);
-      if(relative_distance<200) {
+      if(relative_distance < 200) {
         generator.tint = 0x008b00;
         generator.interactive = true;
       } else {
@@ -49272,7 +49266,7 @@ class Transition_Room {
 }
 
 module.exports = {
-  Transition_Room,
+  TransitionRoom,
 };
 
 

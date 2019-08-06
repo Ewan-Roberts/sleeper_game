@@ -143,7 +143,7 @@ class Christina extends LogicHuman {
 
 }
 
-class Ranbir_Room  {
+class RanbirRoom  {
   constructor() {
     this.name   = 'ranbir_flat';
     this.data   = require('../data/ranbir_flat.json');
@@ -297,5 +297,5 @@ class Ranbir_Room  {
 }
 
 module.exports = {
-  Ranbir_Room,
+  RanbirRoom,
 };

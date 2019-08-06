@@ -1,7 +1,7 @@
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 
-class Items_Room {
+class ItemsRoom {
   constructor() {
     this.name     = 'item_room';
     this.player   = new Player();
@@ -16,5 +16,5 @@ class Items_Room {
 }
 
 module.exports = {
-  Items_Room,
+  ItemsRoom,
 };

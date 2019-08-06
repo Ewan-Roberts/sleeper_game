@@ -3,7 +3,7 @@ const { Player        } = require('../../character/archetypes/player');
 const { Trigger_Pad   } = require('../elements');
 const { env           } = require('../../../config');
 
-class Simple_Room {
+class SimpleRoom {
   constructor() {
     console.log('generating simple room');
     this.name   = 'simple_room';
@@ -32,6 +32,6 @@ class Simple_Room {
 }
 
 module.exports = {
-  Simple_Room,
+  SimpleRoom,
 };
 
