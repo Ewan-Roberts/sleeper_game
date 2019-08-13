@@ -1,5 +1,5 @@
-const {Text,Sprite} = require('pixi.js');
-const { guis      } = require('../engine/pixi_containers');
+const { Text, Sprite, Texture } = require('pixi.js');
+const { guis } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
 class Label extends Text{
@@ -12,14 +12,24 @@ class Label extends Text{
       lineJoin: 'round',
       strokeThickness: 5,
     });
+
     this.anchor.set(0.5);
     guis.addChild(this);
   }
 }
 
-class Button {
-  constructor({label_action, label_description, label_image}) {
-    this.name = 'button';
+class Button extends Sprite {
+  constructor({
+    label_action,
+    label_description,
+    label_image,
+  }) {
+    super(Texture.fromImage(label_image));
+
+    this.name   = 'button';
+    this.height = 30;
+    this.width  = 30;
+    this.anchor.set(0.5);
 
     if(label_action) {
       this.action_label = new Label(label_action);
@@ -28,17 +38,13 @@ class Button {
       this.description_label = new Label(label_description);
     }
 
-    this.sprite = Sprite.fromFrame(label_image);
-    this.sprite.anchor.set(0.5);
-    this.sprite.height = 30;
-    this.sprite.width  = 30;
-
+    // Start invisible
     this.visible = false;
-    guis.addChild(this.sprite);
+    guis.addChild(this);
   }
 
   set_position({x, y}) {
-    this.sprite.position.set(x, y);
+    this.position.copy(x, y);
 
     if(this.action_label) {
       this.action_label.position.copy({x, y: y+30});
@@ -49,7 +55,7 @@ class Button {
   }
 
   set visible(bool) {
-    this.sprite.visible = bool;
+    super.visible = bool;
 
     if(this.action_label) {
       this.action_label.visible = bool;

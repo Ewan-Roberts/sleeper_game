@@ -1,7 +1,9 @@
 const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
 const { distance_between } = require('../../utils/math');
-const { ProgressBar   } = require('../../view/progress_bar');
+// TODO temp progress bar
+// const { ProgressBar   } = require('../../view/progress_bar');
+const { global_bar   } = require('../../view/progress_bar');
 const { Caption       } = require('../../view/caption');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
@@ -28,7 +30,7 @@ class Light extends Floor {
   }
 }
 
-class TransitionRoom {
+class HubRoom {
   constructor() {
     this.name   = 'transition_room';
     this.data   = require('../data/transition_room.json');
@@ -59,8 +61,7 @@ class TransitionRoom {
 
     // TODO couple the progress bar to the generator?
 
-    const bar = new ProgressBar();
-    bar.visible = false;
+    global_bar.visible = false;
 
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
@@ -72,10 +73,10 @@ class TransitionRoom {
       if(this.player.inventory.contains('gas_canister')) {
         const fuel_item = this.player.inventory.take_item('gas_canister');
         keyboardManager.disable();
-        bar.visible = true;
+        global_bar.visible = true;
 
         generator.fuel = fuel_item.condition;
-        bar.animate_increase(fuel_item.condition);
+        global_bar.animate_increase(fuel_item.condition);
         lights.forEach(light => light.turn_on());
       }
     });
@@ -86,7 +87,7 @@ class TransitionRoom {
       });
     });
 
-    bar.complete(() => {
+    global_bar.complete(() => {
       Caption.render('Its filled');
       generator.ready();
       keyboardManager.enable();
@@ -124,6 +125,6 @@ class TransitionRoom {
 }
 
 module.exports = {
-  TransitionRoom,
+  HubRoom,
 };
 

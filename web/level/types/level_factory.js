@@ -16,32 +16,32 @@ class Level_Factory {
   static create(level_name, spawn_id) {
     this.clear();
 
-    const { Intro          } = require('./intro');
-    const { ItemsRoom      } = require('./item_room');
-    const { Street         } = require('./street');
-    const { TransitionRoom } = require('./transition_room');
-    const { DefendRoom     } = require('./defend_room');
-    const { ParkRoom       } = require('./park_room');
-    const { StartRoom      } = require('./start');
-    const { SimpleRoom     } = require('./simple_room');
-    const { RanbirRoom     } = require('./ranbir_room');
-    const { DevRoom        } = require('./dev_room');
-    const { RanbirFloor0  } = require('./ranbir_flat_0');
-    const { RanbirFloor1  } = require('./ranbir_flat_1');
-    const { RanbirFloor2  } = require('./ranbir_flat_2');
+    const { IntroRoom    } = require('./intro');
+    const { ItemsRoom    } = require('./item_room');
+    const { StreetRoom   } = require('./street');
+    const { HubRoom      } = require('./transition_room');
+    const { DefendRoom   } = require('./defend_room');
+    const { ParkRoom     } = require('./park_room');
+    const { StartRoom    } = require('./start');
+    const { SimpleRoom   } = require('./simple_room');
+    const { RanbirRoom   } = require('./ranbir_room');
+    const { DevRoom      } = require('./dev_room');
+    const { RanbirFloor0 } = require('./ranbir_flat_0');
+    const { RanbirFloor1 } = require('./ranbir_flat_1');
+    const { RanbirFloor2 } = require('./ranbir_flat_2');
 
     switch(level_name) {
-      case 'intro'     : return new Intro();
+      case 'intro'     : return new IntroRoom();
       case 'item'      : return new ItemsRoom();
-      case 'street'    : return new Street(spawn_id);
-      case 'transition': return new TransitionRoom();
+      case 'street'    : return new StreetRoom(spawn_id);
+      case 'transition': return new HubRoom();
       case 'defend'    : return new DefendRoom();
       case 'start'     : return new StartRoom();
       case 'park'      : return new ParkRoom();
       case 'ranbir_flat'  : return new RanbirRoom();
       case 'ranbir_flat_0': return new RanbirFloor0(spawn_id);
-      case 'ranbir_flat_1': return new RanbirFloor1(spawn_id);
-      case 'ranbir_flat_2': return new RanbirFloor2(spawn_id);
+      case 'ranbir_flat_1': return new RanbirFloor1();
+      case 'ranbir_flat_2': return new RanbirFloor2();
       case 'dev'          : return new DevRoom(spawn_id);
       default: new SimpleRoom(level_name);
     }

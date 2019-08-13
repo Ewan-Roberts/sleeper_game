@@ -44735,15 +44735,24 @@ const { Blood            } = require('../../effects/blood');
 const { env              } = require('../../../config');
 const { MeleeBox         } = require('../../engine/melee');
 
+// TODO Something like this
 function break_at_door(path) {
-  for (let i = 0; i < path.length; i++) {
-    if(path[i].door) {
-      path.length = i+1;
-      return path;
-    }
-  }
-  return path;
+  const door_index = path.indexOf(node => node.door === true);
+  if(!door_index) return;
+
+  const path_to_door = door_index.trimRight(door_index);
+  return path_to_door;
 }
+
+// function break_at_door(path) {
+//   for (let i = 0; i < path.length; i++) {
+//     if(path[i].door) {
+//       path.length = i+1;
+//       return path;
+//     }
+//   }
+//   return path;
+// }
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor(data) {
@@ -44819,6 +44828,7 @@ class LogicSprite extends extras.AnimatedSprite {
       this.tween.time = 500;
       return;
     }
+
     const door_path = break_at_door(normal_path);
     const door_tile = door_path[door_path.length - 1];
 
@@ -46271,7 +46281,6 @@ const { loader } = require('./engine/packer');
 loader.add('../../images/bedroom_EN_web.json');
 loader.add('../../images/work_EN_web.json');
 loader.load(() => {
-  console.log('33333333');
   const { Level_Loader } = require('./engine/boot_loader.js');
   Level_Loader.boot();
 });
@@ -47649,7 +47658,7 @@ const {
 const white_filter = new filters.ColorMatrixFilter();
 white_filter.greyscale(3);
 
-class Intro {
+class IntroRoom {
   constructor() {
     this.name   = 'intro_room';
     this.data   = require('../data/intro_room.json');
@@ -47781,7 +47790,7 @@ class Intro {
 }
 
 module.exports = {
-  Intro,
+  IntroRoom,
 };
 
 },{"../../../config":1,"../../effects/fade_sprite.js":219,"../../engine/app":223,"../../engine/app.js":223,"../../engine/pixi_containers":230,"../../engine/tween":234,"../../view/button":286,"../data/intro_room.json":241,"../elements":259,"../elements/click_pad":254,"pixi.js":151}],268:[function(require,module,exports){
@@ -47825,32 +47834,32 @@ class Level_Factory {
   static create(level_name, spawn_id) {
     this.clear();
 
-    const { Intro          } = require('./intro');
-    const { ItemsRoom      } = require('./item_room');
-    const { Street         } = require('./street');
-    const { TransitionRoom } = require('./transition_room');
-    const { DefendRoom     } = require('./defend_room');
-    const { ParkRoom       } = require('./park_room');
-    const { StartRoom      } = require('./start');
-    const { SimpleRoom     } = require('./simple_room');
-    const { RanbirRoom     } = require('./ranbir_room');
-    const { DevRoom        } = require('./dev_room');
-    const { RanbirFloor0  } = require('./ranbir_flat_0');
-    const { RanbirFloor1  } = require('./ranbir_flat_1');
-    const { RanbirFloor2  } = require('./ranbir_flat_2');
+    const { IntroRoom    } = require('./intro');
+    const { ItemsRoom    } = require('./item_room');
+    const { StreetRoom   } = require('./street');
+    const { HubRoom      } = require('./transition_room');
+    const { DefendRoom   } = require('./defend_room');
+    const { ParkRoom     } = require('./park_room');
+    const { StartRoom    } = require('./start');
+    const { SimpleRoom   } = require('./simple_room');
+    const { RanbirRoom   } = require('./ranbir_room');
+    const { DevRoom      } = require('./dev_room');
+    const { RanbirFloor0 } = require('./ranbir_flat_0');
+    const { RanbirFloor1 } = require('./ranbir_flat_1');
+    const { RanbirFloor2 } = require('./ranbir_flat_2');
 
     switch(level_name) {
-      case 'intro'     : return new Intro();
+      case 'intro'     : return new IntroRoom();
       case 'item'      : return new ItemsRoom();
-      case 'street'    : return new Street(spawn_id);
-      case 'transition': return new TransitionRoom();
+      case 'street'    : return new StreetRoom(spawn_id);
+      case 'transition': return new HubRoom();
       case 'defend'    : return new DefendRoom();
       case 'start'     : return new StartRoom();
       case 'park'      : return new ParkRoom();
       case 'ranbir_flat'  : return new RanbirRoom();
       case 'ranbir_flat_0': return new RanbirFloor0(spawn_id);
-      case 'ranbir_flat_1': return new RanbirFloor1(spawn_id);
-      case 'ranbir_flat_2': return new RanbirFloor2(spawn_id);
+      case 'ranbir_flat_1': return new RanbirFloor1();
+      case 'ranbir_flat_2': return new RanbirFloor2();
       case 'dev'          : return new DevRoom(spawn_id);
       default: new SimpleRoom(level_name);
     }
@@ -47998,7 +48007,7 @@ module.exports = {
 
 },{"../../../config":1,"../../character/archetypes/logic_zombie":205,"../../character/archetypes/path_rat":207,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../data/park_room.json":243,"../elements":259}],271:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
-const { Player       } = require('../../character/archetypes/player');
+//const { Player       } = require('../../character/archetypes/player');
 const { viewport    } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
 const { random_bound } = require('../../utils/math.js');
@@ -48048,7 +48057,7 @@ async function flicker(light) {
   await flicker(light);
 }
 
-let first = false;
+//const first = false;
 
 class RanbirFloor0 {
   constructor(spawn_id) {
@@ -48076,10 +48085,14 @@ class RanbirFloor0 {
   }
 
   _set_elements() {
-    if(!first) {
-      this.player.position.copy(this.entry_point);
-      first = true;
-    }
+    // TODO solve the issue of entry point ids
+
+    viewport.moveCenter(this.entry_point.x, this.entry_point.y);
+
+    // if(!first) {
+    //   this.player.position.copy(this.entry_point);
+    //   first = true;
+    // }
   }
 
   async _start() {
@@ -48094,7 +48107,7 @@ module.exports = {
   RanbirFloor0,
 };
 
-},{"../../../config":1,"../../character/archetypes/player":208,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":284,"../../utils/time.js":285,"../data/ranbir_flat_0.json":245,"../elements":259}],272:[function(require,module,exports){
+},{"../../../config":1,"../../engine/app":223,"../../engine/pixi_containers":230,"../../utils/math.js":284,"../../utils/time.js":285,"../data/ranbir_flat_0.json":245,"../elements":259}],272:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
 const { filters      } = require('pixi.js');
 const { Player       } = require('../../character/archetypes/player');
@@ -49067,7 +49080,7 @@ async function flicker(light) {
   await flicker(light);
 }
 
-class Street {
+class StreetRoom {
   constructor(spawn_id) {
     this.name   = 'home_street';
     this.data   = require('../data/home_street.json');
@@ -49136,14 +49149,16 @@ class Street {
 }
 
 module.exports = {
-  Street,
+  StreetRoom,
 };
 
 },{"../../../config":1,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../engine/pixi_containers":230,"../../utils/math.js":284,"../../utils/time.js":285,"../data/home_street.json":240,"../elements":259,"pixi.js":151}],278:[function(require,module,exports){
 const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
 const { distance_between } = require('../../utils/math');
-const { ProgressBar   } = require('../../view/progress_bar');
+// TODO temp progress bar
+// const { ProgressBar   } = require('../../view/progress_bar');
+const { global_bar   } = require('../../view/progress_bar');
 const { Caption       } = require('../../view/caption');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
@@ -49170,7 +49185,7 @@ class Light extends Floor {
   }
 }
 
-class TransitionRoom {
+class HubRoom {
   constructor() {
     this.name   = 'transition_room';
     this.data   = require('../data/transition_room.json');
@@ -49201,8 +49216,7 @@ class TransitionRoom {
 
     // TODO couple the progress bar to the generator?
 
-    const bar = new ProgressBar();
-    bar.visible = false;
+    global_bar.visible = false;
 
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
@@ -49214,10 +49228,10 @@ class TransitionRoom {
       if(this.player.inventory.contains('gas_canister')) {
         const fuel_item = this.player.inventory.take_item('gas_canister');
         keyboardManager.disable();
-        bar.visible = true;
+        global_bar.visible = true;
 
         generator.fuel = fuel_item.condition;
-        bar.animate_increase(fuel_item.condition);
+        global_bar.animate_increase(fuel_item.condition);
         lights.forEach(light => light.turn_on());
       }
     });
@@ -49228,7 +49242,7 @@ class TransitionRoom {
       });
     });
 
-    bar.complete(() => {
+    global_bar.complete(() => {
       Caption.render('Its filled');
       generator.ready();
       keyboardManager.enable();
@@ -49266,7 +49280,7 @@ class TransitionRoom {
 }
 
 module.exports = {
-  TransitionRoom,
+  HubRoom,
 };
 
 
@@ -49720,8 +49734,8 @@ module.exports = {
 };
 
 },{}],286:[function(require,module,exports){
-const {Text,Sprite} = require('pixi.js');
-const { guis      } = require('../engine/pixi_containers');
+const { Text, Sprite, Texture } = require('pixi.js');
+const { guis } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
 class Label extends Text{
@@ -49734,14 +49748,24 @@ class Label extends Text{
       lineJoin: 'round',
       strokeThickness: 5,
     });
+
     this.anchor.set(0.5);
     guis.addChild(this);
   }
 }
 
-class Button {
-  constructor({label_action, label_description, label_image}) {
-    this.name = 'button';
+class Button extends Sprite {
+  constructor({
+    label_action,
+    label_description,
+    label_image,
+  }) {
+    super(Texture.fromImage(label_image));
+
+    this.name   = 'button';
+    this.height = 30;
+    this.width  = 30;
+    this.anchor.set(0.5);
 
     if(label_action) {
       this.action_label = new Label(label_action);
@@ -49750,17 +49774,13 @@ class Button {
       this.description_label = new Label(label_description);
     }
 
-    this.sprite = Sprite.fromFrame(label_image);
-    this.sprite.anchor.set(0.5);
-    this.sprite.height = 30;
-    this.sprite.width  = 30;
-
+    // Start invisible
     this.visible = false;
-    guis.addChild(this.sprite);
+    guis.addChild(this);
   }
 
   set_position({x, y}) {
-    this.sprite.position.set(x, y);
+    this.position.copy(x, y);
 
     if(this.action_label) {
       this.action_label.position.copy({x, y: y+30});
@@ -49771,7 +49791,7 @@ class Button {
   }
 
   set visible(bool) {
-    this.sprite.visible = bool;
+    super.visible = bool;
 
     if(this.action_label) {
       this.action_label.visible = bool;
@@ -50276,8 +50296,10 @@ class ProgressBar extends Container {
   }
 }
 
+const global_bar = new ProgressBar();
+
 module.exports = {
-  ProgressBar,
+  global_bar,
 };
 
 },{"../engine/app":223,"pixi.js":151}],293:[function(require,module,exports){

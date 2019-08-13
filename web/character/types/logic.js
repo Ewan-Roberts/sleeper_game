@@ -14,15 +14,24 @@ const { Blood            } = require('../../effects/blood');
 const { env              } = require('../../../config');
 const { MeleeBox         } = require('../../engine/melee');
 
+// TODO Something like this
 function break_at_door(path) {
-  for (let i = 0; i < path.length; i++) {
-    if(path[i].door) {
-      path.length = i+1;
-      return path;
-    }
-  }
-  return path;
+  const door_index = path.indexOf(node => node.door === true);
+  if(!door_index) return;
+
+  const path_to_door = door_index.trimRight(door_index);
+  return path_to_door;
 }
+
+// function break_at_door(path) {
+//   for (let i = 0; i < path.length; i++) {
+//     if(path[i].door) {
+//       path.length = i+1;
+//       return path;
+//     }
+//   }
+//   return path;
+// }
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor(data) {
@@ -98,6 +107,7 @@ class LogicSprite extends extras.AnimatedSprite {
       this.tween.time = 500;
       return;
     }
+
     const door_path = break_at_door(normal_path);
     const door_tile = door_path[door_path.length - 1];
 

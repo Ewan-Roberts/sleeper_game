@@ -44,7 +44,7 @@ async function flicker(light) {
   await flicker(light);
 }
 
-class Street {
+class StreetRoom {
   constructor(spawn_id) {
     this.name   = 'home_street';
     this.data   = require('../data/home_street.json');
@@ -113,5 +113,5 @@ class Street {
 }
 
 module.exports = {
-  Street,
+  StreetRoom,
 };

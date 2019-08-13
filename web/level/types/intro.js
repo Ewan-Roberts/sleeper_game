@@ -29,7 +29,7 @@ const {
 const white_filter = new filters.ColorMatrixFilter();
 white_filter.greyscale(3);
 
-class Intro {
+class IntroRoom {
   constructor() {
     this.name   = 'intro_room';
     this.data   = require('../data/intro_room.json');
@@ -161,5 +161,5 @@ class Intro {
 }
 
 module.exports = {
-  Intro,
+  IntroRoom,
 };

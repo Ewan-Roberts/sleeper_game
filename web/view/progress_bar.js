@@ -85,6 +85,8 @@ class ProgressBar extends Container {
   }
 }
 
+const global_bar = new ProgressBar();
+
 module.exports = {
-  ProgressBar,
+  global_bar,
 };

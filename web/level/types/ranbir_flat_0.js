@@ -1,5 +1,5 @@
 //const { Level_Factory } = require('./level_factory');
-const { Player       } = require('../../character/archetypes/player');
+//const { Player       } = require('../../character/archetypes/player');
 const { viewport    } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
 const { random_bound } = require('../../utils/math.js');
@@ -49,7 +49,7 @@ async function flicker(light) {
   await flicker(light);
 }
 
-let first = false;
+//const first = false;
 
 class RanbirFloor0 {
   constructor(spawn_id) {
@@ -77,10 +77,14 @@ class RanbirFloor0 {
   }
 
   _set_elements() {
-    if(!first) {
-      this.player.position.copy(this.entry_point);
-      first = true;
-    }
+    // TODO solve the issue of entry point ids
+
+    viewport.moveCenter(this.entry_point.x, this.entry_point.y);
+
+    // if(!first) {
+    //   this.player.position.copy(this.entry_point);
+    //   first = true;
+    // }
   }
 
   async _start() {
