@@ -43850,17 +43850,13 @@ class LogicRat extends PathSprite {
     this.inventory.populate();
 
     this.interactive = true;
-    this.button = new Button({
+    this.button = new Button(this, {
       label_action: 'Loot',
       label_description: 'Corpse',
       label_image: 'eye_icon',
     });
-    this.button.set_position(this);
 
-    this.on('mouseover', () => this.button.visible = true);
-    this.on('mouseout', () => this.button.visible = false);
     this.click = () => {
-      this.button.visible = false;
       this.inventory.set_position(this);
       this.inventory.fade_in();
     };
@@ -44335,7 +44331,8 @@ function point_contains(player) {
   }
 
   const pad = pads.children.find(child => child.containsPoint(point));
-  if(pad && pad.events) {
+  if(pad) {
+    console.log(221);
     player.animation.speed = 0.60;
     pad.events.emit('trigger');
     return pad.speed;
@@ -44736,23 +44733,23 @@ const { env              } = require('../../../config');
 const { MeleeBox         } = require('../../engine/melee');
 
 // TODO Something like this
-function break_at_door(path) {
-  const door_index = path.indexOf(node => node.door === true);
-  if(!door_index) return;
-
-  const path_to_door = door_index.trimRight(door_index);
-  return path_to_door;
-}
-
 // function break_at_door(path) {
-//   for (let i = 0; i < path.length; i++) {
-//     if(path[i].door) {
-//       path.length = i+1;
-//       return path;
-//     }
-//   }
-//   return path;
+//   const door_index = path.indexOf(node => node.door === true);
+//   if(!door_index) return;
+
+//   const path_to_door = door_index.trimRight(door_index);
+//   return path_to_door;
 // }
+
+function break_at_door(path) {
+  for (let i = 0; i < path.length; i++) {
+    if(path[i].door) {
+      path.length = i+1;
+      return path;
+    }
+  }
+  return path;
+}
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor(data) {
@@ -44786,17 +44783,13 @@ class LogicSprite extends extras.AnimatedSprite {
     this.inventory.populate();
 
     this.interactive = true;
-    this.button = new Button({
+    this.button = new Button(this, {
       label_action: 'Loot',
       label_description: 'Corpse',
       label_image: 'eye_icon',
     });
-    this.button.set_position(this);
 
-    this.on('mouseover', () => this.button.visible = true);
-    this.on('mouseout', () => this.button.visible = false);
     this.click = () => {
-      this.button.visible = false;
       this.inventory.set_position(this);
       this.inventory.fade_in();
     };
@@ -46949,22 +46942,10 @@ class Chest extends Element {
     });
   }
 
+  // TODO This is repeated in a few places
   label(data) {
     this.tint = 0xd3d3d3;
-    this.button = new Button(data);
-    this.on('mouseover', () => {
-      this.tint = 0xffffff;
-      this.button.set_position(this);
-      this.button.visible = true;
-    });
-    this.on('mouseout', () => {
-      this.tint = 0xd3d3d3;
-      this.button.visible = false;
-    });
-    this.on('click', () => {
-      this.tint = 0xd3d3d3;
-      this.button.visible = false;
-    });
+    this.button = new Button(this, data);
   }
 
   remove() {
@@ -47142,20 +47123,8 @@ class Door extends Element {
   }
 
   overlay(value) {
-    this.button = new Button(value);
-    this.button.visible = false;
+    this.button = new Button(this,value);
     this.tint = 0xd3d3d3;
-    this.on('mouseover', () => {
-      this.tint = 0xffffff;
-      if(this.button._destoyed) return;
-      this.button.set_position(this);
-      this.button.visible = true;
-    });
-    this.on('mouseout', () => {
-      this.tint = 0xd3d3d3;
-      if(this.button._destoyed) return;
-      this.button.visible = false;
-    });
   }
 
   pathfind_logic() {
@@ -47409,22 +47378,10 @@ class Generator extends Element {
     this._fuel = value;
   }
 
+  // TODO This is repeated in a few places
   label(data) {
     this.tint = 0xd3d3d3;
-    this.button = new Button(data);
-    this.on('mouseover', () => {
-      this.tint = 0xffffff;
-      this.button.set_position(this);
-      this.button.visible = true;
-    });
-    this.on('mouseout', () => {
-      this.tint = 0xd3d3d3;
-      this.button.visible = false;
-    });
-    this.on('click', () => {
-      this.tint = 0xd3d3d3;
-      this.button.visible = false;
-    });
+    this.button = new Button(this, data);
   }
 }
 
@@ -47486,22 +47443,23 @@ module.exports = {
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
 const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
-const { Player        } = require('../../character/archetypes/player');
+const { players       } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('./level_factory');
 
 class DefendRoom  {
   constructor() {
     this.name     = 'defend_room';
-    this.player   = new Player();
+    this.player = players.children[0];
     this.elements = require('../data/defend_room.json');
 
+    this.exit_pad = this.elements.exit_pad.map(data => new Trigger_Pad(data));
     this._set_elements();
   }
 
   _set_elements() {
     Level_Factory.generate(this.elements);
 
-    const { prey, exit_pad, grid, player } = this.elements;
+    const { prey, grid, player } = this.elements;
 
     this.player.position.copy(player[0]);
     const zombies = prey.map((unit,i) => {
@@ -47511,11 +47469,8 @@ class DefendRoom  {
       return zombie;
     });
 
-    exit_pad.forEach(data => {
-      const pad = new Trigger_Pad(data);
-
+    this.exit_pad.forEach(pad => {
       pad.events.once('trigger', () => zombies.forEach(unit => unit.logic_start()));
-      return pad;
     });
 
     pathfind.create_level_grid(grid[0]);
@@ -47526,7 +47481,7 @@ module.exports = {
   DefendRoom,
 };
 
-},{"../../character/archetypes/logic_zombie":205,"../../character/archetypes/player":208,"../../engine/pathfind.js":229,"../data/defend_room.json":238,"../elements/pad":261,"./level_factory":269}],266:[function(require,module,exports){
+},{"../../character/archetypes/logic_zombie":205,"../../engine/pathfind.js":229,"../../engine/pixi_containers":230,"../data/defend_room.json":238,"../elements/pad":261,"./level_factory":269}],266:[function(require,module,exports){
 //const { Level_Factory } = require('./level_factory');
 const { Player       } = require('../../character/archetypes/player');
 const { LogicRat     } = require('../../character/archetypes/logic_rat');
@@ -47729,15 +47684,8 @@ class IntroRoom {
     });
 
     this.generator.on('click', () => {
-      console.log(this.player);
-      console.log(this.player.inventory.contains('gas_canister'));
       const poo = this.player.inventory.take_item('gas_canister');
-      console.log(poo);
-      console.log(this.player.inventory.contains('gas_canister'));
       this.generator.inventory.give_item(poo);
-      console.log(this.generator.inventory);
-
-      console.log('hew');
     });
 
     this.locked_door.on('click', () => {
@@ -47747,17 +47695,15 @@ class IntroRoom {
 
     const pad_data = this.data.click_pad[0];
     const pad = new Click_Pad(pad_data);
-    const button = new Button(pad_data);
-    button.set_position(pad_data);
+    const button = new Button(pad, pad_data);
     pad.on('mouseover', () => {
       this.dumpster.tint = 0xffffff;
-      button.visible = true;
     });
 
     pad.on('mouseout', () => {
       this.dumpster.tint = 0xd3d3d3;
-      button.visible = false;
     });
+
     pad.interactive = false;
 
     this.spear.click = () => {
@@ -49755,12 +49701,29 @@ class Label extends Text{
 }
 
 class Button extends Sprite {
-  constructor({
+  constructor(sprite, {
     label_action,
     label_description,
     label_image,
   }) {
     super(Texture.fromImage(label_image));
+
+    this.sprite = sprite;
+    this.sprite.on('mouseover', () => {
+      this.sprite.tint = 0xffffff;
+      this.set_position(this.sprite);
+      this.show();
+    });
+    this.sprite.on('mouseout', () => {
+      this.sprite.tint = 0xd3d3d3;
+      this.hide();
+    });
+    this.sprite.on('click', () => {
+      this.sprite.tint = 0xd3d3d3;
+      this.hide();
+    });
+
+    this.set_position(this.sprite);
 
     this.name   = 'button';
     this.height = 30;
@@ -49780,7 +49743,7 @@ class Button extends Sprite {
   }
 
   set_position({x, y}) {
-    this.position.copy(x, y);
+    this.position.copy({x, y});
 
     if(this.action_label) {
       this.action_label.position.copy({x, y: y+30});
@@ -49790,14 +49753,23 @@ class Button extends Sprite {
     }
   }
 
-  set visible(bool) {
-    super.visible = bool;
-
+  hide() {
+    this.visible = false;
     if(this.action_label) {
-      this.action_label.visible = bool;
+      this.action_label.visible = false;
     }
     if(this.description_label) {
-      this.description_label.visible = bool;
+      this.description_label.visible = false;
+    }
+  }
+
+  show() {
+    this.visible = true;
+    if(this.action_label) {
+      this.action_label.visible = true;
+    }
+    if(this.description_label) {
+      this.description_label.visible = true;
     }
   }
 
@@ -49813,12 +49785,12 @@ module.exports = {
 };
 
 },{"../engine/pixi_containers":230,"pixi.js":151}],287:[function(require,module,exports){
-const { stage        } = require('../engine/app');
-const { viewport     } = require('../engine/app');
-const { Sprite       } = require('pixi.js');
-const { Texture      } = require('pixi.js');
-const { Container    } = require('pixi.js');
-const { Text    } = require('pixi.js');
+const { stage     } = require('../engine/app');
+const { viewport  } = require('../engine/app');
+const { Sprite    } = require('pixi.js');
+const { Texture   } = require('pixi.js');
+const { Container } = require('pixi.js');
+const { Text      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
@@ -49836,6 +49808,7 @@ dialog.position.copy(background);
 dialog.y -= 15;
 dialog.anchor.set(0.5, 1);
 
+//TODO handle gui elements in pixi_containers
 container.addChild(
   background,
   dialog
@@ -49866,6 +49839,9 @@ class Caption {
     container.visible = false;
   }
 }
+
+// start hidden
+Caption.hide();
 
 module.exports = {
   Caption,

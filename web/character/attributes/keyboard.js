@@ -41,7 +41,8 @@ function point_contains(player) {
   }
 
   const pad = pads.children.find(child => child.containsPoint(point));
-  if(pad && pad.events) {
+  if(pad) {
+    console.log(221);
     player.animation.speed = 0.60;
     pad.events.emit('trigger');
     return pad.speed;

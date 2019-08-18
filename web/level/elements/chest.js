@@ -39,22 +39,10 @@ class Chest extends Element {
     });
   }
 
+  // TODO This is repeated in a few places
   label(data) {
     this.tint = 0xd3d3d3;
-    this.button = new Button(data);
-    this.on('mouseover', () => {
-      this.tint = 0xffffff;
-      this.button.set_position(this);
-      this.button.visible = true;
-    });
-    this.on('mouseout', () => {
-      this.tint = 0xd3d3d3;
-      this.button.visible = false;
-    });
-    this.on('click', () => {
-      this.tint = 0xd3d3d3;
-      this.button.visible = false;
-    });
+    this.button = new Button(this, data);
   }
 
   remove() {

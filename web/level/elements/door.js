@@ -101,20 +101,8 @@ class Door extends Element {
   }
 
   overlay(value) {
-    this.button = new Button(value);
-    this.button.visible = false;
+    this.button = new Button(this,value);
     this.tint = 0xd3d3d3;
-    this.on('mouseover', () => {
-      this.tint = 0xffffff;
-      if(this.button._destoyed) return;
-      this.button.set_position(this);
-      this.button.visible = true;
-    });
-    this.on('mouseout', () => {
-      this.tint = 0xd3d3d3;
-      if(this.button._destoyed) return;
-      this.button.visible = false;
-    });
   }
 
   pathfind_logic() {

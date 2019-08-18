@@ -35,17 +35,13 @@ class LogicRat extends PathSprite {
     this.inventory.populate();
 
     this.interactive = true;
-    this.button = new Button({
+    this.button = new Button(this, {
       label_action: 'Loot',
       label_description: 'Corpse',
       label_image: 'eye_icon',
     });
-    this.button.set_position(this);
 
-    this.on('mouseover', () => this.button.visible = true);
-    this.on('mouseout', () => this.button.visible = false);
     this.click = () => {
-      this.button.visible = false;
       this.inventory.set_position(this);
       this.inventory.fade_in();
     };

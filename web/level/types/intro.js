@@ -100,15 +100,8 @@ class IntroRoom {
     });
 
     this.generator.on('click', () => {
-      console.log(this.player);
-      console.log(this.player.inventory.contains('gas_canister'));
       const poo = this.player.inventory.take_item('gas_canister');
-      console.log(poo);
-      console.log(this.player.inventory.contains('gas_canister'));
       this.generator.inventory.give_item(poo);
-      console.log(this.generator.inventory);
-
-      console.log('hew');
     });
 
     this.locked_door.on('click', () => {
@@ -118,17 +111,15 @@ class IntroRoom {
 
     const pad_data = this.data.click_pad[0];
     const pad = new Click_Pad(pad_data);
-    const button = new Button(pad_data);
-    button.set_position(pad_data);
+    const button = new Button(pad, pad_data);
     pad.on('mouseover', () => {
       this.dumpster.tint = 0xffffff;
-      button.visible = true;
     });
 
     pad.on('mouseout', () => {
       this.dumpster.tint = 0xd3d3d3;
-      button.visible = false;
     });
+
     pad.interactive = false;
 
     this.spear.click = () => {

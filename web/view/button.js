@@ -19,12 +19,29 @@ class Label extends Text{
 }
 
 class Button extends Sprite {
-  constructor({
+  constructor(sprite, {
     label_action,
     label_description,
     label_image,
   }) {
     super(Texture.fromImage(label_image));
+
+    this.sprite = sprite;
+    this.sprite.on('mouseover', () => {
+      this.sprite.tint = 0xffffff;
+      this.set_position(this.sprite);
+      this.show();
+    });
+    this.sprite.on('mouseout', () => {
+      this.sprite.tint = 0xd3d3d3;
+      this.hide();
+    });
+    this.sprite.on('click', () => {
+      this.sprite.tint = 0xd3d3d3;
+      this.hide();
+    });
+
+    this.set_position(this.sprite);
 
     this.name   = 'button';
     this.height = 30;
@@ -44,7 +61,7 @@ class Button extends Sprite {
   }
 
   set_position({x, y}) {
-    this.position.copy(x, y);
+    this.position.copy({x, y});
 
     if(this.action_label) {
       this.action_label.position.copy({x, y: y+30});
@@ -54,14 +71,23 @@ class Button extends Sprite {
     }
   }
 
-  set visible(bool) {
-    super.visible = bool;
-
+  hide() {
+    this.visible = false;
     if(this.action_label) {
-      this.action_label.visible = bool;
+      this.action_label.visible = false;
     }
     if(this.description_label) {
-      this.description_label.visible = bool;
+      this.description_label.visible = false;
+    }
+  }
+
+  show() {
+    this.visible = true;
+    if(this.action_label) {
+      this.action_label.visible = true;
+    }
+    if(this.description_label) {
+      this.description_label.visible = true;
     }
   }
 

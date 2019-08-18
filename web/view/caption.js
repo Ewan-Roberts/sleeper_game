@@ -1,9 +1,9 @@
-const { stage        } = require('../engine/app');
-const { viewport     } = require('../engine/app');
-const { Sprite       } = require('pixi.js');
-const { Texture      } = require('pixi.js');
-const { Container    } = require('pixi.js');
-const { Text    } = require('pixi.js');
+const { stage     } = require('../engine/app');
+const { viewport  } = require('../engine/app');
+const { Sprite    } = require('pixi.js');
+const { Texture   } = require('pixi.js');
+const { Container } = require('pixi.js');
+const { Text      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
@@ -21,6 +21,7 @@ dialog.position.copy(background);
 dialog.y -= 15;
 dialog.anchor.set(0.5, 1);
 
+//TODO handle gui elements in pixi_containers
 container.addChild(
   background,
   dialog
@@ -51,6 +52,9 @@ class Caption {
     container.visible = false;
   }
 }
+
+// start hidden
+Caption.hide();
 
 module.exports = {
   Caption,

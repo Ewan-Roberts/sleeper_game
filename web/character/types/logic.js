@@ -15,23 +15,23 @@ const { env              } = require('../../../config');
 const { MeleeBox         } = require('../../engine/melee');
 
 // TODO Something like this
-function break_at_door(path) {
-  const door_index = path.indexOf(node => node.door === true);
-  if(!door_index) return;
-
-  const path_to_door = door_index.trimRight(door_index);
-  return path_to_door;
-}
-
 // function break_at_door(path) {
-//   for (let i = 0; i < path.length; i++) {
-//     if(path[i].door) {
-//       path.length = i+1;
-//       return path;
-//     }
-//   }
-//   return path;
+//   const door_index = path.indexOf(node => node.door === true);
+//   if(!door_index) return;
+
+//   const path_to_door = door_index.trimRight(door_index);
+//   return path_to_door;
 // }
+
+function break_at_door(path) {
+  for (let i = 0; i < path.length; i++) {
+    if(path[i].door) {
+      path.length = i+1;
+      return path;
+    }
+  }
+  return path;
+}
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor(data) {
@@ -65,17 +65,13 @@ class LogicSprite extends extras.AnimatedSprite {
     this.inventory.populate();
 
     this.interactive = true;
-    this.button = new Button({
+    this.button = new Button(this, {
       label_action: 'Loot',
       label_description: 'Corpse',
       label_image: 'eye_icon',
     });
-    this.button.set_position(this);
 
-    this.on('mouseover', () => this.button.visible = true);
-    this.on('mouseout', () => this.button.visible = false);
     this.click = () => {
-      this.button.visible = false;
       this.inventory.set_position(this);
       this.inventory.fade_in();
     };
