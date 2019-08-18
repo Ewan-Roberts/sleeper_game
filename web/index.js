@@ -1,3 +1,20 @@
+const JSDOM = require( 'jsdom' ).JSDOM;
+
+const jsdomOptions = {
+  url: 'http://localhost/',
+};
+
+const jsdomInstance = new JSDOM( '', jsdomOptions );
+const { window } = jsdomInstance;
+
+Object.getOwnPropertyNames( window )
+  .filter( property => !property.startsWith( '_' ) )
+  .forEach( key => global[key] = window[key] );
+
+global.window = window;
+window.console = global.console;
+
+
 require('./utils/globals');
 
 const { loader } = require('./engine/packer');

@@ -75,7 +75,7 @@ class Generator extends Element {
   state_handler() {
     switch(this.state) {
       case 'running' : return this.ready();
-      case 'ready'   : return this.running();
+      case 'ready'   : return this.run();
       case 'empty'   : return this.ready();
     }
   }

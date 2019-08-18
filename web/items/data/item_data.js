@@ -381,7 +381,7 @@ const items = [
     rank: 0,
     cost: 10,
     category: 'material',
-    condition: 20,
+    condition: 0.2,
 
     visual_name: 'a small gas canister',
     description: 'some cheap fuel',

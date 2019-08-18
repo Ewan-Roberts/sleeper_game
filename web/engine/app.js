@@ -1,7 +1,7 @@
-const { env      } = require('../../config');
-const { Viewport } = require('pixi-viewport');
 const PIXI = require('pixi.js');
 const { Application, settings } = PIXI;
+const { env      } = require('../../config');
+const { Viewport } = require('pixi-viewport');
 
 console.time();
 

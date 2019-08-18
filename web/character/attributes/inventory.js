@@ -18,7 +18,7 @@ class Inventory extends View_Inventory {
   populate_with_random_items() {
     this.items = Item_Manager.get_random_items();
 
-    this.populate_slots(this.items);
+    this.populate();
   }
 
   populate() {
@@ -31,16 +31,23 @@ class Inventory extends View_Inventory {
   }
 
   populate_with_items(items) {
-    this.items = items.map(name => Item_Manager.get_item(name));
+    this.items.concat(
+      items.map(name => Item_Manager.get_item(name))
+    );
 
-    this.populate_slots(this.items);
+    this.populate();
   }
 
-  populate_with_item(name) {
-    const item = Item_Manager.get_item(name);
+  populate_with_item(name,
+    {
+      condition,
+    }
+    = {}
+  ) {
+    const item = Item_Manager.get_item(name, { condition });
     this.items.push(item);
 
-    this.populate_slots(this.items);
+    this.populate();
   }
 
   equip(name) {

@@ -5,88 +5,102 @@ const { Texture      } = require('pixi.js');
 const { Container    } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
-class ProgressBar extends Container {
-  constructor() {
-    super();
-    this.bar = new Sprite(Texture.WHITE);
-    this.background = new Sprite(Texture.WHITE);
-    this.tween_bar = tweenManager.createTween(this.bar);
+const container = new Container();
+container.x = viewport.screenWidth/2;
+container.y = viewport.screenHeight;
 
-    this.addChild(
-      this.bar,
-      this.background
-    );
+const background = new Sprite(Texture.WHITE);
+background.width = 500;
+background.height = 30;
+background.anchor.set(0.5, 1);
+background.alpha = 0.1;
 
-    stage.addChild(this);
+const maximum_width = background.width - 20;
 
-    this._set_position();
+const bar = new Sprite(Texture.WHITE);
+bar.width = 0;
+bar.height = 15;
+bar.x -= maximum_width/2;
+bar.y -= 5;
+bar.anchor.set(0, 1);
+bar.tint = 0x9acd3;
+
+const tween_bar = tweenManager.createTween(bar);
+
+container.addChild(
+  bar,
+  background
+);
+
+stage.addChild(container);
+
+const DEFAULT_TIME_TO_COMPLETE = 10000;
+
+class ProgressBar {
+  static initialize() {
+    this.hide(); // Start hidden
+
+    this.time = DEFAULT_TIME_TO_COMPLETE;
   }
 
-  _set_position() {
-    this.x = viewport.screenWidth/2;
-    this.y = viewport.screenHeight;
-
-    this.background.width = 500;
-    this.background.height = 30;
-    this.background.anchor.set(0.5, 1);
-    this.background.alpha = 0.1;
-
-    this.bar.width = 0;
-    this.bar.height = 15;
-    this.bar.x -= this.background.width/2 - 10;
-    this.bar.y -= 5;
-    this.bar.anchor.set(0, 1);
-    this.bar.tint = 0x9acd3;
+  static set percentage(percentage) {
+    const amount = (maximum_width)*percentage;
+    bar.width = amount;
   }
 
-  set percentage(percentage) {
-    const maximum_width = this.background.width;
-    const amount = (maximum_width/100)*percentage;
-    this.bar.width = amount;
-  }
-
-  get percentage() {
-    const maximum_width = this.background.width;
-    const percentage = (this.bar.width/maximum_width)*100;
+  static get percentage() {
+    const percentage = (bar.width/maximum_width);
     return percentage;
   }
 
-  pause() {
-    if(this.tween_bar) this.tween_bar.stop();
+  static show() {
+    container.visible = true;
   }
 
-  complete(func) {
-    this.tween_bar.on('stop', func);
+  static hide() {
+    container.visible = false;
   }
 
-  animate_increase(value) {
-    if(this.tween_bar.active) return;
+  static pause() {
+    if(tween_bar) tween_bar.stop();
+  }
 
-    const maximum_width = this.background.width;
-    const percentage = (this.bar.width/maximum_width);
-    const total = 10000;
-    const to_remove = total * percentage;
+  static get time_to_complete() {
+    const time_to_complete = this.time - (this.time * this.percentage);
+    return time_to_complete;
+  }
 
-    const time = total - to_remove;
-
-    this.tween_bar.time = time;
-    this.tween_bar.to({
-      width: maximum_width - 20,
+  static complete(func) {
+    tween_bar.on('end', () => {
+      func();
+      setTimeout(() => this.hide(), 3000);
     });
-    this.tween_bar.start();
-    this.tween_bar.on('update', () => {
-      if(this.percentage > value) {
-        this.tween_bar.stop();
-        this.tween_bar.remove();
+
+    tween_bar.on('stop', () => {
+      func();
+      setTimeout(() => this.hide(), 3000);
+    });
+  }
+
+  static to_percentage(end_percentage) {
+    if(tween_bar.active) return;
+
+    tween_bar.time = this.time_to_complete;
+    tween_bar.to({ width: maximum_width });
+
+    tween_bar.on('update', () => {
+      if(this.percentage > end_percentage) {
+        tween_bar.stop();
+        tween_bar.remove();
       }
     });
 
-    this.tween_bar.expire = true;
+    tween_bar.start();
   }
 }
 
-const global_bar = new ProgressBar();
+ProgressBar.initialize();
 
 module.exports = {
-  global_bar,
+  ProgressBar,
 };

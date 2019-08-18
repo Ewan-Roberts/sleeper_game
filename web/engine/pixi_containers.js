@@ -1,5 +1,10 @@
+const PIXI = require('pixi.js');
+global.window.PIXI = PIXI;
+global.window.PIXI.default = PIXI;
+
 const { Container } = require('pixi.js');
 const { viewport } = require('./app');
+console.log(viewport);
 
 const zIndex_layer = {
   background: 12,

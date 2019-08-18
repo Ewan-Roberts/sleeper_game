@@ -3,7 +3,7 @@ const { players       } = require('../../engine/pixi_containers');
 const { distance_between } = require('../../utils/math');
 // TODO temp progress bar
 // const { ProgressBar   } = require('../../view/progress_bar');
-const { global_bar   } = require('../../view/progress_bar');
+const { ProgressBar   } = require('../../view/progress_bar');
 const { Caption       } = require('../../view/caption');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
@@ -61,33 +61,29 @@ class HubRoom {
 
     // TODO couple the progress bar to the generator?
 
-    global_bar.visible = false;
-
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
     const generator = new Generator(this.data.generator[0]);
 
-    this.player.inventory.populate_with_item('gas_canister');
+    this.player.inventory.populate_with_item('gas_canister', { condition: 0.8 });
+
+    ProgressBar.percentage = 0.1;
 
     generator.on('click', () => {
       if(this.player.inventory.contains('gas_canister')) {
         const fuel_item = this.player.inventory.take_item('gas_canister');
         keyboardManager.disable();
-        global_bar.visible = true;
+        ProgressBar.show();
 
         generator.fuel = fuel_item.condition;
-        global_bar.animate_increase(fuel_item.condition);
+        ProgressBar.to_percentage(fuel_item.condition);
         lights.forEach(light => light.turn_on());
       }
     });
 
-    generator.end(() => {
-      lights.forEach(light => {
-        light.turn_off();
-      });
-    });
+    generator.end(() => lights.forEach(light => light.turn_off()));
 
-    global_bar.complete(() => {
+    ProgressBar.complete(() => {
       Caption.render('Its filled');
       generator.ready();
       keyboardManager.enable();
