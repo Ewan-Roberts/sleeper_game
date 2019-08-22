@@ -21,7 +21,7 @@ class Stalker extends LogicZombie {
   set floor_hands(value) {
     if(!value) this.destroy();
 
-    this.hand_tween = tweenManager.createTween(this);
+    this.hand_tween      = tweenManager.createTween(this);
     this.hand_tween.loop = true;
     this.hand_tween.time = 200;
     this.hand_tween.expire = true;
@@ -36,17 +36,17 @@ class Stalker extends LogicZombie {
       });
       hands.rotation = this.rotation + 1.5,
       hands.position.copy(this);
+      hands.fade_out(2000);
 
       decals.addChild(hands);
-
-      hands.fade_out(2000);
-      hand_state = !hand_state;
 
       if(this.floor_words) random_word({
         point: this,
         size: 10,
         closeness: 40,
       });
+
+      hand_state = !hand_state;
     });
 
     this.hand_tween.start();

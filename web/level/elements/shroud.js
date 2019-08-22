@@ -18,6 +18,11 @@ class Shroud extends Element {
     if(this._destroyed) return;
     Fade.out_destroy(this);
   }
+
+  fade_out(time) {
+    if(this._destroyed) return;
+    Fade.out(this, { time, visible_on_end: true });
+  }
 }
 
 module.exports = {

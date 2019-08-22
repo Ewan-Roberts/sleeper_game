@@ -12,11 +12,11 @@ class Trigger_Pad extends Element {
       alpha: env.visable_pads?0.4:0,
     });
     this.events = new event();
-    this.speed = 30;
+    this.speed  = 30;
     if(data.speed) {
-      this.speed    = 2;
+      this.speed = 2;
     } else {
-      this.speed    = (env.dev)?25:4;
+      this.speed = (env.dev)?25:4;
     }
 
     this.anchor.set(0);
@@ -32,17 +32,14 @@ class Trigger_Pad extends Element {
   }
 
   on(name, callback) {
-    this.tint  = 0xffff00;
+    this.tint = 0xffff00;
 
     this.events.on(name, callback);
   }
 
   once(name, callback) {
     this.tint  = 0xffff00;
-    this.events.once(name, () => {
-      callback();
-      //this.destroy();
-    });
+    this.events.once(name, () => callback());
   }
 }
 

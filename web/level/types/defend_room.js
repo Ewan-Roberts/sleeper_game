@@ -7,10 +7,10 @@ const { Level_Factory } = require('./level_factory');
 class DefendRoom  {
   constructor() {
     this.name     = 'defend_room';
-    this.player = players.children[0];
+    this.player   = players.children[0];
     this.elements = require('../data/defend_room.json');
-
     this.exit_pad = this.elements.exit_pad.map(data => new Trigger_Pad(data));
+
     this._set_elements();
   }
 

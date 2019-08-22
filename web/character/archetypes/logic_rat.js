@@ -16,14 +16,15 @@ class LogicRat extends PathSprite {
     this.add_component(new Vitals());
     this.add_component(new Inventory(data));
 
-    damage_events.on('damage', data => this.damage(data));
+    damage_events.on('damage', ({id, damage}) => {
+      if(this.id !== id) return;
+      this.damage(damage);
+    });
 
-    this.animation.wait();
+    this.animation.idle();
   }
 
-  damage({id, damage}) {
-    if(this.id !== id) return;
-    console.log(damage);
+  damage(damage) {
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) new Blood(this.position);
 

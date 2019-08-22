@@ -9,8 +9,6 @@ viewport.updateLayersOrder = function () {
   });
 };
 
-viewport.roundPixels = true;
-
 module.exports = {
   world: viewport,
 };

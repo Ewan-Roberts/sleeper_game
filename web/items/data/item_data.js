@@ -5,14 +5,13 @@ const items = [
   {
     name:           'rusty_knife',
     animation_name: 'knife',
-    id:             1,
+    id:             0,
     rank:           0,
     cost:           50,
     category:       'weapon',
     range:          20,
     damage:         10,
     speed:          400,
-    condition:      100,
 
     visual_name:    'rusty knife',
     description:    'The rusty knife someone sharpened on what looks like a rock',
@@ -28,7 +27,6 @@ const items = [
     range:          20,
     damage:         20,
     speed:          400,
-    condition:      100,
 
     visual_name:    'rusty knife',
     description:    'The rusty knife someone sharpened on what looks like a rock',
@@ -45,7 +43,6 @@ const items = [
     range:          20,
     damage:         999,
     speed:          100,
-    condition:      999,
 
     visual_name:    'rusty knife',
     description:    'You call that a knife???',
@@ -63,7 +60,6 @@ const items = [
     range:          200,
     damage:         40,
     speed:          400,
-    condition:      100,
 
     visual_name:    'old bow',
     description:    'An old bow still working but not for long...',
@@ -81,7 +77,6 @@ const items = [
     range:          200,
     damage:         1,
     speed:          400,
-    condition:      100,
 
     visual_name:    'weak bow',
     description:    'A weak bow for testing',
@@ -100,7 +95,6 @@ const items = [
     range:          999,
     damage:         999,
     speed:          100,
-    condition:      999,
 
     visual_name:    'old bow',
     description:    'this is my dev bow, there are many like it but this one kills',
@@ -115,7 +109,6 @@ const items = [
     range:       20,
     damage:      20,
     speed:       10,
-    condition:   100,
 
     visual_name: 'rat teeth',
     description: 'the gnashing teeth of a diseased rat',
@@ -131,7 +124,6 @@ const items = [
     range:       20,
     damage:      50,
     speed:       1,
-    condition:   100,
 
     visual_name: 'wrench blade',
     description: 'This blade looks to be a hastily sharped from an old wrench',
@@ -148,7 +140,6 @@ const items = [
     range:       20,
     damage:      10,
     speed:       400,
-    condition:   100,
 
     visual_name: 'pistol',
     description: 'a pistol from a cop',
@@ -165,7 +156,6 @@ const items = [
     range:        20,
     damage:       2,
     speed:        1,
-    condition:    100,
 
     visual_name:  'wrench blade',
     display_name: 'wrench blade',
@@ -381,7 +371,6 @@ const items = [
     rank: 0,
     cost: 10,
     category: 'material',
-    condition: 0.2,
 
     visual_name: 'a small gas canister',
     description: 'some cheap fuel',
@@ -419,6 +408,17 @@ const items = [
     visual_name: 'empty',
     description: '',
     image_name:  'empty_image',
+  },
+  {
+    name: 'keys_brass',
+    id: 15,
+    rank: 0,
+    cost: 20,
+    category: 'material',
+
+    visual_name: 'brass keys',
+    description: 'Keys to the front door',
+    image_name: 'keys_brass',
   },
 ];
 

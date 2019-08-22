@@ -33,16 +33,16 @@ class Fade {
     movement.start();
   }
 
-  static out(sprite) {
+  static out(sprite, { time = 150,visible_on_end = false } = {}) {
     const movement  = tweenManager.createTween(sprite);
-    movement.time   = 150;
+    movement.time   = time;
     movement.expire = true;
     movement.to({alpha: 0});
     movement.start();
 
     movement.on('end', () => {
       movement.remove();
-      sprite.visible = false;
+      sprite.visible = visible_on_end;
     });
   }
 }

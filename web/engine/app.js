@@ -5,7 +5,13 @@ const { Viewport } = require('pixi-viewport');
 
 console.time();
 
-const app = new Application({
+const {
+  renderer,
+  stage,
+  ticker,
+  screen,
+  view,
+} = new Application({
   width           : global.window.innerWidth,
   height          : global.window.innerHeight,
   backgroundColor : env.background_color,
@@ -17,8 +23,6 @@ settings.ROUND_PIXELS               = env.round_pixels;
 settings.RENDER_OPTIONS.roundPixels = env.round_pixels;
 settings.RESOLUTION                 = env.resolution;
 settings.TARGET_FPMS                = env.fps;
-
-const { renderer, stage, ticker, screen, view } = app;
 
 // 60/30 for 30 fps
 const fps_delta = env.dev?2:1;

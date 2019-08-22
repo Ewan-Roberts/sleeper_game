@@ -15,15 +15,15 @@ class Slot extends Sprite {
 
 class Title extends Text{
   constructor() {
-    super('', {fontSize: 20, fill: 'grey'});
-    this.y += 50;
+    super('', {fontSize: 18, fill: 'grey'});
+    this.y += 48;
     this.x -= 30;
     this.visible = false;
 
     this.background = new Sprite(Texture.WHITE);
     this.background.tint  = 0x29241F;
     this.background.height = 35;
-    this.background.y += 45;
+    this.background.y += 40;
     this.background.x -= 40;
     this.background.visible = false;
   }
@@ -32,10 +32,14 @@ class Title extends Text{
     this.background.width = value;
   }
 
-  set visible(value) {
-    if(!this.background) return;
-    this.background.visible = value;
-    super.visible = value;
+  show() {
+    this.background.visible = true;
+    this.visible = true;
+  }
+
+  hide() {
+    this.background.visible = false;
+    this.visible = false;
   }
 }
 
@@ -45,8 +49,8 @@ class Description extends Text{
       fontSize: 15,
       fill: 'white',
     });
-    this.y += 85;
-    this.x -= 35;
+    this.y += 76;
+    this.x -= 40;
     this.visible = false;
   }
 
@@ -76,7 +80,10 @@ class View_Inventory {
   constructor() {
     this.slot_container = new Container();
     this.slot_container.interactive = true;
-    this.slot_container.on('mouseout', () => Fade.out(this.slot_container));
+    this.slot_container.buttonMode  = true;
+    this.slot_container.on('mouseout', () => {
+      Fade.out(this.slot_container);
+    });
     this.slots = [];
   }
 
@@ -111,13 +118,13 @@ class View_Inventory {
       item.click = () => {
         item_events.emit('give', { id: 1, item: loot_item });
         description.visible = false;
-        title.visible = false;
+        title.hide();
         item.destroy();
       };
 
       item.on('mouseover', () => {
         item.visible = true;
-        title.visible = true;
+        title.show();
         description.visible = true;
         description.text = loot_item.description;
 

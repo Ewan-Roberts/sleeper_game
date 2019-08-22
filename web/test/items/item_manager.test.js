@@ -28,16 +28,37 @@ describe('items/item_manager', function() {
   });
 
   describe('get_item()', function() {
-    it('throws if no name is provided', function() {
-      expect(() =>
-        Item_Manager.get_item()
-      ).to.throw();
+    // move to UUID
+    it('throws if there is a dup item id', function() {
+      const all_items = Item_Manager.get_all_items();
+      const just_item_ids = all_items.map(item => item.id);
+
+      const duplicates = just_item_ids.some((item, id) => {
+        if(just_item_ids.indexOf(item.id) === id) {
+          console.log('this item has a dup id: ' + all_items[id]);
+          return true;
+        }
+
+        return false;
+      });
+
+      expect(duplicates).to.be.false;
     });
 
     it('throws if no item found with name', function() {
       expect(() =>
         Item_Manager.get_item('no item will exist with this name')
       ).to.throw();
+    });
+
+    it('returns an object with the specified condition', function() {
+      const condition_of_item = 0.3;
+
+      const item = Item_Manager.get_item('rusty_knife', {
+        condition: condition_of_item,
+      });
+
+      expect(item.condition).to.equal(condition_of_item);
     });
 
     context('when checking each item', function() {

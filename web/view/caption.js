@@ -12,13 +12,14 @@ container.y = viewport.screenHeight;
 
 const background = new Sprite(Texture.WHITE);
 background.width = viewport.screenWidth;
-background.height = 60;
+background.height = 35;
 background.anchor.set(0.5, 1);
 background.alpha = 0.2;
 
 const dialog = new Text();
+dialog.style.fontSize = 20;
 dialog.position.copy(background);
-dialog.y -= 15;
+dialog.y -= 5;
 dialog.anchor.set(0.5, 1);
 
 //TODO handle gui elements in pixi_containers

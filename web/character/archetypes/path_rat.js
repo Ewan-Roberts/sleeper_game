@@ -9,7 +9,7 @@ class PathRat extends PathSprite {
     this.width  = 60;
     this.height = 25;
 
-    this.animation.wait();
+    this.animation.idle();
   }
 }
 

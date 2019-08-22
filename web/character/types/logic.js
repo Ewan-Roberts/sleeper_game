@@ -34,26 +34,38 @@ function break_at_door(path) {
 }
 
 class LogicSprite extends extras.AnimatedSprite {
-  constructor(data) {
-    super([Texture.fromFrame(data.image_name || 'bird_8')]);
+  constructor({
+    image_name = 'bird_8',
+    height,
+    width,
+    id,
+    x,
+    y,
+    items,
+    random,
+    equip,
+  }) {
+    super([Texture.fromFrame(image_name)]);
     this.name = 'zombie';
-    this.id   = data.id;
-    this.anchor.set(0.5);
+    this.id   = id;
 
-    this.add_component(new Inventory(data));
+    this.add_component(new Inventory({items,random,equip}));
     this.add_component(new Vitals());
     this.rotation_offset = 0;
-    this.position.copy(data);
-    this.height = data.height || 100;
-    this.width = data.width || 100;
+    this.height = height || 100;
+    this.width  = width  || 100;
+    this.anchor.set(0.5);
+    this.position.copy({x,y});
 
-    damage_events.on('damage', data => this.damage(data));
+    damage_events.on('damage', ({id,damage}) => {
+      if(this.id !== id) return;
+      this.damage(damage);
+    });
+
     enemys.addChild(this);
   }
 
-  damage({id, damage}) {
-    if(this.id !== id) return;
-
+  damage(damage) {
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) new Blood(this.position);
 
@@ -66,9 +78,9 @@ class LogicSprite extends extras.AnimatedSprite {
 
     this.interactive = true;
     this.button = new Button(this, {
-      label_action: 'Loot',
+      label_action:      'Loot',
       label_description: 'Corpse',
-      label_image: 'eye_icon',
+      label_image:       'eye_icon',
     });
 
     this.click = () => {
@@ -184,11 +196,6 @@ class LogicSprite extends extras.AnimatedSprite {
   add_component(component) {
     this[component.name] = component;
   }
-
-
-  //render_text(text) {
-  //  //this.current_text = new SpeechText(text,this.point);
-  //}
 }
 
 module.exports = {

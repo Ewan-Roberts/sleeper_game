@@ -25,9 +25,10 @@ class Overlay_Dialog {
     });
 
     this.button.interactive = true;
+    this.button.buttonMode  = true;
     this.button.on('mouseover', () => this.button.tint = 0xd3d3d3);
-    this.button.on('mouseout', () => this.button.tint = 0x383838);
-    this.button.on('mouseup', () => this.button.tint = 0xd3d3d3);
+    this.button.on('mouseout',  () => this.button.tint = 0x383838);
+    this.button.on('mouseup',   () => this.button.tint = 0xd3d3d3);
     this.button.on('mousedown', () => this.button.tint = 0xffffff);
 
     await sleep(5000);

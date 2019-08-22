@@ -1,18 +1,19 @@
-const { collisions } = require('../../engine/pixi_containers');
-const { items } = require('../../engine/pixi_containers');
-const { Inventory  } = require('../../character/attributes/inventory');
-const { Element    } = require('./model');
-const { sound      } = require('pixi.js');
+const { collisions   } = require('../../engine/pixi_containers');
+const { items        } = require('../../engine/pixi_containers');
+const { Inventory    } = require('../../character/attributes/inventory');
+const { Element      } = require('./model');
+const { sound        } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
-const { Button     } = require('../../view/button');
-const { Caption    } = require('../../view/caption');
+const { Button       } = require('../../view/button');
+const { Caption      } = require('../../view/caption');
 
 class Shrine extends Element {
   constructor(data) {
     super(data);
     this.inventory   = new Inventory();
     this.interactive = true;
-    this.max = 100;
+    this.buttonMode  = true;
+    this.max         = 100;
 
     collisions.addChild(this);
   }
@@ -32,6 +33,7 @@ class Generator extends Element {
     this.inventory   = new Inventory();
     this.tint        = 0xA9A9A9;
     this.interactive = true;
+    this.buttonMode  = true;
     this._fuel = 0;
 
     this.label(data);
@@ -53,23 +55,22 @@ class Generator extends Element {
   }
 
   ready() {
-    if(this._fuel <=0) return Caption.render('No fuel');
     this.button.action_label.text = 'Start';
+    this.state                    = 'ready';
     this.running_sound.stop();
-    this.state = 'ready';
   }
 
   run() {
     this.button.action_label.text = 'Turn off';
-    this.state = 'running';
-    this.tween.time = 400 * this._fuel;
+    this.state                    = 'running';
+    this.tween.time               = 4000 * this._fuel;
     this.tween.start();
     this.running_sound.play();
     this.tween.on('end', () => this.empty());
   }
 
   end(func) {
-    this.tween.on('end', () => func);
+    this.tween.on('end', func);
   }
 
   state_handler() {
@@ -99,9 +100,17 @@ class Generator extends Element {
   }
 
   // TODO This is repeated in a few places
-  label(data) {
+  label({
+    label_action,
+    label_description,
+    label_image,
+  }) {
     this.tint = 0xd3d3d3;
-    this.button = new Button(this, data);
+    this.button = new Button(this, {
+      label_action,
+      label_description,
+      label_image,
+    });
   }
 }
 

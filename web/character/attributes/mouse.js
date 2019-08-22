@@ -86,7 +86,7 @@ class Mouse {
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
     if(event.data.originalEvent.shiftKey && this.animation.prefix === 'bow') {
-      this.animation.ready_weapon();
+      this.animation.ready();
       this.cone.narrow();
     }
   }

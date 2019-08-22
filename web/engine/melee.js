@@ -1,12 +1,11 @@
 const { tweenManager } = require('pixi.js');
 const { Sprite, Texture } = require('pixi.js');
-const { guis } = require('./pixi_containers');
-const { enemys } = require('./pixi_containers');
-const { players } = require('./pixi_containers');
-const { items } = require('./pixi_containers');
-const { damage_events } = require('./damage_handler');
-const { env   } = require('../../config');
-
+const { guis            } = require('./pixi_containers');
+const { enemys          } = require('./pixi_containers');
+const { players         } = require('./pixi_containers');
+const { items           } = require('./pixi_containers');
+const { damage_events   } = require('./damage_handler');
+const { env             } = require('../../config');
 
 class Box extends Sprite {
   constructor() {

@@ -72,13 +72,17 @@ class ProgressBar {
 
   static complete(func) {
     tween_bar.on('end', () => {
-      func();
-      setTimeout(() => this.hide(), 3000);
+      setTimeout(() => {
+        func();
+        this.hide();
+      }, 3000);
     });
 
     tween_bar.on('stop', () => {
-      func();
-      setTimeout(() => this.hide(), 3000);
+      setTimeout(() => {
+        func();
+        this.hide();
+      }, 3000);
     });
   }
 

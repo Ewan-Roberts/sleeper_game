@@ -3,20 +3,15 @@ const { View_Inventory } = require('../../view/view_inventory');
 const { Fade           } = require('../../effects/fade');
 
 class Inventory extends View_Inventory {
-  constructor(data = {}) {
+  constructor({ random, equip, items } = {}) {
     super();
-    this.name   = 'inventory';
-    this.items  =  data.random?Item_Manager.get_random_items():[];
-    this.equipped = data.equip?Item_Manager.get_item(data.equip):null;
-    if(data.items) {
-      this.items = JSON.parse(data.items).map(name =>
-        Item_Manager.get_item(name));
-      this.populate();
-    }
-  }
-
-  populate_with_random_items() {
-    this.items = Item_Manager.get_random_items();
+    this.name     = 'inventory';
+    this.items    = random ? Item_Manager.get_random_items() : [];
+    this.equipped = equip ? Item_Manager.get_item(equip) : null;
+    if(!items) return;
+    this.items = JSON.parse(items).map(
+      ({name, condition}) => Item_Manager.get_item(name, { condition })
+    );
 
     this.populate();
   }
@@ -50,8 +45,30 @@ class Inventory extends View_Inventory {
     this.populate();
   }
 
+  give_item_by_name(name,
+    {
+      condition,
+    }
+    = {}
+  ) {
+    const item = Item_Manager.get_item(name, { condition });
+    this.items.push(item);
+  }
+
   equip(name) {
     this.equipped = Item_Manager.get_item(name);
+  }
+
+  find_by_name(name) {
+    const found_item = this.items.find(item => item.name === name);
+
+    return found_item;
+  }
+
+  remove_by_name(name) {
+    const index = this.items.findIndex(item => item.name === name);
+
+    this.items.splice(index, 1);
   }
 
   remove(id) {
@@ -86,14 +103,13 @@ class Inventory extends View_Inventory {
   }
 
   give_item(item) {
-    if(!item) return;
+    if(!item) throw 'can not give nothing';
     this.items.push(item);
   }
 
   take_item(name) {
     const index = this.items.indexOf(name);
     const [result] = this.items.splice(index,1);
-    console.log(result);
     return result;
   }
 }

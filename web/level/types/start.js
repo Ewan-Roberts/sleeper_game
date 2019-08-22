@@ -86,7 +86,6 @@ class StartRoom  {
     this.border      = this.data.border.map(data => new Border(data));
     this.hill_area   = this.data.hill_area.map(data => new Trigger_Pad(data));
 
-
     this.gore_layer  = this.data.gore_layer.map(item => {
       const gore_item = new Floor(item);
       gore_item.visible = false;
@@ -120,22 +119,22 @@ class StartRoom  {
 
 
   _set_sounds() {
-    this.theme_song = sound.find('start_theme');
-    this.theme_song.volume = 0.05;
-    this.eerie_song = sound.find('eerie_ambient');
-    this.eerie_song.volume = 0.2;
-    this.horror_song = sound.find('horror_theme');
+    this.theme_song         = sound.find('start_theme');
+    this.theme_song.volume  = 0.05;
+    this.eerie_song         = sound.find('eerie_ambient');
+    this.eerie_song.volume  = 0.2;
+    this.horror_song        = sound.find('horror_theme');
     this.horror_song.volume = 0.08;
 
-    this.suspense_effect = sound.find('suspense_in');
+    this.suspense_effect        = sound.find('suspense_in');
     this.suspense_effect.volume = 0.03;
-    this.click_effect    = sound.find('click');
-    this.click_effect.volume = 0.04;
-    this.honk_effect     = sound.find('honk');
-    this.honk_effect.volume = 1;
-    this.thud_1_effect   = sound.find('thud_1');
-    this.whisper_effect  = sound.find('whisper_effect');
-    this.whisper_effect.volume = 0.05;
+    this.click_effect           = sound.find('click');
+    this.click_effect.volume    = 0.04;
+    this.honk_effect            = sound.find('honk');
+    this.honk_effect.volume     = 1;
+    this.thud_1_effect          = sound.find('thud_1');
+    this.whisper_effect         = sound.find('whisper_effect');
+    this.whisper_effect.volume  = 0.05;
   }
 
   _set_elements() {

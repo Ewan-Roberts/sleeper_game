@@ -1,4 +1,5 @@
 const { radian } = require('../../utils/math');
+const event               = require('events');
 
 class Animation {
   constructor(sprite, frames) {
@@ -6,6 +7,7 @@ class Animation {
 
     this.frames = frames;
     this.sprite = sprite;
+    this.events = new event();
   }
 
   switch(action) {
@@ -27,14 +29,19 @@ class Animation {
   }
 
   ready()  { this.switch('shoot');  }
-  wait()   { this.switch('idle');   }
-  idle()   { this.switch('idle');   }
+  wait()   { this.switch('wait');   }
+  idle()   {
+    this.events.emit('idle');
+    this.switch('idle');
+  }
   eat()    { this.switch('eat');    }
   move()   { this.switch('move');   }
-  walk()   { this.switch('move');   }
+  walk()   {
+    this.events.emit('walk');
+    this.switch('move');
+  }
   attack() { this.switch('attack'); }
   speed(value) { this.sprite.animationSpeed = value; }
-
   kill() {
     this.switch('death');
     this.sprite.loop = false;

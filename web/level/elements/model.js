@@ -2,18 +2,28 @@ const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { env } = require('../../../config');
 
 class Element extends Sprite {
-  constructor(data) {
-    super(Texture.fromImage(data.image_name || 'bunny'));
-    this.id     = data.id;
-    this.height = data.height;
-    this.width  = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.tint     = data.tint  || 0xffffff;
-    this.alpha    = data.alpha || env.brightness;
-    this.visible  = !data.hidden;
-
+  constructor({
+    image_name = 'bunny',
+    id,
+    height,
+    width,
+    rotation,
+    tint = 0xffffff,
+    alpha = env.brightness,
+    hidden,
+    x,
+    y,
+  }) {
+    super(Texture.fromImage(image_name || 'bunny'));
+    this.id       = id;
+    this.height   = height;
+    this.width    = width;
+    this.rotation = rotation * DEG_TO_RAD;
+    this.tint     = tint;
+    this.alpha    = alpha;
+    this.visible  = !hidden;
     this.anchor.set(0, 1);
-    this.position.copy(data);
+    this.position.copy({x,y});
   }
 }
 

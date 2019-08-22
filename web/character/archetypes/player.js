@@ -36,19 +36,23 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
 
-    item_events.on('give', ({id,item}) => {
+    damage_events.on('damage', ({id, damage}) => {
       if(this.id !== id) return;
-      this.inventory.give_item(item);
+      this.damage(damage);
     });
 
-    this.events.on('give_item', item => this.inventory.give_item(item));
-    this.events.on('check_items', callback => {
-      const result = this.inventory.take_items('blood');
-      callback(result);
+    item_events.on('give', ({id,item}) => {
+      console.log(item);
+      if(this.id !== id) return;
+      console.log(item);
+      const found_item = Item_Manager.get_item(item.image_name);
+      this.inventory.give_item(found_item);
     });
 
-    this.events.on('equip_weapon', item => {
-      const found_item = Item_Manager.get_item_by_image_name(item.image_name);
+    item_events.on('equip_weapon', ({id,item}) => {
+      if(this.id !== id) return;
+      console.log(item);
+      const found_item = Item_Manager.get_item(item.image_name);
       this.inventory.equip_weapon(found_item);
 
       this.animation.prefix = found_item.animation_name;
@@ -57,17 +61,25 @@ class Player extends extras.AnimatedSprite {
 
     players.addChild(this);
 
-    damage_events.on('damage', data => this.damage(data));
     this._set_sounds();
+
+    this.animation.events.on('walk', () => {
+      if(!this.walk_sound.isPlaying) {
+        this.walk_sound.play();
+      }
+    });
+
+    this.animation.events.on('idle', () => {
+      this.walk_sound.stop();
+    });
   }
 
   _set_sounds() {
     this.walk_sound = sound.find('walk_normal', {loop: true});
-    this.walk_sound.volume = 0.05;
+    this.walk_sound.volume = 1;
   }
 
-  damage({id, damage}) {
-    if(this.id !== id) return;
+  damage(damage) {
     this.events.emit('hit');
 
     this.vitals.damage(damage);
@@ -83,24 +95,6 @@ class Player extends extras.AnimatedSprite {
     players.removeChild(this);
     this.keyboard.destroy();
     this.mouse.destroy();
-  }
-
-  // mixin sounds to animations
-  idle() {
-    this.animation.idle = () => {
-      this.walk_sound.stop();
-      this.animation.switch(this.animation.prefix + '_idle');
-    };
-  }
-
-  // mixin sounds to animations
-  walk() {
-    this.animation.walk = () => {
-      if(!this.walk_sound.isPlaying) {
-        this.walk_sound.play();
-      }
-      this.animation.switch(this.animation.prefix + '_walk');
-    };
   }
 
   add_component(component) {

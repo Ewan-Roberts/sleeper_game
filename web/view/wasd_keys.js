@@ -6,8 +6,9 @@ class KeyboardKey extends FadeSprite {
   constructor(letter) {
     super({image_name: 'key'});
 
-    const text = new Text(letter);
-    text.style.fontSize = 55;
+    const text = new Text(letter, {
+      fontSize: 55,
+    });
     text.x += 55;
     text.y -= 100;
     this.alpha = 0;

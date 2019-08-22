@@ -71,7 +71,7 @@ const options = {
     visable_borders:    true,
     brightness:         1,
     inventory_openable: false,
-    level_on_load:      'transition',
+    level_on_load:      'intro',
     draw_paths:         false,
     player_speed:       309,
     round_pixels:       true,

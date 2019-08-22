@@ -5,12 +5,11 @@ const { guis } = require('../engine/pixi_containers');
 class Label extends Text{
   constructor(text) {
     super(text, {
-      fontSize: 20,
+      fontSize: 15,
       fill: '#D2D8D7',
       fontVariant: 'small-caps',
-      stroke: '#4a1850',
       lineJoin: 'round',
-      strokeThickness: 5,
+      strokeThickness: 4,
     });
 
     this.anchor.set(0.5);
@@ -41,11 +40,9 @@ class Button extends Sprite {
       this.hide();
     });
 
-    this.set_position(this.sprite);
-
     this.name   = 'button';
-    this.height = 30;
-    this.width  = 30;
+    this.height = 20;
+    this.width  = 20;
     this.anchor.set(0.5);
 
     if(label_action) {
@@ -64,10 +61,10 @@ class Button extends Sprite {
     this.position.copy({x, y});
 
     if(this.action_label) {
-      this.action_label.position.copy({x, y: y+30});
+      this.action_label.position.copy({x, y: y+22});
     }
     if(this.description_label) {
-      this.description_label.position.copy({x, y: y-30});
+      this.description_label.position.copy({x, y: y-22});
     }
   }
 

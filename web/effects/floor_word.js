@@ -3,27 +3,41 @@ const { Text, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 class FloorWord extends Text {
-  constructor(data) {
-    super(data);
+  constructor({
+    rotation  = 0,
+    font_size = 20,
+    fill      = 'black',
+    weight    = 'bolder',
+    align     = 'center',
+    text      = 'Invalid Text',
+    alpha     = 1,
+    tint      = 0xA9A9A9,
+    delay     = 0,
+    x,
+    y,
+  }) {
+    super(text, {
+      fontSize:   font_size,
+      fontWeight: weight,
+      fill,
+      align,
+    });
 
-    const degrees = data.rotation * DEG_TO_RAD;
-    this.style.fontSize   = data.font_size || 20;
-    this.style.fill       = data.fill      || 'black';
-    this.style.fontWeight = data.weight    || 'bolder';
-    this.style.align      = data.align     || 'center';
-
-    this.text     = data.text  || 'Invalid Text';
-    this.alpha    = data.alpha || 1;
-    this.rotation = degrees    || 0;
-    this.tint     = data.tint  || 0xA9A9A9;
+    this.alpha    = alpha;
+    this.rotation = rotation * DEG_TO_RAD;
+    this.tint     = tint;
     this.anchor.set(0.5);
+    this.position.copy({x,y});
 
     this.tween       = tweenManager.createTween(this);
-    this.tween.delay = data.delay || 0;
-    this.position.copy(data);
+    this.tween.delay = delay;
   }
 
-  fade_in_wait_out(in_time = 1000, wait_time = 1000, out_time = 1000) {
+  fade_in_wait_out(
+    in_time = 1000,
+    wait_time = 1000,
+    out_time = 1000
+  ) {
     this.fade_in(in_time);
     this.tween.on('end', () => {
       this.tween.reset();
@@ -44,11 +58,9 @@ class FloorWord extends Text {
   fade_out(time = 1000) {
     this.tween.reset();
     this.tween.time = time;
-    this.tween.from({
-      alpha: 1,
-    }).to({
-      alpha: 0,
-    });
+    this.tween
+      .from({alpha: 1})
+      .to({alpha: 0});
 
     this.tween.on('end', () => {
       this.tween.remove();
@@ -81,7 +93,7 @@ function random_word({
   closeness   = 100,
   fade_lower  = 500,
   fade_higher = 2000,
-  text = default_words,
+  text        = default_words,
 }) {
   const random_word_from_array = random_text(text);
   const word = new FloorWord({

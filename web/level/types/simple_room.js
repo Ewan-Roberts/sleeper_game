@@ -8,14 +8,6 @@ class SimpleRoom {
     console.log('generating simple room');
     this.name   = 'simple_room';
     this.player = new Player();
-    // const level_name = 'transition';
-    // if(true) {
-    //   const bar = require('../data/${level_name}.json');
-    //   console.log(bar);
-    // } else {
-    //   const name  = `../data/${level_name}.json`;
-    //   this.data = require(name);
-    // }
     this._set_elements();
     if(env.dev) this._set_dev_settings();
   }

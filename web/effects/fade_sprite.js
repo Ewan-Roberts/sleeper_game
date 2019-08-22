@@ -1,25 +1,36 @@
-const { visuals, decals, fades } = require('../engine/pixi_containers');
+const { visuals, decals, fades      } = require('../engine/pixi_containers');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-const { tweenManager    } = require('pixi.js');
+const { tweenManager                } = require('pixi.js');
 
 class FadeSprite extends Sprite {
-  constructor(data) {
-    super(Texture.fromImage(data.image_name));
+  constructor({
+    image_name,
+    rotation,
+    alpha  = 1,
+    height = 50,
+    width  = 50,
+    delay = 0,
+    x,
+    y,
+  }) {
+    super(Texture.fromImage(image_name));
 
-    const degrees = data.rotation * DEG_TO_RAD;
-    this.alpha    = data.alpha  || 1;
-    this.rotation = degrees     || 0;
-    this.width    = data.width  || 50;
-    this.height   = data.height || 50;
+    this.alpha    = alpha;
+    this.width    = width;
+    this.height   = height;
+    this.rotation = rotation * DEG_TO_RAD;
     this.anchor.set(0, 1);
+    this.position.copy({x,y});
 
     this.tween       = tweenManager.createTween(this);
-    this.tween.delay = data.delay || 0;
-
-    this.position.copy(data);
+    this.tween.delay = delay;
   }
 
-  fade_in_wait_out(in_time = 1000, wait_time = 1000, out_time = 1000) {
+  fade_in_wait_out(
+    in_time   = 1000,
+    wait_time = 1000,
+    out_time  = 1000
+  ) {
     this.fade_in(in_time);
     this.tween.on('end', () => {
       this.tween.reset();

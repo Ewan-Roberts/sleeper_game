@@ -42,23 +42,20 @@ class Item_Manager {
     return found_item;
   }
 
-  static get_item_by_image_name(name) {
-    const found_item = items.find(item => item.image_name === name);
-
-    if(!found_item) throw new Error('no item found based on image_name ' + name);
-
-    return found_item;
-  }
-
   static get_item_by_id(id) {
     return items.find(item => item.id === id);
   }
 
+  static get_all_items() {
+    return items;
+  }
+
+  // TODO remove below, they are extracting image info
   static extract_image(name) {
     const found_sprite = new Sprite.fromFrame(name);
 
     // TODO
-    const { renderer      } = require('../engine/app');
+    const { renderer } = require('../engine/app');
     const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;
@@ -73,7 +70,7 @@ class Item_Manager {
     const found_sprite = new Sprite.fromFrame(image_name);
 
     // TODO
-    const { renderer      } = require('../engine/app');
+    const { renderer } = require('../engine/app');
     const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;
@@ -83,7 +80,7 @@ class Item_Manager {
     const found_sprite = new Sprite.fromFrame(item.image_name);
 
     // TODO
-    const { renderer      } = require('../engine/app');
+    const { renderer } = require('../engine/app');
     const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;

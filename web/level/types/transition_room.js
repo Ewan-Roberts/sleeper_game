@@ -65,7 +65,7 @@ class HubRoom {
 
     const generator = new Generator(this.data.generator[0]);
 
-    this.player.inventory.populate_with_item('gas_canister', { condition: 0.8 });
+    this.player.inventory.populate_with_item('gas_canister', { condition: 0.4 });
 
     ProgressBar.percentage = 0.1;
 
@@ -81,7 +81,9 @@ class HubRoom {
       }
     });
 
-    generator.end(() => lights.forEach(light => light.turn_off()));
+    generator.end(() => {
+      lights.forEach(light => light.turn_off());
+    });
 
     ProgressBar.complete(() => {
       Caption.render('Its filled');

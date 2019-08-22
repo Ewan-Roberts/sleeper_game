@@ -1,6 +1,6 @@
-const { items      } = require('../../engine/pixi_containers');
-const { collisions } = require('../../engine/pixi_containers');
-const { players    } = require('../../engine/pixi_containers');
+const { items       } = require('../../engine/pixi_containers');
+const { collisions  } = require('../../engine/pixi_containers');
+const { item_events } = require('../../engine/item_handler');
 
 const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
@@ -12,26 +12,58 @@ class Chest extends Element {
   constructor(data) {
     super(data);
     this.interactive = true;
+    this.buttonMode = true;
+
+    const {
+      type,
+      equip_on_click,
+      label,
+      dialog_on_click,
+      container,
+      collision,
+      give_on_click,
+    } = data;
 
     // TODO handle player acquisition better
-    const [player] = players.children;
+    if(type === 'note') this.on('click', () => {
+      const {
+        image_on_click,
+        text,
+        text_colour,
+        sound_file,
+      } = data;
 
-    if(data.type === 'note') this.on('click', () => new Note(data));
+      new Note({
+        image_on_click,
+        text,
+        text_colour,
+        sound_file,
+      });
+    });
 
-    if(data.equip_on_click) this.on('click', () => player.events.emit('equip_weapon', data));
-    if(data.label) this.label(data);
-    if(data.dialog_on_click) this.on('click', () => Caption.render(data.dialog_on_click));
-    if(data.remove_on_click) this.on('click', () => this.destroy());
-    if(data.container) this.container(data);
+    this.inventory = new Inventory(data);
 
-    if(data.collision) {
-      collisions.addChild(this);
-    }
+    if(equip_on_click) this.on('click', () => {
+      item_events.emit('equip_weapon', {id:1, item: data});
+      this.destroy();
+    });
+
+    if(give_on_click) this.on('click', () => {
+      //TODO this implies only one, which may be ok
+      const [item] = this.inventory.items;
+      item_events.emit('give', {id:1, item});
+      this.destroy();
+    });
+
+    if(label) this.label(data);
+    if(dialog_on_click) this.on('click', () => Caption.render(dialog_on_click));
+    if(container) this.container(data);
+    if(collision) collisions.addChild(this);
+
     items.addChild(this);
   }
 
-  container(data) {
-    this.inventory = new Inventory(data);
+  container() {
     this.on('click', () => {
       this.button.visible = false;
       this.inventory.set_position(this);
@@ -39,10 +71,17 @@ class Chest extends Element {
     });
   }
 
-  // TODO This is repeated in a few places
-  label(data) {
+  label({
+    label_action,
+    label_description,
+    label_image,
+  }) {
     this.tint = 0xd3d3d3;
-    this.button = new Button(this, data);
+    this.button = new Button(this, {
+      label_action,
+      label_description,
+      label_image,
+    });
   }
 
   remove() {

@@ -7,52 +7,92 @@ const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
 
 const { damage_events } = require('../../engine/damage_handler');
+const { random_bound  } = require('../../utils/math');
 const { Vitals        } = require('../../character/attributes/vitals');
 const { Floor         } = require('./floor');
+const StateMachine      = require('javascript-state-machine');
 
 class Door extends Element {
   constructor(data) {
     super(data);
     this.interactive = true;
+    this.buttonMode = true;
     this.add_component(new Vitals());
+    this.state = new StateMachine({
+      init: 'closed',
+      transitions: [
+        { name: 'lock',   from: 'closed',  to: 'locked' },
+        { name: 'unlock', from: 'locked',  to: 'closed' },
+        { name: 'open',   from: 'closed',  to: 'opened' },
 
-    this.rotation_on_interaction = data.open_rotation || 2;
+        { name: 'close',  from: 'opened',  to: 'closed' },
+        { name: 'goto',   from: '*',       to: s => s },
+      ],
+    });
 
     items.addChild(this);
 
-    if(!data) return;
-
     if(data.clickable) {
       this.closable = data.closable;
-      this.tween = tweenManager.createTween(this);
       this.on('click', () => {
-        if(this.opened) {
-          if(this.closable === false) {
-            return;
-          }
+        if(this.state.is('motion')) {
+          return;
+        }
+
+        if(this.state.is('opened')) {
           return this.close();
         }
-        this.open();
+
+        if(this.state.is('closed')) {
+          return this.open();
+        }
       });
     }
 
-    if(data.dialog_on_click) {
-      this.on('click', () => {
-        Caption.render(data.dialog_on_click);
-        this.locked_door_effect.play();
-      });
-    }
+    this.rotation_on_interaction = data.open_rotation || 2;
 
     if(data.label) this.overlay(data);
     if(data.door)  this.pathfind_logic();
 
-    damage_events.on('damage', data => this.damage(data));
+    damage_events.on('damage', ({id,damage}) => {
+      if(this.id !== id) return;
+      this.damage(damage);
+    });
 
     this._set_sound();
   }
 
-  damage({id, damage}) {
-    if(this.id !== id) return;
+  open() {
+    if(this.state.is('locked')) {
+      Caption.render('Its locked');
+      this.locked_door_effect.play();
+      return;
+    }
+    if(this.state.is('motion')) return;
+
+    this.state.open();
+    this._open();
+    return this;
+  }
+
+  close() {
+    this.state.close();
+    this._close();
+    return this;
+  }
+
+  lock() {
+    this.state.lock();
+    return this;
+  }
+
+  unlock() {
+    this.state.unlock();
+    this.button.action_label.text = 'Open';
+    return this;
+  }
+
+  damage(damage) {
     this.vitals.damage(damage);
     this.wood_thump.play();
 
@@ -68,40 +108,47 @@ class Door extends Element {
     this.wood_thump = sound.find('thud_1');
     this.wood_thump.volume = 0.5;
 
+    this.open_door_effect = sound.find('door_open_1');
+    this.open_door_effect.volume = 0.3;
+
     this.locked_door_effect = sound.find('door_locked');
     this.locked_door_effect.volume = 0.1;
   }
 
-  open() {
-    if(this.in_motion) return;
-    this.in_motion = true;
-    this.tween.clear();
-    this.tween.to({ rotation: this.rotation+this.rotation_on_interaction });
-    this.tween.time = 500;
+  _open() {
+    this.state.goto('motion');
+    const rotation = this.rotation + 1.5;
+
+    this.tween = tweenManager.createTween(this);
+    this.open_door_effect.play();
+    this.tween.to({ rotation });
+    this.tween.time = random_bound(1000, 1300);
     this.tween.start();
+    this.tween.expire = true;
     this.tween.on('end', () => {
-      this.opened = true;
-      this.in_motion = false;
       this.button.action_label.text = 'Close';
+      this.state.goto('opened');
     });
   }
 
-  close() {
-    if(this.in_motion) return;
-    this.in_motion = true;
-    this.tween.clear();
-    this.tween.to({ rotation: this.rotation-this.rotation_on_interaction });
-    this.tween.time = 500;
+  _close() {
+    this.state.goto('motion');
+    this.open_door_effect.play();
+    const rotation = this.rotation - 1.5;
+
+    this.tween = tweenManager.createTween(this);
+    this.tween.expire = true;
+    this.tween.to({ rotation });
+    this.tween.time = random_bound(1000, 1300);
     this.tween.start();
     this.tween.on('end', () => {
-      this.opened = false;
-      this.in_motion = false;
       this.button.action_label.text = 'Open';
+      this.state.goto('closed');
     });
   }
 
   overlay(value) {
-    this.button = new Button(this,value);
+    this.button = new Button(this, value);
     this.tint = 0xd3d3d3;
   }
 

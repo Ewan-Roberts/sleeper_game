@@ -23,9 +23,14 @@ class Background extends Sprite {
 }
 
 class Note {
-  constructor(options) {
+  constructor({
+    image_on_click,
+    text,
+    text_colour = 'grey',
+    sound_file,
+  }) {
     //TODO Don't imply sound on instantiation
-    PIXI.sound.play('page_turn');
+    if(sound_file) PIXI.sound.play(sound_file);
 
     this.name = 'note';
     this.background = new Background();
@@ -36,33 +41,33 @@ class Note {
     // disable keyboard when note is up
     PIXI.keyboardManager.disable();
 
-    const texture = Texture.fromImage(options.image_on_click);
-    this.sprite = new Sprite(texture);
+    this.sprite = new Sprite(Texture.fromImage(image_on_click));
     this.sprite.position.copy(this.background.position);
+
+    //TODO make image size relative to viewport
+    if(this.sprite.width > global.window.innerWidth) {
+      this.sprite.scale.set(0.5);
+    }
     this.sprite.anchor.set(0.5);
     this.sprite.interactive = true;
-
-    if(options.remove_on_click) {
-      this.click = () => this.sprite.destroy();
-    }
+    this.sprite.buttonMode  = true;
+    this.sprite.tint = 0xd3d3d3;
+    this.sprite.on('mouseover', () => this.sprite.tint = 0xffffff);
+    this.sprite.on('mouseout', () => this.sprite.tint = 0xd3d3d3);
 
     this.text = new Text(
-      options.text,
+      text,
       {
-        fontSize: 20,
-        fill:     options.text_colour || 'grey',
-        align:    'center',
-        wordWrap: true,
+        fontSize:      20,
+        fill:          text_colour,
+        align:         'center',
+        wordWrap:      true,
         wordWrapWidth: 200,
       }
     );
     this.text.anchor.set(0.5);
     this.text.rotation = -0.05;
     this.text.position.copy(this.sprite);
-
-    this.sprite.tint = 0xd3d3d3;
-    this.sprite.on('mouseover', () => this.sprite.tint = 0xffffff);
-    this.sprite.on('mouseout', () => this.sprite.tint = 0xd3d3d3);
 
     this.sprite.on('click', () => {
       this.background.fade_out_destroy();

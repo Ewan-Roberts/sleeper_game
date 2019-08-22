@@ -25,6 +25,7 @@
     "express": "4.16.3",
     "imagemin-jpegtran": "6.0.0",
     "imagemin-pngquant": "6.0.0",
+    "javascript-state-machine": "^3.1.0",
     "jimp": "0.6.1",
     "pixi-keyboard": "0.9.4",
     "pixi-packer-parser": "2.0.0",

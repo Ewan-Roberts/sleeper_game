@@ -43,7 +43,7 @@ class Dialog {
 
 class Dialog_Script {
   constructor(point) {
-    this.point  = point;
+    this.point = point;
     this.happy_iterator = this.happy();
     this.angry_iterator = this.angry();
     this.help_iterator = this.help();

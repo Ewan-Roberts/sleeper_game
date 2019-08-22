@@ -5,8 +5,9 @@ class Wall extends Element {
   constructor(data) {
     super({
       ...data,
-      image_name:'black_dot',
-      tint: 0x000000,
+
+      image_name: 'black_dot',
+      tint:       0x000000,
     });
 
     collisions.addChild(this);

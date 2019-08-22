@@ -2,15 +2,21 @@ const { Texture, extras } = require('pixi.js');
 const { backgrounds     } = require('../../engine/pixi_containers');
 
 class Background extends extras.TilingSprite {
-  constructor(data) {
-    const { width, height, image_name } = data;
+  constructor({
+    width,
+    height,
+    image_name,
+    alpha = 1,
+    x,
+    y,
+  }) {
     super(Texture.fromImage(image_name));
     this.width  = width;
     this.height = height;
+    this.alpha  = alpha;
     this.anchor.set(0,1);
-    this.position.copy(data);
+    this.position.copy({x,y});
 
-    this.alpha = data.alpha || 1;
     if(image_name === 'tile_floor') {
       this.tileScale.x = 0.10;
       this.tileScale.y = 0.10;
