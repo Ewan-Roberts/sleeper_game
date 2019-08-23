@@ -25,9 +25,9 @@ class PlayerAnimation {
   }
 
   _set_sound() {
-    this.walk_sound = sound.find('walk_normal');
-    this.walk_sound.loop = true;
-    this.walk_sound.volume = 0.05;
+    //this.walk_sound = sound.find('walk_normal');
+    // this.walk_sound.loop = true;
+    // this.walk_sound.volume = 0.05;
   }
 
   switch(action) {
@@ -55,7 +55,7 @@ class PlayerAnimation {
 
   walk() {
     if(!this.walk_sound.isPlaying) {
-      this.walk_sound.play();
+      //this.walk_sound.play();
     }
     this.switch(this.prefix + '_walk');
   }

@@ -68,6 +68,7 @@ require('pixi-tween');
 require('./tween');
 require('./sound.js');
 require('./pixi_containers');
+//require('./raycast');
 
 module.exports = {
   viewport,

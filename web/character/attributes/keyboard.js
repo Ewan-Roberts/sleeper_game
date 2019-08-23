@@ -179,7 +179,7 @@ class Keyboard {
 
     this.speed = point_contains(this.sprite);
     this.sprite.y -= this.speed;
-    this.animation.walk();
+    // this.animation.walk();
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
@@ -190,7 +190,7 @@ class Keyboard {
 
     this.speed = point_contains(this.sprite);
     this.sprite.y += this.speed;
-    this.animation.walk();
+    // this.animation.walk();
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
@@ -202,7 +202,7 @@ class Keyboard {
 
     this.speed = point_contains(this.sprite);
     this.sprite.x -= this.speed;
-    this.animation.walk();
+    // this.animation.walk();
 
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
@@ -214,7 +214,7 @@ class Keyboard {
 
     this.speed = point_contains(this.sprite);
     this.sprite.x += this.speed;
-    this.animation.walk();
+    // this.animation.walk();
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 

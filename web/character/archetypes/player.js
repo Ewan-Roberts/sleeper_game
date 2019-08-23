@@ -65,18 +65,18 @@ class Player extends extras.AnimatedSprite {
 
     this.animation.events.on('walk', () => {
       if(!this.walk_sound.isPlaying) {
-        this.walk_sound.play();
+        // this.walk_sound.play();
       }
     });
 
     this.animation.events.on('idle', () => {
-      this.walk_sound.stop();
+      // this.walk_sound.stop();
     });
   }
 
   _set_sounds() {
-    this.walk_sound = sound.find('walk_normal', {loop: true});
-    this.walk_sound.volume = 1;
+    //this.walk_sound = sound.find('walk_normal', {loop: true});
+    //this.walk_sound.volume = 0.04;
   }
 
   damage(damage) {
