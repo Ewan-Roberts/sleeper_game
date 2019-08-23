@@ -11,6 +11,7 @@ const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
 const { env          } = require('../../../config');
 const { sound        } = require('pixi.js');
+const { filters } = require('pixi.js');
 const { flash_at     } = require('../../effects/fade_sprite.js');
 const { VideoBaseTexture, tweenManager, Sprite, Texture, Text } = require('pixi.js');
 const { Graphics } = require('pixi.js');
@@ -91,7 +92,8 @@ class DevRoom {
   }
 
   _set_dev_settings() {
-    setTimeout(()=> addVertexFromContainer(viewport.children[4]), 1000);
+    const [background] = this.data.background;
+    setTimeout(()=> new Raycast(background, viewport.children[4]), 1000);
   }
 }
 
@@ -101,81 +103,6 @@ const { viewport   } = require('../../engine/app');
 const { ticker } = require('../../engine/app');
 
 const Player = players.children[0];
-function distanceSquared(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow((x1 - x2)) + Math.pow(y1 - y2, 2));
-}
-
-function linePoint(x1, y1, x2, y2, xp, yp, tolerance) {
-  tolerance = tolerance || 1;
-  return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance;
-}
-
-
-function getCenter(o, dimension, axis) {
-  if (o.anchor !== undefined) {
-    if (o.anchor[axis] !== 0) {
-      return 0;
-    }
-    return dimension / 2;
-  }
-  return dimension;
-}
-
-
-module.exports.angle = (sprite, point) => Math.atan2(
-  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-);
-
-const trimVertexData = (sprite) => {
-  const trimmedData = [];
-
-  for (let i = 0; i < sprite.vertexData.length; i += 1) {
-    if (i % 2 === 0) trimmedData.push(sprite.vertexData[i] - sprite.vertexData[0] + sprite.x);
-    else trimmedData.push(sprite.vertexData[i] - sprite.vertexData[1] + sprite.y);
-  }
-
-  return trimmedData;
-};
-
-module.exports.hitBox = (x, y, points) => {
-  const length = points.length;
-  let c = false;
-  let lastAction = 'top';
-  let i;
-  let j;
-  for (i = 0, j = length - 2; i < length; i += 2) {
-    if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i])) {
-      c = !c;
-    }
-    j = i;
-  }
-  if (c) {
-    return lastAction;
-  }
-  for (i = 0; i < length; i += 2) {
-    const p1x = points[i];
-    const p1y = points[i + 1];
-    let p2x;
-    let p2y;
-    if (i === length - 2) {
-      p2x = points[0];
-      p2y = points[1];
-    } else {
-      p2x = points[i + 2];
-      p2y = points[i + 3];
-    }
-    if (linePoint(p1x, p1y, p2x, p2y, x, y, [1])) {
-      if (p1x === points[0]) {
-        lastAction = 'top';
-        return 'top';
-      }
-      lastAction = 'bottom';
-      return 'bottom';
-    }
-  }
-  return false;
-};
 
 function getIntersection(Player,segment,angle){
   // RAY in parametric: Point + Delta*T1
@@ -218,90 +145,133 @@ function getIntersection(Player,segment,angle){
 
 }
 
-const segments = [
-  // Border
-  {a:{x:0,y:0}, b:{x:3000,y:0}},
-  {a:{x:3000,y:0}, b:{x:3000,y:3000}},
-  {a:{x:3000,y:3000}, b:{x:0,y:3000}},
-  {a:{x:0,y:3000}, b:{x:0,y:0}},
-];
+class Raycast {
+  constructor(bounds, container) {
+    // Border
+    this.segments = [
+      ...this.convertToRays(bounds),
+    ];
+    const colorMatrix = new filters.BlurFilter();
+    // colorMatrix.autoFit = true;
+    // colorMatrix.greyscale(0.5);
 
+    this.raycast = new Graphics();
+    this.raycast.filters = [colorMatrix];
 
-// const set = {};
-// const uniquePoints = points.filter(p=>{
-//   const key = p.x+','+p.y;
-//   if(key in set){
-//     return false;
-//   }
+    this.addVertexFromContainer(container);
+    this.start();
+  }
 
-//   set[key]=true;
-//   return true;
-// });
+  convertToRays(sprite) {
+    const {x,y,width,height} = sprite;
 
+    const info = [
+      {a:{x,         y         }, b:{x:x+width, y         }},
+      {a:{x:x+width, y         }, b:{x:x+width, y:y-height}},
+      {a:{x:x+width, y:y-height}, b:{x,         y:y-height}},
+      {a:{x,         y:y-height}, b:{x,         y         }},
+    ];
+    return info;
+  }
 
-const addRaycastingOnVertex = () => {
-  const raycast = new Graphics();
-  const uniquePoints = segments.map(({a,b})=> (a,b));
+  addVertexFromContainer(containers) {
+    containers.children.forEach((child)=>{
+      console.log(child.constructor.name);
+      if(child.constructor.name === 'Wall') {
 
-  ticker.add(() => {
-    raycast.clear();
-    raycast.beginFill(0xfffffff,0.34);
- s   // raycast.position.copy({
-    //   x: Player.x -1500,
-    //   y: Player.y-400,
-    // });
-
-    const uniqueAngles = [];
-    uniquePoints.forEach(uniquePoint => {
-      const angle = Math.atan2(uniquePoint.y-Player.y,uniquePoint.x-Player.x);
-      uniquePoint.angle = angle;
-      uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
+        this.segments.push(...this.convertToRays(child));
+      }
     });
+  }
 
-    let intersects = [];
-    uniqueAngles.forEach(angle => {
-      let closestIntersect = null;
-      segments.forEach(seg => {
-        const intersect = getIntersection(Player,seg, angle);
-        if(!intersect) return;
-        if(!closestIntersect || intersect.param < closestIntersect.param){
-          closestIntersect = intersect;
-        }
+  start() {
+    const uniquePoints = this.segments.map(({a,b})=> (a,b));
+
+    console.log(ticker);
+    ticker.add(() => {
+      this.raycast.clear();
+      this.raycast.beginFill(0xfffffff,0.09);
+
+      const uniqueAngles = [];
+      uniquePoints.forEach(uniquePoint => {
+        const angle = Math.atan2(uniquePoint.y-Player.y,uniquePoint.x-Player.x);
+        uniquePoint.angle = angle;
+        uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
       });
-      if(!closestIntersect) return;
-      closestIntersect.angle = angle;
-      intersects.push(closestIntersect);
+
+      let intersects = [];
+      uniqueAngles.forEach(angle => {
+        let closestIntersect = null;
+        this.segments.forEach(seg => {
+          const intersect = getIntersection(Player,seg, angle);
+          if(!intersect) return;
+          if(!closestIntersect || intersect.param < closestIntersect.param){
+            closestIntersect = intersect;
+          }
+        });
+        if(!closestIntersect) return;
+        closestIntersect.angle = angle;
+        intersects.push(closestIntersect);
+      });
+
+      intersects = intersects.sort((a,b) => a.angle - b.angle );
+      this.raycast.moveTo(intersects[0].x,intersects[0].y);
+      this.raycast.lineStyle(1, 0xffd900, 1);
+
+      intersects.forEach(inter => this.raycast.lineTo(inter.x,inter.y));
     });
 
-    intersects = intersects.sort((a,b) => a.angle - b.angle );
-    raycast.moveTo(intersects[0].x,intersects[0].y);
-    raycast.lineStyle(1, 0xffd900, 1);
+    viewport.addChild(this.raycast);
+  }
+}
 
-    intersects.forEach(inter => raycast.lineTo(inter.x,inter.y));
-  });
 
-  viewport.addChild(raycast);
-};
 
-const convertToRays = (sprite) => {
-  const {x,y,width,height} = sprite;
+// const addRaycastingOnVertex = () => {
+//   const raycast = new Graphics();
+//   const uniquePoints = segments.map(({a,b})=> (a,b));
 
-  const info = [
-    {a:{x,         y         }, b:{x:x+width, y         }},
-    {a:{x:x+width, y         }, b:{x:x+width, y:y-height}},
-    {a:{x:x+width, y:y-height}, b:{x,         y:y-height}},
-    {a:{x,         y:y-height}, b:{x,         y         }},
-  ];
-  return info;
-};
+//   ticker.add(() => {
+//     raycast.clear();
+//     raycast.beginFill(0xfffffff,0.34);
+//     // raycast.position.copy({
+//     //   x: Player.x -1500,
+//     //   y: Player.y-400,
+//     // });
 
-const addVertexFromContainer = (containers) => {
-  containers.children.forEach((child)=>{
-    segments.push(...convertToRays(child));
-  });
+//     const uniqueAngles = [];
+//     uniquePoints.forEach(uniquePoint => {
+//       const angle = Math.atan2(uniquePoint.y-Player.y,uniquePoint.x-Player.x);
+//       uniquePoint.angle = angle;
+//       uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
+//     });
 
-  addRaycastingOnVertex();
-};
+//     let intersects = [];
+//     uniqueAngles.forEach(angle => {
+//       let closestIntersect = null;
+//       segments.forEach(seg => {
+//         const intersect = getIntersection(Player,seg, angle);
+//         if(!intersect) return;
+//         if(!closestIntersect || intersect.param < closestIntersect.param){
+//           closestIntersect = intersect;
+//         }
+//       });
+//       if(!closestIntersect) return;
+//       closestIntersect.angle = angle;
+//       intersects.push(closestIntersect);
+//     });
+
+//     intersects = intersects.sort((a,b) => a.angle - b.angle );
+//     raycast.moveTo(intersects[0].x,intersects[0].y);
+//     raycast.lineStyle(1, 0xffd900, 1);
+
+//     intersects.forEach(inter => raycast.lineTo(inter.x,inter.y));
+//   });
+
+//   viewport.addChild(raycast);
+// };
+
+
 
 
 
