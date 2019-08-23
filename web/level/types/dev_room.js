@@ -91,7 +91,7 @@ class DevRoom {
   }
 
   _set_dev_settings() {
-    setTimeout(()=> addVertexFromContainer(viewport.children[4]), 2000);
+    setTimeout(()=> addVertexFromContainer(viewport.children[4]), 1000);
   }
 }
 
@@ -177,13 +177,12 @@ module.exports.hitBox = (x, y, points) => {
   return false;
 };
 
-function getIntersection(ray,segment){
-
+function getIntersection(Player,segment,angle){
   // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
+  const r_px = Player.x;
+  const r_py = Player.y;
+  const r_dx = Math.cos(angle);
+  const r_dy = Math.sin(angle);
 
   // SEGMENT in parametric: Point + Delta*T2
   const s_px = segment.a.x;
@@ -194,7 +193,11 @@ function getIntersection(ray,segment){
   // Are they parallel? If so, no intersect
   const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
   const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
+
+  if(
+    r_dx/r_mag===s_dx/s_mag &&
+    r_dy/r_mag===s_dy/s_mag
+  ){
     // Unit vectors are the same.
     return null;
   }
@@ -217,155 +220,87 @@ function getIntersection(ray,segment){
 
 const segments = [
   // Border
-  {a:{x:0,y:0}, b:{x:3640,y:0}},
-  {a:{x:3640,y:0}, b:{x:3640,y:3360}},
-  {a:{x:3640,y:3360}, b:{x:0,y:3360}},
-  {a:{x:0,y:3360}, b:{x:0,y:0}},
-
-  // Polygon #1
-  {a:{x:100,y:150}, b:{x:120,y:50}},
-  {a:{x:120,y:50}, b:{x:200,y:80}},
-  {a:{x:200,y:80}, b:{x:140,y:210}},
-  {a:{x:140,y:210}, b:{x:100,y:150}},
-
-  // Polygon #2
-  {a:{x:100,y:200}, b:{x:120,y:250}},
-  {a:{x:120,y:250}, b:{x:60,y:300}},
-  {a:{x:60,y:300}, b:{x:100,y:200}},
-
-  // Polygon #3
-  {a:{x:200,y:260}, b:{x:220,y:150}},
-  {a:{x:220,y:150}, b:{x:300,y:200}},
-  {a:{x:300,y:200}, b:{x:350,y:320}},
-  {a:{x:350,y:320}, b:{x:200,y:260}},
-
-  // Polygon #4
-  {a:{x:340,y:60}, b:{x:360,y:40}},
-  {a:{x:360,y:40}, b:{x:370,y:70}},
-  {a:{x:370,y:70}, b:{x:340,y:60}},
-
-  // Polygon #5
-  {a:{x:450,y:190}, b:{x:560,y:170}},
-  {a:{x:560,y:170}, b:{x:540,y:270}},
-  {a:{x:540,y:270}, b:{x:430,y:290}},
-  {a:{x:430,y:290}, b:{x:450,y:190}},
-
-  // Polygon #6
-  {a:{x:400,y:95}, b:{x:580,y:50}},
-  {a:{x:580,y:50}, b:{x:480,y:150}},
-  {a:{x:480,y:150}, b:{x:400,y:95}},
-
+  {a:{x:0,y:0}, b:{x:3000,y:0}},
+  {a:{x:3000,y:0}, b:{x:3000,y:3000}},
+  {a:{x:3000,y:3000}, b:{x:0,y:3000}},
+  {a:{x:0,y:3000}, b:{x:0,y:0}},
 ];
 
-const addRaycastingOnVertex = (data) => {
+
+// const set = {};
+// const uniquePoints = points.filter(p=>{
+//   const key = p.x+','+p.y;
+//   if(key in set){
+//     return false;
+//   }
+
+//   set[key]=true;
+//   return true;
+// });
+
+
+const addRaycastingOnVertex = () => {
   const raycast = new Graphics();
-  const points = (segments=>{
-    const a = [];
-    segments.forEach(seg=>a.push(seg.a,seg.b));
-    return a;
-  })(segments);
-  const uniquePoints = (points=>{
-    const set = {};
-    return points.filter(p=>{
-      const key = p.x+','+p.y;
-      if(key in set){
-        return false;
-      }
-
-      set[key]=true;
-      return true;
-
-    });
-  })(points);
+  const uniquePoints = segments.map(({a,b})=> (a,b));
 
   ticker.add(() => {
-    Player.getGlobalPosition();
-
-    const uniqueAngles = [];
-    let intersects = [];
     raycast.clear();
     raycast.beginFill(0xfffffff,0.34);
-    for(let j=0;j<uniquePoints.length;j++){
-      const uniquePoint = uniquePoints[j];
+ s   // raycast.position.copy({
+    //   x: Player.x -1500,
+    //   y: Player.y-400,
+    // });
+
+    const uniqueAngles = [];
+    uniquePoints.forEach(uniquePoint => {
       const angle = Math.atan2(uniquePoint.y-Player.y,uniquePoint.x-Player.x);
       uniquePoint.angle = angle;
       uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
-    }
-    for(let k=0;k<uniqueAngles.length;k++){
-      const angle = uniqueAngles[k];
-      const dx = Math.cos(angle);
-      const dy = Math.sin(angle);
-      const ray = {
-        a:{
-          x:Player.x,
-          y:Player.y,
-        },
-        b:{
-          x:Player.x+dx,
-          y:Player.y+dy,
-        },
-      };
+    });
+
+    let intersects = [];
+    uniqueAngles.forEach(angle => {
       let closestIntersect = null;
-      for(let i=0;i<segments.length;i++){
-        const intersect = getIntersection(ray,segments[i]);
-        if(!intersect) continue;
-        if(!closestIntersect || intersect.param<closestIntersect.param){
-          closestIntersect=intersect;
+      segments.forEach(seg => {
+        const intersect = getIntersection(Player,seg, angle);
+        if(!intersect) return;
+        if(!closestIntersect || intersect.param < closestIntersect.param){
+          closestIntersect = intersect;
         }
-      }
-      if(!closestIntersect) continue;
+      });
+      if(!closestIntersect) return;
       closestIntersect.angle = angle;
       intersects.push(closestIntersect);
-    }
-    intersects = intersects.sort((a,b)=>a.angle-b.angle);
+    });
 
+    intersects = intersects.sort((a,b) => a.angle - b.angle );
     raycast.moveTo(intersects[0].x,intersects[0].y);
     raycast.lineStyle(1, 0xffd900, 1);
-    for (let i = 1; i < intersects.length; i++) {
-      raycast.lineTo(intersects[i].x,intersects[i].y);
-    }
+
+    intersects.forEach(inter => raycast.lineTo(inter.x,inter.y));
   });
 
   viewport.addChild(raycast);
-
 };
 
 const convertToRays = (sprite) => {
-  //sprite.getGlobalPosition();
-
   const {x,y,width,height} = sprite;
 
-  global.place_bunny(sprite);
-
   const info = [
-    {a:{x,         y         },b:{x:x+width,     y         }},
-    {a:{x:x+width, y         },b:{x:x+width,     y:y-height}},
-    {a:{x:x+width, y:y-height},b:{x,             y:y-height}},
-    {a:{x,         y:y-height},b:{x,             y         }},
+    {a:{x,         y         }, b:{x:x+width, y         }},
+    {a:{x:x+width, y         }, b:{x:x+width, y:y-height}},
+    {a:{x:x+width, y:y-height}, b:{x,         y:y-height}},
+    {a:{x,         y:y-height}, b:{x,         y         }},
   ];
-  console.log(info);
-  console.log(sprite);
-
-
-  // const info = [
-  //   {a:{x:vertex[0],y:vertex[1]}, b:{x:vertex[2],y:vertex[3]}},
-  //   {a:{x:vertex[2],y:vertex[3]}, b:{x:vertex[4],y:vertex[5]}},
-  //   {a:{x:vertex[4],y:vertex[5]}, b:{x:vertex[6],y:vertex[7]}},
-  //   {a:{x:vertex[6],y:vertex[7]}, b:{x:vertex[0],y:vertex[1]}},
-  // ];
   return info;
 };
 
 const addVertexFromContainer = (containers) => {
-  const containerVertexData = [];
-
   containers.children.forEach((child)=>{
     segments.push(...convertToRays(child));
   });
 
-  console.log(containerVertexData);
-
-  addRaycastingOnVertex(containerVertexData);
+  addRaycastingOnVertex();
 };
 
 
