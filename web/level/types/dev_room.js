@@ -23,6 +23,7 @@ const { VideoBaseTexture, tweenManager, Sprite, Texture, Text } = require('pixi.
 const { Graphics } = require('pixi.js');
 const { viewport } = require('../../engine/app');
 const { Raycast } = require('../../engine/raycast');
+const { ProgressBar   } = require('../../view/progress_bar');
 
 const {
   Wall,
@@ -35,6 +36,7 @@ const {
   Collision,
   Floor,
   Trigger_Pad,
+  Generator,
 } = require('../elements');
 
 let first = false;
@@ -82,22 +84,35 @@ class DevRoom {
     this.top_door = this.doors.find(door => door.id === 527);
     this.top_wall = this.walls.find(wall => wall.id === 625);
 
-    this.bathroom_door = this.doors.find(door => door.id === 590);
-    this.bathroom_wall = this.walls.find(wall => wall.id === 624);
+    // this.bathroom_door = this.doors.find(door => door.id === 590);
+    // this.bathroom_wall = this.walls.find(wall => wall.id === 624);
+    // this.bathroom_door.click = () => {
+    //   this.bathroom_wall.destroy();
+    // };
 
     this.top_door.once('click', () => {
       this.top_wall.destroy();
-      raycaster._refesh_segments();
     });
 
-    this.bathroom_door.click = () => {
-      this.bathroom_wall.destroy();
-      raycaster._refesh_segments();
-    };
+    const generator = new Generator(this.data.generator[0]);
+    ProgressBar.percentage = 0.1;
+    generator.on('click', () => {
+      if(this.player.inventory.contains('gas_canister')) {
+        const fuel_item = this.player.inventory.take_by_name('gas_canister');
+        ProgressBar.show();
+
+        generator.fuel = fuel_item.condition;
+        ProgressBar.to_percentage(fuel_item.condition);
+      }
+    });
+
+    ProgressBar.complete(() => {
+      generator.ready();
+    });
 
     this.exit_door.lock();
     this.exit_door.click = () => {
-      const keys_for_door = this.player.inventory.take_item('keys_brass');
+      const keys_for_door = this.player.inventory.take_by_name('keys_brass');
       if(keys_for_door) {
         this.exit_door.unlock().open();
       }

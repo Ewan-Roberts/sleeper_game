@@ -198,13 +198,13 @@ class IntroRoom {
   start_lights_fade_in() {
     const amount = 1000;
     //this.study_door_light.destroy();
-    this.locked_door.interactive = true;
     this.main_room_shroud.fade_out(amount);
     this.kitchen_shroud.fade_out(amount*4);
+
     this.bedroom_light.flicker_for(amount);
-
-
+    this.kitchen_light.flicker_for(amount);
     this.living_room_light.flicker_for(amount*3);
+
 
     // this.bedroom_light.events.on('on', () => this.bedroom_shroud.alpha = 0);
     // this.bedroom_light.events.on('off', () => this.bedroom_shroud.alpha = 0.2);
@@ -212,36 +212,30 @@ class IntroRoom {
     this.living_room_light.events.on('on', () => this.main_room_shroud.alpha = 0);
     this.living_room_light.events.on('off', () => this.main_room_shroud.alpha = 0.2);
 
-    this.kitchen_light.flicker_for(amount);
     this.kitchen_light.events.on('on', () => this.kitchen_shroud.alpha = 0);
     this.kitchen_light.events.on('off', () => this.kitchen_shroud.alpha = 0.2);
   }
 
   _set_elements() {
-    renderer.backgroundColor = 0x000000;
     this.theme_song.play();
 
-    this.player.position.copy(this.data.player_spawn.find(spawn=>spawn.id===137));
+    const spawn_point = this.data.player_spawn.find(spawn=>spawn.id===137);
+    this.player.position.copy(spawn_point);
+
     viewport.moveCenter(this.player.x, this.player.y);
 
-    this.bedroom_shroud.alpha = 1;
-    this.bedroom_shroud.fade_out(1000);
+    this.bedroom_shroud.fade_out(4000);
 
-    this.bedroom_light.flicker_for(200);
-    const walls = collisions.children.filter(sprite =>
-      sprite.constructor.name === 'Wall');
-    this.foo = new Raycast(this.player, {
+    this.shadow = new Raycast(this.player, {
       border:       this.data.shadow_area[0],
-      obstructions: walls,
+      obstructions: this.walls,
       follow:       true,
-      radius:       150,
+      radius:       200,
     });
 
     viewport.on('mousemove', ({data}) => {
-      if(
-        this.foo.light.containsPoint(data.global) &&
-        this.foo.raycast.containsPoint(data.global)
-      ) {
+      const mouse_point = data.global;
+      if(this.shadow.contains(mouse_point)) {
         viewport.interactiveChildren = true;
         return;
       }
@@ -249,23 +243,22 @@ class IntroRoom {
       viewport.interactiveChildren = false;
     });
 
-    //start_lights_fade_in();
     this.study_door.once('click', () => {
       Caption.render('The generator is almost out of fuel. There is a car to the North');
       this.start_lights_fade_in();
-      this.foo.shadow.alpha = 0.5;
-      this.foo.light.alpha = 0.5;
+      this.shadow.alpha = 0.5;
     });
 
-    this.key.click = () => console.log(this.player.inventory);
-
-    this.exit_door.lock();
-    this.exit_door.click = () => {
-      const keys_for_door = this.player.inventory.take_item('keys_brass');
-      if(keys_for_door) {
-        this.exit_door.unlock().open();
-      }
-    };
+    this.exit_door
+      .lock()
+      .click = () => {
+        const keys_for_door = this.player.inventory.take_by_name('keys_brass');
+        if(keys_for_door) {
+          this.exit_door
+            .unlock()
+            .open();
+        }
+      };
 
     this.bathroom_door.once('click', () => {
       this.bathroom_shroud.fade_out();
@@ -273,21 +266,21 @@ class IntroRoom {
     });
 
     this.generator.click = () => {
-      if(this.player.inventory.contains('oil_canister')) {
-        const fuel_item = this.player.inventory.take_item('oil_canister');
+      const fuel_item = this.player.inventory.take_by_name('oil_canister');
+      if(fuel_item) {
         keyboardManager.disable();
-        ProgressBar.show();
 
-        this.generator.fuel = fuel_item.condition;
-        ProgressBar.to_percentage(fuel_item.condition);
+        ProgressBar
+          .show()
+          .to_percentage(fuel_item.condition)
+          .complete(() => {
+            Caption.render('The canister is empty.');
+            this.generator.ready();
+            keyboardManager.enable();
+            this.generator.fuel = fuel_item.condition;
+          });
       }
     };
-
-    ProgressBar.complete(() => {
-      Caption.render('The fuel tank is empty.');
-      this.generator.ready();
-      keyboardManager.enable();
-    });
 
     this.generator.end(() => {
       this.bedroom_light.turn_off();
@@ -299,23 +292,19 @@ class IntroRoom {
       this.bathroom_shroud.alpha  = 0.8;
     });
 
-    this.locked_door.lock();
-    this.locked_door.once('click', () => {
-      this.locked_door.interactive = false;
-      Caption.render('I cant get in');
-    });
+    this.locked_door
+      .lock()
+      .inactive()
+      .once('click', function () {
+        this.interactive = false;
+        Caption.render('I cant get in');
+      });
 
     const pad_data = this.data.click_pad[0];
     const pad = new Click_Pad(pad_data);
     const button = new Button(pad, pad_data);
-    pad.on('mouseover', () => {
-      this.dumpster.tint = 0xffffff;
-    });
-
-    pad.on('mouseout', () => {
-      this.dumpster.tint = 0xd3d3d3;
-    });
-
+    pad.on('mouseover', () => this.dumpster.tint = 0xffffff);
+    pad.on('mouseout', () => this.dumpster.tint = 0xd3d3d3);
     pad.interactive = false;
 
     this.spear.click = () => {
@@ -339,6 +328,7 @@ class IntroRoom {
 
     this.theme_song.volume = 0;
     this.theme_song.stop();
+    this.key.click = () => console.log(this.player.inventory);
 
     this.study_door.position.x   += 40;
     this.study_door.interactive  = true;

@@ -86,6 +86,11 @@ class Door extends Element {
     return this;
   }
 
+  inactive() {
+    this.interactive = false;
+    return this;
+  }
+
   unlock() {
     this.state.unlock();
     this.button.action_label.text = 'Open';

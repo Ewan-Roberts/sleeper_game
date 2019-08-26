@@ -116,7 +116,9 @@ class View_Inventory {
     loot.forEach((loot_item, slot) => {
       const item = new Item(loot_item);
       item.click = () => {
-        item_events.emit('give', { id: 1, item: loot_item });
+        console.log('click');
+        console.log(loot_item);
+        item_events.emit('give', 1, { item: loot_item });
         description.visible = false;
         title.hide();
         item.destroy();

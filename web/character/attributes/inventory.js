@@ -12,6 +12,7 @@ class Inventory extends View_Inventory {
     this.items = JSON.parse(items).map(
       ({name, condition}) => Item_Manager.get_item(name, { condition })
     );
+    console.log(this.items);
 
     this.populate();
   }
@@ -45,6 +46,7 @@ class Inventory extends View_Inventory {
     this.populate();
   }
 
+  // TODO: rename create and give
   give_item_by_name(name,
     {
       condition,
@@ -102,13 +104,15 @@ class Inventory extends View_Inventory {
     this.equipped = weapon;
   }
 
-  give_item(item) {
+  give(item) {
     if(!item) throw 'can not give nothing';
     this.items.push(item);
   }
 
-  take_item(name) {
-    const index = this.items.indexOf(name);
+  take_by_name(name) {
+    const index = this.items.findIndex(item => item.name === name);
+    if(index < 0) return undefined;
+
     const [result] = this.items.splice(index,1);
     return result;
   }

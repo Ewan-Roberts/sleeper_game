@@ -19,7 +19,7 @@ class Shrine extends Element {
   }
 
   give_blood(vial) {
-    if(vial) this.inventory.give_item(vial);
+    if(vial) this.inventory.give(vial);
   }
 
   get enough_blood() {

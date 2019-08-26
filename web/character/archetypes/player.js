@@ -41,15 +41,19 @@ class Player extends extras.AnimatedSprite {
       this.damage(damage);
     });
 
-    item_events.on('give', ({id,item}) => {
+    item_events.on('give', (id, {
+      item: { name, condition },
+    }) => {
       if(this.id !== id) return;
-      const found_item = Item_Manager.get_item(item.image_name);
-      this.inventory.give_item(found_item);
+      const found_item = Item_Manager.get_item(name, { condition });
+      this.inventory.give(found_item);
     });
 
-    item_events.on('equip_weapon', ({id,item}) => {
+    item_events.on('equip_weapon', (id, {
+      item: { name },
+    }) => {
       if(this.id !== id) return;
-      const found_item = Item_Manager.get_item(item.image_name);
+      const found_item = Item_Manager.get_item(name);
       this.inventory.equip_weapon(found_item);
 
       this.animation.prefix = found_item.animation_name;

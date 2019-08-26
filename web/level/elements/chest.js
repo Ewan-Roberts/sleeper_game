@@ -43,17 +43,21 @@ class Chest extends Element {
 
     this.inventory = new Inventory(data);
 
-    if(equip_on_click) this.on('click', () => {
-      item_events.emit('equip_weapon', {id:1, item: data});
-      this.destroy();
-    });
+    if(equip_on_click) {
+      this.on('click', () => {
+        item_events.emit('equip_weapon', 1, {item: data});
+        this.destroy();
+      });
+    }
 
-    if(give_on_click) this.on('click', () => {
-      //TODO this implies only one, which may be ok
-      const [item] = this.inventory.items;
-      item_events.emit('give', {id:1, item});
-      this.destroy();
-    });
+    if(give_on_click) {
+      this.on('click', () => {
+        //TODO this implies only one, which may be ok
+        const [item] = this.inventory.items;
+        item_events.emit('give', 1, {item});
+        this.destroy();
+      });
+    }
 
     if(label) this.label(data);
     if(dialog_on_click) this.on('click', () => Caption.render(dialog_on_click));

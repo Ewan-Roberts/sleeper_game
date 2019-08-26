@@ -60,23 +60,23 @@ class HubRoom {
     });
 
     // TODO couple the progress bar to the generator?
-
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
     const generator = new Generator(this.data.generator[0]);
 
-    //this.player.inventory.populate_with_item('gas_canister', { condition: 0.4 });
+    this.player.inventory.populate_with_item('gas_canister', { condition: 0.4 });
 
     ProgressBar.percentage = 0.1;
 
     generator.on('click', () => {
       if(this.player.inventory.contains('gas_canister')) {
-        const fuel_item = this.player.inventory.take_item('gas_canister');
+        const fuel_item = this.player.inventory.take_by_name('gas_canister');
         keyboardManager.disable();
         ProgressBar.show();
 
         generator.fuel = fuel_item.condition;
         ProgressBar.to_percentage(fuel_item.condition);
+        generator.interactive = false;
         lights.forEach(light => light.turn_on());
       }
     });
@@ -89,6 +89,7 @@ class HubRoom {
       Caption.render('Its filled');
       generator.ready();
       keyboardManager.enable();
+      generator.interactive = true;
     });
 
     keyboardManager.on('pressed', () => {

@@ -55,6 +55,7 @@ class ProgressBar {
 
   static show() {
     container.visible = true;
+    return this;
   }
 
   static hide() {
@@ -100,6 +101,7 @@ class ProgressBar {
     });
 
     tween_bar.start();
+    return this;
   }
 }
 

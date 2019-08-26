@@ -26,8 +26,8 @@ class Items {
     this.items.some(item => item.id === id);
   }
 
-  take_items(name) {
-    const index = this.items.map(item => item.name).indexOf(name);
+  take_by_name(name) {
+    const index = this.items.findIndex(item => item.name === name);
     const result = this.items.splice(index,1);
 
     return result;
