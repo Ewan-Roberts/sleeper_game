@@ -65,7 +65,7 @@ class HubRoom {
 
     const generator = new Generator(this.data.generator[0]);
 
-    this.player.inventory.populate_with_item('gas_canister', { condition: 0.4 });
+    //this.player.inventory.populate_with_item('gas_canister', { condition: 0.4 });
 
     ProgressBar.percentage = 0.1;
 

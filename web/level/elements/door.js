@@ -117,12 +117,12 @@ class Door extends Element {
 
   _open() {
     this.state.goto('motion');
-    const rotation = this.rotation + 1.5;
+    const rotation = this.rotation + 2.5;
 
     this.tween = tweenManager.createTween(this);
     this.open_door_effect.play();
     this.tween.to({ rotation });
-    this.tween.time = random_bound(1000, 1300);
+    this.tween.time = random_bound(500, 800);
     this.tween.start();
     this.tween.expire = true;
     this.tween.on('end', () => {
@@ -134,16 +134,17 @@ class Door extends Element {
   _close() {
     this.state.goto('motion');
     this.open_door_effect.play();
-    const rotation = this.rotation - 1.5;
+    const rotation = this.rotation - 2.5;
 
     this.tween = tweenManager.createTween(this);
     this.tween.expire = true;
     this.tween.to({ rotation });
-    this.tween.time = random_bound(1000, 1300);
+    this.tween.time = random_bound(500, 800);
     this.tween.start();
     this.tween.on('end', () => {
       this.button.action_label.text = 'Open';
       this.state.goto('closed');
+      this.rotation = 2;
     });
   }
 

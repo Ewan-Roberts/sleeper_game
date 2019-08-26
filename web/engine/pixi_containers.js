@@ -3,28 +3,18 @@ global.window.PIXI = PIXI;
 global.window.PIXI.default = PIXI;
 
 const { Container } = require('pixi.js');
-const { viewport } = require('./app');
-console.log(viewport);
+const { viewport  } = require('./app');
 
-const zIndex_layer = {
-  background: 12,
-  floor:      10,
-  low:        9,
-  medium:     6,
-  close:      3,
-  closer:     2,
-  very_close: 1,
-};
-
+// Its easier to edit, so sue me
 const {
-  background,
-  floor,
-  low,
-  medium,
-  close,
-  closer,
-  very_close,
-} = zIndex_layer;
+  background = 12,
+  floor      = 10,
+  low        = 9,
+  medium     = 6,
+  close      = 3,
+  closer     = 2,
+  very_close = 1,
+} = {};
 
 const borders = new Container();
 borders.name   = 'borders';

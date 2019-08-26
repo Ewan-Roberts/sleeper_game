@@ -5,6 +5,7 @@ const { LogicZombie  } = require('../../character/archetypes/logic_zombie');
 const { PathSprite   } = require('../../character/types/path');
 const { players      } = require('../../engine/pixi_containers');
 const { collisions    } = require('../../engine/pixi_containers');
+const { items       } = require('../../engine/pixi_containers');
 const { FloorWord    } = require('../../effects/floor_word');
 const { Debris       } = require('../../effects/debris');
 const { guis         } = require('../../engine/pixi_containers');
@@ -57,6 +58,8 @@ class DevRoom {
     this.light_shroud = this.shrouds.find(roof => roof.id === 592);
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
 
+    this.exit_door    = this.doors.find(door => door.id === 619);
+
     this._set_elements();
     if(env.dev) this._set_dev_settings();
     this._start();
@@ -76,10 +79,45 @@ class DevRoom {
     // TODO consider extraction function or storing walls in a different container
     const walls = collisions.children.filter(sprite => sprite.constructor.name === 'Wall');
 
-    new Raycast(this.player, {
+    this.top_door = this.doors.find(door => door.id === 527);
+    this.top_wall = this.walls.find(wall => wall.id === 625);
+
+    this.bathroom_door = this.doors.find(door => door.id === 590);
+    this.bathroom_wall = this.walls.find(wall => wall.id === 624);
+
+    this.top_door.once('click', () => {
+      this.top_wall.destroy();
+      raycaster._refesh_segments();
+    });
+
+    this.bathroom_door.click = () => {
+      this.bathroom_wall.destroy();
+      raycaster._refesh_segments();
+    };
+
+    this.exit_door.lock();
+    this.exit_door.click = () => {
+      const keys_for_door = this.player.inventory.take_item('keys_brass');
+      if(keys_for_door) {
+        this.exit_door.unlock().open();
+      }
+    };
+
+    const light = this.collisions.find(light => light.id === 626);
+    const raycaster = new Raycast(this.player, {
       border:       this.data.shadow_area[0],
       obstructions: walls,
       follow:       true,
+      radius:       200,
+    });
+    raycaster.add_light(light, 200);
+
+    viewport.on('mousemove', ({data}) => {
+      if(raycaster.raycast.containsPoint(data.global)) {
+        viewport.interactiveChildren = true;
+        return;
+      }
+      viewport.interactiveChildren = false;
     });
   }
 }

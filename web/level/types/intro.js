@@ -19,6 +19,8 @@ const { env        } = require('../../../config');
 const { random_bound } = require('../../utils/math.js');
 const { sleep    } = require('../../utils/time.js');
 const { ProgressBar   } = require('../../view/progress_bar');
+const { Raycast } = require('../../engine/raycast');
+const { collisions    } = require('../../engine/pixi_containers');
 
 const {
   Trigger_Pad,
@@ -193,6 +195,28 @@ class IntroRoom {
     this.keys_effect.volume = 0.2;
   }
 
+  start_lights_fade_in() {
+    const amount = 1000;
+    //this.study_door_light.destroy();
+    this.locked_door.interactive = true;
+    this.main_room_shroud.fade_out(amount);
+    this.kitchen_shroud.fade_out(amount*4);
+    this.bedroom_light.flicker_for(amount);
+
+
+    this.living_room_light.flicker_for(amount*3);
+
+    // this.bedroom_light.events.on('on', () => this.bedroom_shroud.alpha = 0);
+    // this.bedroom_light.events.on('off', () => this.bedroom_shroud.alpha = 0.2);
+
+    this.living_room_light.events.on('on', () => this.main_room_shroud.alpha = 0);
+    this.living_room_light.events.on('off', () => this.main_room_shroud.alpha = 0.2);
+
+    this.kitchen_light.flicker_for(amount);
+    this.kitchen_light.events.on('on', () => this.kitchen_shroud.alpha = 0);
+    this.kitchen_light.events.on('off', () => this.kitchen_shroud.alpha = 0.2);
+  }
+
   _set_elements() {
     renderer.backgroundColor = 0x000000;
     this.theme_song.play();
@@ -201,31 +225,36 @@ class IntroRoom {
     viewport.moveCenter(this.player.x, this.player.y);
 
     this.bedroom_shroud.alpha = 1;
-    this.bedroom_shroud.fade_out(6000);
+    this.bedroom_shroud.fade_out(1000);
 
-    const start_lights_fade_in = () => {
-      //this.study_door_light.destroy();
-      this.locked_door.interactive = true;
-      this.main_room_shroud.fade_out(3000);
-      this.kitchen_shroud.fade_out(4000);
-      this.bedroom_light.flicker_for(1200);
+    this.bedroom_light.flicker_for(200);
+    const walls = collisions.children.filter(sprite =>
+      sprite.constructor.name === 'Wall');
+    this.foo = new Raycast(this.player, {
+      border:       this.data.shadow_area[0],
+      obstructions: walls,
+      follow:       true,
+      radius:       150,
+    });
 
-      // this.bedroom_light.events.on('on', () => this.bedroom_shroud.alpha = 0);
-      // this.bedroom_light.events.on('off', () => this.bedroom_shroud.alpha = 0.2);
+    viewport.on('mousemove', ({data}) => {
+      if(
+        this.foo.light.containsPoint(data.global) &&
+        this.foo.raycast.containsPoint(data.global)
+      ) {
+        viewport.interactiveChildren = true;
+        return;
+      }
 
-      this.living_room_light.flicker_for(3000);
-      this.living_room_light.events.on('on', () => this.main_room_shroud.alpha = 0);
-      this.living_room_light.events.on('off', () => this.main_room_shroud.alpha = 0.2);
-
-      this.kitchen_light.flicker_for(800);
-      this.kitchen_light.events.on('on', () => this.kitchen_shroud.alpha = 0);
-      this.kitchen_light.events.on('off', () => this.kitchen_shroud.alpha = 0.2);
-    };
+      viewport.interactiveChildren = false;
+    });
 
     //start_lights_fade_in();
     this.study_door.once('click', () => {
       Caption.render('The generator is almost out of fuel. There is a car to the North');
-      start_lights_fade_in();
+      this.start_lights_fade_in();
+      this.foo.shadow.alpha = 0.5;
+      this.foo.light.alpha = 0.5;
     });
 
     this.key.click = () => console.log(this.player.inventory);
@@ -316,356 +345,8 @@ class IntroRoom {
     this.locked_door.interactive = true;
     this.intro_fade.visible = false;
     keyboardManager.enable();
-    setTimeout(()=> addVertexFromContainer(viewport.children[4]), 2000);
   }
 }
-
-
-const { ticker } = require('../../engine/app');
-
-const Player = players.children[0];
-function distanceSquared(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow((x1 - x2)) + Math.pow(y1 - y2, 2));
-}
-
-function linePoint(x1, y1, x2, y2, xp, yp, tolerance) {
-  tolerance = tolerance || 1;
-  return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance;
-}
-
-
-function getCenter(o, dimension, axis) {
-  if (o.anchor !== undefined) {
-    if (o.anchor[axis] !== 0) {
-      return 0;
-    }
-    return dimension / 2;
-  }
-  return dimension;
-}
-
-
-module.exports.angle = (sprite, point) => Math.atan2(
-  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-);
-
-const trimVertexData = (sprite) => {
-  const trimmedData = [];
-
-  for (let i = 0; i < sprite.vertexData.length; i += 1) {
-    if (i % 2 === 0) trimmedData.push(sprite.vertexData[i] - sprite.vertexData[0] + sprite.x);
-    else trimmedData.push(sprite.vertexData[i] - sprite.vertexData[1] + sprite.y);
-  }
-
-  return trimmedData;
-};
-
-module.exports.hitBox = (x, y, points) => {
-  const length = points.length;
-  let c = false;
-  let lastAction = 'top';
-  let i;
-  let j;
-  for (i = 0, j = length - 2; i < length; i += 2) {
-    if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i])) {
-      c = !c;
-    }
-    j = i;
-  }
-  if (c) {
-    return lastAction;
-  }
-  for (i = 0; i < length; i += 2) {
-    const p1x = points[i];
-    const p1y = points[i + 1];
-    let p2x;
-    let p2y;
-    if (i === length - 2) {
-      p2x = points[0];
-      p2y = points[1];
-    } else {
-      p2x = points[i + 2];
-      p2y = points[i + 3];
-    }
-    if (linePoint(p1x, p1y, p2x, p2y, x, y, [1])) {
-      if (p1x === points[0]) {
-        lastAction = 'top';
-        return 'top';
-      }
-      lastAction = 'bottom';
-      return 'bottom';
-    }
-  }
-  return false;
-};
-
-function getIntersection(ray,segment){
-
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
-
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
-
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
-  }
-
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1,
-  };
-
-}
-
-const segments = [
-  // Border
-  {a:{x:0,y:0}, b:{x:3640,y:0}},
-  {a:{x:3640,y:0}, b:{x:3640,y:3360}},
-  {a:{x:3640,y:3360}, b:{x:0,y:3360}},
-  {a:{x:0,y:3360}, b:{x:0,y:0}},
-
-  // Polygon #1
-  {a:{x:100,y:150}, b:{x:120,y:50}},
-  {a:{x:120,y:50}, b:{x:200,y:80}},
-  {a:{x:200,y:80}, b:{x:140,y:210}},
-  {a:{x:140,y:210}, b:{x:100,y:150}},
-
-  // Polygon #2
-  {a:{x:100,y:200}, b:{x:120,y:250}},
-  {a:{x:120,y:250}, b:{x:60,y:300}},
-  {a:{x:60,y:300}, b:{x:100,y:200}},
-
-  // Polygon #3
-  {a:{x:200,y:260}, b:{x:220,y:150}},
-  {a:{x:220,y:150}, b:{x:300,y:200}},
-  {a:{x:300,y:200}, b:{x:350,y:320}},
-  {a:{x:350,y:320}, b:{x:200,y:260}},
-
-  // Polygon #4
-  {a:{x:340,y:60}, b:{x:360,y:40}},
-  {a:{x:360,y:40}, b:{x:370,y:70}},
-  {a:{x:370,y:70}, b:{x:340,y:60}},
-
-  // Polygon #5
-  {a:{x:450,y:190}, b:{x:560,y:170}},
-  {a:{x:560,y:170}, b:{x:540,y:270}},
-  {a:{x:540,y:270}, b:{x:430,y:290}},
-  {a:{x:430,y:290}, b:{x:450,y:190}},
-
-  // Polygon #6
-  {a:{x:400,y:95}, b:{x:580,y:50}},
-  {a:{x:580,y:50}, b:{x:480,y:150}},
-  {a:{x:480,y:150}, b:{x:400,y:95}},
-
-];
-
-const addRaycastingOnVertex = (data) => {
-  console.log('===========');
-  console.log(data);
-  console.log(segments);
-  console.log('===========');
-  const raycast = new Graphics();
-  const points = (segments=>{
-    const a = [];
-    segments.forEach(seg=>a.push(seg.a,seg.b));
-    return a;
-  })(segments);
-  const uniquePoints = (points=>{
-    const set = {};
-    return points.filter(p=>{
-      const key = p.x+','+p.y;
-      if(key in set){
-        return false;
-      }
-
-      set[key]=true;
-      return true;
-
-    });
-  })(points);
-
-  ticker.add(() => {
-    const uniqueAngles = [];
-    let intersects = [];
-    raycast.clear();
-    raycast.beginFill(0xfffffff,0.34);
-    for(let j=0;j<uniquePoints.length;j++){
-      const uniquePoint = uniquePoints[j];
-      const angle = Math.atan2(uniquePoint.y-Player.y,uniquePoint.x-Player.x);
-      uniquePoint.angle = angle;
-      uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
-    }
-    for(let k=0;k<uniqueAngles.length;k++){const angle = uniqueAngles[k];const dx = Math.cos(angle);const dy = Math.sin(angle);const ray = {a:{x:Player.x,y:Player.y},b:{x:Player.x+dx,y:Player.y+dy}};let closestIntersect = null;for(let i=0;i<segments.length;i++){const intersect = getIntersection(ray,segments[i]);if(!intersect) continue;if(!closestIntersect || intersect.param<closestIntersect.param){closestIntersect=intersect;}}if(!closestIntersect) continue;closestIntersect.angle = angle;intersects.push(closestIntersect);}
-    intersects = intersects.sort((a,b)=>a.angle-b.angle);
-    raycast.moveTo(intersects[0].x,intersects[0].y);
-    raycast.lineStyle(1, 0xffd900, 1);
-    for (let i = 1; i < intersects.length; i++) raycast.lineTo(intersects[i].x,intersects[i].y);
-
-  });
-
-  viewport.addChild(raycast);
-
-};
-
-const convertToRays = (vertex) => {
-  const info = [
-    {a:{x:vertex[0],y:vertex[1]}, b:{x:vertex[2],y:vertex[3]}},
-    {a:{x:vertex[2],y:vertex[3]}, b:{x:vertex[4],y:vertex[5]}},
-    {a:{x:vertex[4],y:vertex[5]}, b:{x:vertex[6],y:vertex[7]}},
-    {a:{x:vertex[6],y:vertex[7]}, b:{x:vertex[0],y:vertex[1]}},
-  ];
-  return info;
-};
-
-const addVertexFromContainer = (containers) => {
-  const containerVertexData = [];
-
-  containers.children.forEach((child)=>{
-    segments.push(...convertToRays(child.vertexData));
-  });
-
-  console.log(containerVertexData);
-
-  addRaycastingOnVertex(containerVertexData);
-};
-
-
-
-//
-//module.exports.addLevelRaycasting = () => {
-//  const raycast = new PIXI.Graphics();
-//  const points = (segments=>{
-//    const a = [];
-//    segments.forEach(seg=>a.push(seg.a,seg.b));
-//    return a;
-//  })(segments);
-//  const uniquePoints = (points=>{
-//    const set = {};
-//    return points.filter(p=>{
-//      const key = p.x+','+p.y;
-//      if(key in set){
-//        return false;
-//      }
-//
-//      set[key]=true;
-//      return true;
-//
-//    });
-//  })(points);
-//
-//
-//  const getSightPolygon = (PlayerX, PlayerY) => {
-//
-//    const uniqueAngles = [];
-//    let intersects = [];
-//    raycast.clear();
-//    raycast.beginFill(0xfffffff, 12);
-//    for (let j=0;j<uniquePoints.length;j++){
-//      const uniquePoint = uniquePoints[j];
-//      const angle = Math.atan2(uniquePoint.y-PlayerY,uniquePoint.x-PlayerX);
-//      uniquePoint.angle = angle;
-//      uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
-//    }
-//
-//    for(let k=0;k<uniqueAngles.length;k++){
-//      const angle = uniqueAngles[k];
-//
-//      const dx = Math.cos(angle);
-//      const dy = Math.sin(angle);
-//
-//      const ray = {
-//        a:{x:PlayerX,y:PlayerY},
-//        b:{x:PlayerX+dx,y:Player.y+dy},
-//      };
-//
-//      let closestIntersect = null;
-//      for(let i=0;i<segments.length;i++){
-//        const intersect = getIntersection(ray,segments[i]);
-//        if(!intersect) continue;
-//        if(!closestIntersect || intersect.param<closestIntersect.param){
-//          closestIntersect=intersect;
-//        }
-//      }
-//      if(!closestIntersect) continue;
-//      closestIntersect.angle = angle;
-//
-//      intersects.push(closestIntersect);
-//    }
-//    intersects = intersects.sort((a,b)=>a.angle-b.angle);
-//
-//    return intersects;
-//  };
-//
-//  function drawPolygon(polygon){
-//    raycast.moveTo(polygon[0].x,polygon[0].y);
-//    for(let i=1;i<polygon.length;i++){
-//      const intersect = polygon[i];
-//      raycast.lineTo(intersect.x,intersect.y);
-//    }
-//  }
-//
-//  let Mouse = {x: 1, y: 0};
-//  viewport.on('mousemove', event => {
-//    Mouse = event.data.global;
-//    console.log(Mouse);
-//  });
-//  ticker.add(() => {
-//    //drawPolygon(getSightPolygon(Player.x,Player.y));
-//    // var fuzzyRadius = 30;
-//    // var polygons = [getSightPolygon(Player.x,Player.y)];
-//    // for(var angle=0;angle<Math.PI*1.2;angle+=(Math.PI*2)/10){
-//    //   var dx = Math.cos(angle)*fuzzyRadius;
-//    //   var dy = Math.sin(angle)*fuzzyRadius;
-//    //   polygons.push(getSightPolygon(Player.x+dx,Player.y+dy));
-//    // }
-//
-//    // for (let i = 0; i < polygons.length; i++) {
-//    //   drawPolygon(polygons[i]);
-//    // }
-//
-//    // const intersects = getSightPolygon(Player.x, Player.y);
-//    // raycast.moveTo(intersects[0].x,intersects[0].y);
-//    // raycast.lineStyle(1, 0xffd900, 1);
-//    // for (let i = 1; i < intersects.length; i++) {
-//    //   raycast.lineTo(intersects[i].x,intersects[i].y);
-//    // }
-//    // var fuzzyRadius = 10;
-//    // var polygons = [getSightPolygon(Mouse.x,Mouse.y)];
-//    // for(var angle=0;angle<Math.PI*2;angle+=(Math.PI*2)/10){
-//    //   var dx = Math.cos(angle)*fuzzyRadius;
-//    //   var dy = Math.sin(angle)*fuzzyRadius;
-//    //   polygons.push(getSightPolygon(Mouse.x+dx,Mouse.y+dy));
-//    // }
-//
-//  });
-//
-//  raycast.name = 'loog look';
-//  viewport.addChild(raycast);
-//};
-
-//module.exports.addLevelRaycasting();
-
 
 
 module.exports = {

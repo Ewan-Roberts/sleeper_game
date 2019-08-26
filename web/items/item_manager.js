@@ -25,7 +25,7 @@ class Item_Manager {
   static get_random_item() {
     const random_item = items[
       Math.floor(
-        Math.random()*items.length
+        Math.random() * items.length
       )
     ];
 

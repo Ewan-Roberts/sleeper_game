@@ -15,16 +15,16 @@ renderer.backgroundColor = 0xFFC0CB;
  * creates raycasting light and shadow around it
  * @param  {Sprite}
  * @option {object}
- * @option {object}   option.border - an object wih x, y, width, height
+ * @option {object}   option.border - border wih x, y, width, height
  * @option {Sprite[]} option.obstructions - array of sprite that cast shadows
  * @option {number}   option.radius - radius of light
- * @option {boolean}  option.follow - does the light move with the sprite
+ * @option {boolean}  option.follow - does the light move with the sprite?
  */
 class Raycast extends Container {
   constructor(sprite, {
     border,
     obstructions,
-    radius = 400,
+    radius = 300,
     follow = false,
   }) {
     super();
@@ -32,18 +32,14 @@ class Raycast extends Container {
     this.sprite = sprite;
     this.follow = follow;
 
-    this.segments = [
-      ...this.convert_to_rays(border),
-    ];
-
-    obstructions.forEach(sprite =>{
-      this.segments.push(...this.convert_to_rays(sprite));
-    });
+    this.obstructions = obstructions;
+    this.border = border;
+    this._refesh_segments();
 
     this.shadow        = new Sprite(Texture.fromFrame('black_dot'));
     this.shadow.width  = border.width;
     this.shadow.height = border.height;
-    this.shadow.alpha  = 0.7;
+    this.shadow.alpha  = 0.9;
     this.shadow.name   = 'shadow_area';
     this.shadow.position.copy(border);
     this.shadow.anchor.set(0,1);
@@ -54,18 +50,49 @@ class Raycast extends Container {
       .endFill();
 
     this.light.blendMode = 20;
+    this.light.alpha = 0.9;
     this.light.mask = this.raycast;
+    this.light.x = sprite.x - this.light.width/2;
+    this.light.y = sprite.y - this.light.height/2;
 
     this.addChild(
       this.shadow,
       this.light
     );
 
-    this.filters = [new filters.BlurFilter(4)];
+    this.filters = [new filters.BlurFilter(8)];
 
     viewport.addChild(this);
 
     this.start();
+  }
+
+  add_light(sprite, radius = 100) {
+    this.newlight = new Graphics()
+      .beginFill(0xFFFFFFF)
+      .drawCircle(radius, radius, radius)
+      .endFill();
+
+    this.newlight.blendMode = 20;
+    this.newlight.mask = this.raycast;
+    this.newlight.x = sprite.x - this.newlight.width/2;
+    this.newlight.y = sprite.y - this.newlight.height/2;
+
+    this.addChild(this.newlight);
+    console.log(this);
+    this._refesh_segments();
+  }
+
+  _refesh_segments() {
+    this.segments = [
+      ...this.convert_to_rays(this.border),
+    ];
+
+    this.obstructions.forEach(sprite =>{
+      if(sprite._destroyed) return;
+      this.segments.push(...this.convert_to_rays(sprite));
+    });
+
   }
 
   // for testing

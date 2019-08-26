@@ -62,7 +62,7 @@ const options = {
 
   dev_medium: new EnvironmentConfig({
     dev:                true,
-    fps:                0.06,
+    fps:                0.04,
     resolution:         1,
     anti_alias:         false,
     background_color:   0xffffff, // blue
