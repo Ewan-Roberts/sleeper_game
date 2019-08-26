@@ -1,6 +1,6 @@
 const { renderer      } = require('../../engine/app');
 //const { viewport      } = require('../../engine/app');
-const { Dialog_Script } = require('../../engine/script_generator');
+//const { Dialog_Script } = require('../../engine/script_generator');
 const { visuals       } = require('../../engine/pixi_containers');
 const { sleep         } = require('../../utils/time.js');
 const { random_bound  } = require('../../utils/math.js');
@@ -262,11 +262,11 @@ class RanbirRoom  {
 
   _ranbir() {
     this.ranbir = this.prey.find(unit => unit.id === 257);
-    this.ranbir_script = new Dialog_Script(this.ranbir);
+    // this.ranbir_script = new Dialog_Script(this.ranbir);
 
     this.sofa = this.items.find(item => item.id === 279);
     this.sofa.on('click', () => {
-      this.ranbir_script.speech_iterator.next();
+      // this.ranbir_script.speech_iterator.next();
       keyboardManager.disable();
     });
 
@@ -281,9 +281,9 @@ class RanbirRoom  {
   _set_dev_settings() {
     keyboardManager.on('released', event => {
       if(event === 13) this.generator.next();
-      if(event === 78) this.ranbir_script.happy_iterator.next(); // good
-      if(event === 79) this.ranbir_script.angry_iterator.next(); // bad
-      if(event === 188) this.ranbir_script.speech_iterator.next(); // normal
+      // if(event === 78) this.ranbir_script.happy_iterator.next(); // good
+      // if(event === 79) this.ranbir_script.angry_iterator.next(); // bad
+      // if(event === 188) this.ranbir_script.speech_iterator.next(); // normal
     });
 
     keyboardManager.enable();

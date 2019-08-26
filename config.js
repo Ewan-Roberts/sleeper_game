@@ -65,7 +65,7 @@ const options = {
     fps:                0.06,
     resolution:         1,
     anti_alias:         false,
-    background_color:   0x0066CC, // blue
+    background_color:   0xffffff, // blue
     keyboard_additions: true,
     visable_pads:       true,
     visable_borders:    true,

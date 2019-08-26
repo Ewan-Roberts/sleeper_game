@@ -7,10 +7,14 @@ const { players      } = require('../../engine/pixi_containers');
 const { FloorWord    } = require('../../effects/floor_word');
 const { Debris       } = require('../../effects/debris');
 const { guis         } = require('../../engine/pixi_containers');
+const { renderer     } = require('../../engine/app');
+const { stage } = require('../../engine/app');
 const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
 const { env          } = require('../../../config');
 const { sound        } = require('pixi.js');
+const { Rectangle    } = require('pixi.js');
+const { Container } = require('pixi.js');
 const { filters } = require('pixi.js');
 const { flash_at     } = require('../../effects/fade_sprite.js');
 const { VideoBaseTexture, tweenManager, Sprite, Texture, Text } = require('pixi.js');
@@ -63,36 +67,37 @@ class DevRoom {
   }
 
   async _start() {
-    this.rat = new LogicRat(this.data.path_rat[0]);
-    this.rat.position.copy(this.player);
+    //this.rat = new LogicRat(this.data.path_rat[0]);
+    //this.rat.position.copy(this.player);
 
-    this.rat.tween.loop = true;
-    this.rat.start();
-    this.ranbir = new LogicZombie(this.data.ranbir[0]);
-    this.ranbir.target(this.player);
-    this.data.debris.forEach(item => new Debris(item));
+    //this.rat.tween.loop = true;
+    //this.rat.start();
+    //this.ranbir = new LogicZombie(this.data.ranbir[0]);
+    //this.ranbir.target(this.player);
+    //this.data.debris.forEach(item => new Debris(item));
 
-    //setTimeout(() => this.ranbir.logic_start(), 1000);
+    ////setTimeout(() => this.ranbir.logic_start(), 1000);
 
-    this.player.events.on('hit', () => {
-      flash_at(this.player, 500);
-      console.log('hit');
+    //this.player.events.on('hit', () => {
+    //  flash_at(this.player, 500);
+    //  console.log('hit');
 
-      // sound.random_sound_from([
-      //   'thud_2',
-      //   'thud_3',
-      //   'thud_5',
-      //   'thud_6',
-      //   'thud_7',
-      // ]).play();
-    });
+    //  // sound.random_sound_from([
+    //  //   'thud_2',
+    //  //   'thud_3',
+    //  //   'thud_5',
+    //  //   'thud_6',
+    //  //   'thud_7',
+    //  // ]).play();
+    //});
 
-    // const mouse_position = get_relative_mouse_position(this.player, event.data.global);
-    // await flicker(this.light_shroud);
+    //// const mouse_position = get_relative_mouse_position(this.player, event.data.global);
+    //// await flicker(this.light_shroud);
   }
 
   _set_dev_settings() {
     const [background] = this.data.background;
+
     setTimeout(()=> new Raycast(background, viewport.children[4]), 1000);
   }
 }
@@ -145,18 +150,61 @@ function getIntersection(Player,segment,angle){
 
 }
 
+// Inner radius of the circle
+const radius = 500;
+
+// The blur amount
+const blurSize = 32;
+
+
 class Raycast {
   constructor(bounds, container) {
     // Border
     this.segments = [
       ...this.convertToRays(bounds),
     ];
-    const colorMatrix = new filters.BlurFilter();
-    // colorMatrix.autoFit = true;
-    // colorMatrix.greyscale(0.5);
-
     this.raycast = new Graphics();
-    this.raycast.filters = [colorMatrix];
+    const poison = new Container();
+
+    renderer.state.blendModes[20] = [0, renderer.gl.ONE_MINUS_SRC_ALPHA];
+    renderer.backgroundColor = 0xFFC0CB;
+
+    const [player] = players.children;
+    const filtered_area  = new Sprite(Texture.fromFrame('black_dot'));
+    filtered_area.width  = viewport.width;
+    filtered_area.height = viewport.width;
+    filtered_area.alpha  = 0.9;
+    filtered_area.name   = 'filtered_area';
+    filtered_area.position.copy(player);
+    filtered_area.anchor.set(0.5);
+
+    const desaturate_filter = new filters.ColorMatrixFilter();
+    desaturate_filter.greyscale(5);
+    filtered_area.filters = [desaturate_filter];
+
+    const circle = new Graphics()
+      .beginFill(0xFFFFFFF)
+      .drawCircle(radius + blurSize, radius + blurSize, radius)
+      .endFill();
+
+    circle.x = player.x - 500;
+    circle.y = player.y - 400;
+
+    circle.blendMode = 20;
+    circle.mask = this.raycast;
+
+    poison.addChild(filtered_area);
+    poison.addChild(circle);
+    poison.filters = [new filters.AlphaFilter()];
+
+    viewport.addChild(poison);
+
+    viewport.on('mousemove', pointerMove);
+
+    function pointerMove(event) {
+      circle.position.x = event.data.global.x;
+      circle.position.y = event.data.global.y;
+    }
 
     this.addVertexFromContainer(container);
     this.start();
@@ -190,7 +238,7 @@ class Raycast {
     console.log(ticker);
     ticker.add(() => {
       this.raycast.clear();
-      this.raycast.beginFill(0xfffffff,0.09);
+      this.raycast.beginFill(0xfffffff,0.01);
 
       const uniqueAngles = [];
       uniquePoints.forEach(uniquePoint => {
