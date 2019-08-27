@@ -9,8 +9,11 @@ const blood_options = [
   'round_floor_stain',
 ];
 
-const random_texture_name = () =>
-  blood_options[Math.floor(Math.random()*blood_options.length)];
+const random_texture_name = () => {
+  const random_index = random_bound(0, blood_options.length);
+  const random_blood_name = blood_options[random_index];
+  return random_blood_name;
+};
 
 class Blood extends Sprite {
   constructor(data) {

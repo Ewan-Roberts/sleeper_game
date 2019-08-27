@@ -1,6 +1,5 @@
-const { extras, Texture, sound } = require('pixi.js');
+const { extras, Texture } = require('pixi.js');
 const { players         } = require('../../engine/pixi_containers');
-//const { PlayerEvents    } = require('../../engine/item_handler');
 const { Animation       } = require('../attributes/animation');
 const { Keyboard        } = require('../attributes/keyboard');
 const { Mouse           } = require('../attributes/mouse');

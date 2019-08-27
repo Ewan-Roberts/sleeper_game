@@ -14,15 +14,7 @@ const { Blood            } = require('../../effects/blood');
 const { env              } = require('../../../config');
 const { MeleeBox         } = require('../../engine/melee');
 
-// TODO Something like this
-// function break_at_door(path) {
-//   const door_index = path.indexOf(node => node.door === true);
-//   if(!door_index) return;
-
-//   const path_to_door = door_index.trimRight(door_index);
-//   return path_to_door;
-// }
-
+// TODO
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
     if(path[i].door) {
@@ -53,7 +45,7 @@ class LogicSprite extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.rotation_offset = 0;
     this.height = height || 100;
-    this.width  = width  || 100;
+    this.width  = width || 100;
     this.anchor.set(0.5);
     this.position.copy({x,y});
 
@@ -139,7 +131,8 @@ class LogicSprite extends extras.AnimatedSprite {
     this.tween.time = door_path.length*500;
   }
 
-  // NOTE: Keep this verbose and dumb
+  // TODO: extract and refactor
+  // too much going on
   logic_start() {
     this.tween = tweenManager.createTween(this);
     this.tween.time = 2000;
@@ -160,7 +153,6 @@ class LogicSprite extends extras.AnimatedSprite {
         if(!this.target) throw 'set an enemy';
         this.animation.face_point(this.target);
         this.melee = new MeleeBox();
-        //this.melee.slash(50, 20, this);
 
         damage_events.emit('damage', {id: this.target.id, damage: 10});
         return;
@@ -173,10 +165,8 @@ class LogicSprite extends extras.AnimatedSprite {
         this.animation.move();
 
         this.tween.time = 200;
-        //this.tween.time = random_bound(2000, 3000);
       } else {
         await this._pathfind();
-        //this.tween.time = this.tween.path.length * this.speed;
         this.tween.time = 4000;
       }
 

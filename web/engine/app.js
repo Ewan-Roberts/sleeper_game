@@ -65,10 +65,8 @@ stage.addChild(viewport);
 require('pixi-keyboard');
 require('pixi-sound');
 require('pixi-tween');
-require('./tween');
 require('./sound.js');
 require('./pixi_containers');
-//require('./raycast');
 
 module.exports = {
   viewport,

@@ -5,19 +5,26 @@ const { radian    } = require('../../utils/math');
 const { draw_path } = require('../../utils/line');
 
 class PathSprite extends extras.AnimatedSprite {
-  constructor(data) {
-    super([Texture.fromFrame(data.image_name || 'bird_8')]);
-    this.id    = data.id;
+  constructor({
+    image_name,
+    id,
+    speed = 600,
+    y,
+    x,
+    polyline,
+  }) {
+    super([Texture.fromFrame(image_name || 'bird_8')]);
+    this.id = id;
 
     this.rotation = 1;
     this.anchor.set(0.5);
     this.animationSpeed = 0.29;
     this.tween = tweenManager.createTween(this);
-    this.speed = data.speed || 600;
+    this.speed = speed;
 
-    this.position.copy(data);
-    if(data.polyline) {
-      this.path = data.polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
+    this.position.copy({x,y});
+    if(polyline) {
+      this.path = polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
     }
     this.turn = true;
     enemys.addChild(this);
