@@ -10,6 +10,7 @@ const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
 const { Trigger_Pad } = require('../elements/pad');
 const { Border      } = require('../elements/border');
+const { Light       } = require('../elements/light');
 
 module.exports = {
   Border,
@@ -24,4 +25,5 @@ module.exports = {
   Collision,
   Floor,
   Generator,
+  Light,
 };

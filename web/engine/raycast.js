@@ -11,6 +11,7 @@ const { filters   } = require('pixi.js');
 
 // A reverse mask as a blend mode
 renderer.state.blendModes[20] = [0, renderer.gl.ONE_MINUS_SRC_ALPHA];
+renderer.backgroundColor = 0x000000;
 
 function get_intersection(sprite, segment, angle) {
   // RAY in parametric: Point + Delta*T1
@@ -115,20 +116,13 @@ class Raycast extends Container {
   constructor(sprite, {
     border,
     obstructions,
-    radius = 300,
-    follow = false,
+    radius = 200,
+    follow = true,
   }) {
     super();
     this.raycast = new Graphics();
     this.sprite = sprite;
     this.follow = follow;
-
-    const border_sprite = new Sprite();
-    border_sprite.width  = border.width;
-    border_sprite.height = border.height;
-    border_sprite.position.copy(border);
-    border_sprite.anchor.set(0.5);
-    visuals.addChild(border_sprite);
 
     this.segments = [
       ...convert_to_rays(border),
@@ -161,7 +155,8 @@ class Raycast extends Container {
 
     this.addChild(
       this.shadow,
-      this.light
+      this.light,
+      this.raycast
     );
 
     //this.filters = [new filters.BlurFilter(1)];
@@ -172,10 +167,10 @@ class Raycast extends Container {
     this.start();
   }
 
-  contains({x,y}) {
+  contains(sprite) {
     return (
-      this.light.containsPoint({x,y}) &&
-      this.raycast.containsPoint({x,y})
+      this.light.containsPoint(sprite) &&
+      this.raycast.containsPoint(sprite)
     );
   }
 
@@ -223,8 +218,6 @@ class Raycast extends Container {
         this.light.y = this.sprite.y - this.light.height/2;
       }
     });
-
-    visuals.addChild(this.raycast);
   }
 }
 

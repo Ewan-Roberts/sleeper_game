@@ -33,8 +33,7 @@
     "pixi-tween": "0.2.0",
     "pixi-viewport": "4.0.1",
     "pixi.js": "4.8.8",
-    "png-js": "0.1.1",
-    "worker-timers": "5.0.19"
+    "png-js": "0.1.1"
   },
   "devDependencies": {
     "canvas": "^2.6.0",
@@ -45,8 +44,6 @@
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "gulp": "^4.0.0",
-    "jsdom": "^15.1.1",
-    "jsdom-global": "3.0.2"
+    "gulp": "^4.0.0"
   }
 }

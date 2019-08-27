@@ -24,7 +24,6 @@ class Door extends Element {
         { name: 'lock',   from: 'closed',  to: 'locked' },
         { name: 'unlock', from: 'locked',  to: 'closed' },
         { name: 'open',   from: 'closed',  to: 'opened' },
-
         { name: 'close',  from: 'opened',  to: 'closed' },
         { name: 'goto',   from: '*',       to: s => s },
       ],

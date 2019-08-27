@@ -86,6 +86,14 @@ class FadeSprite extends Sprite {
     this.tween.on('end', () => this.fade_out(500));
   }
 
+  destroy() {
+    if(this.tween) {
+      this.tween.remove();
+    }
+    super.destroy();
+  }
+
+
   bounce() {
     if(this._destroyed) return;
     if(!this) return;
