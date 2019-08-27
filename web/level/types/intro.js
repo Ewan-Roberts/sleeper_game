@@ -46,7 +46,7 @@ class IntroRoom {
     this.player = players.children[0];
 
     this.backgrounds = this.data.background.map(data => new Background(data));
-    this.shrouds     = this.data.shroud.map(data => new Shroud(data));
+    //this.shrouds     = this.data.shroud.map(data => new Shroud(data));
     this.roofs       = this.data.roof.map(data => new Roof(data));
     this.collisions  = this.data.collision.map(data => new Collision(data));
     this.floors      = this.data.floor.map(data => new Floor(data));
@@ -68,12 +68,9 @@ class IntroRoom {
     this.bathroom_door     = this.doors.find(door => door.id === 590);
     this.exit_door         = this.doors.find(door => door.id === 619);
 
-    this.bathroom_shroud   = this.shrouds.find(shroud => shroud.id === 464);
-
     this.spear             = this.items.find(item => item.id === 601);
     this.key               = this.items.find(item => item.id === 618);
 
-    this._bedroom();
     this._set_sounds();
     this._set_elements();
     this._set_cutscene();
@@ -81,45 +78,28 @@ class IntroRoom {
   }
 
   _main_room() {
-    const shroud  = this.shrouds.find(shroud => shroud.id === 462);
-    const roof   = this.roofs.find(roof => roof.id === 509);
-    shroud.fade_out(5000);
+    const main_roof    = this.roofs.find(roof => roof.id === 509);
+    const bedroom_roof = this.roofs.find(roof => roof.id === 508);
 
     const light = this.lamps.find(light => light.id === 614);
     light.flicker_for(3000*3);
     light.events.on('on', ()  => {
-      shroud.alpha = 0;
-      roof.alpha = 0.2;
+      main_roof.alpha = 0.3;
+      bedroom_roof.alpha = 0.3;
     });
     light.events.on('off', () => {
-      shroud.alpha = 0.3;
-      roof.alpha = 0.2;
+      main_roof.alpha = 0.5;
+      bedroom_roof.alpha = 0.5;
     });
-  }
-
-  _bedroom() {
-    const shroud = this.shrouds.find(shroud => shroud.id === 617);
-    const roof = this.roofs.find(roof => roof.id === 508);
-    roof.alpha = 1;
-    shroud.fade_out(1000);
   }
 
   _kitchen() {
-    const shroud = this.shrouds.find(shroud => shroud.id === 463);
-    const roof   = this.roofs.find(roof => roof.id === 511);
-    const light  = this.lamps.find(light => light.id === 613);
+    const roof  = this.roofs.find(roof => roof.id === 511);
+    const light = this.lamps.find(light => light.id === 613);
 
-    shroud.fade_out(amount*4);
     light.flicker_for(3000);
-    light.events.on('on', () => {
-      shroud.alpha = 0.3;
-      roof.alpha = 0.2;
-    });
-
-    light.events.on('off', () => {
-      shroud.alpha = 0.3;
-      roof.alpha = 0.2;
-    });
+    light.events.on('on', () => roof.alpha = 0.3);
+    light.events.on('off', () => roof.alpha = 0.5);
   }
 
   _set_cutscene() {
@@ -153,14 +133,11 @@ class IntroRoom {
     this.player.position.copy(spawn_point);
 
     viewport.moveCenter(this.player.x, this.player.y);
-    viewport.on('mousemove', ({data}) => {
-      const mouse_point = data.global;
-      if(this.shadow.contains(mouse_point)) {
-        viewport.interactiveChildren = true;
-        return;
-      }
-
-      viewport.interactiveChildren = false;
+    viewport.on('mousemove', (
+      { data: { global } }
+    ) => {
+      const mouse_is_in_shadows = this.shadow.contains(global);
+      viewport.interactiveChildren = mouse_is_in_shadows;
     });
 
     this.study_door.once('click', () => {
@@ -181,29 +158,9 @@ class IntroRoom {
         }
       };
 
-    this.bathroom_door.once('click', () => this.bathroom_shroud.fade_out());
-
-    this.generator.click = () => {
-      const fuel_item = this.player.inventory.take_by_name('oil_canister');
-      if(!fuel_item) return;
-      keyboardManager.disable();
-
-      ProgressBar
-        .show()
-        .to_percentage(fuel_item.condition)
-        .complete(() => {
-          Caption.render('The canister is empty.');
-          this.generator.ready();
-          this.generator.fuel = fuel_item.condition;
-
-          keyboardManager.enable();
-        });
-    };
-
-    this.generator.end(() => {
-      this.living_room_light.turn_off();
-      this.kitchen_light.turn_off();
-    });
+    this.generator
+      .disable()
+      .click = () => Caption.render('I need to fill this up...');
 
     this.locked_door
       .lock()
@@ -212,7 +169,8 @@ class IntroRoom {
         this.inactive();
       });
 
-    this.spear.once('click', () => this.dramatic_beat.play());
+    this.spear
+      .once('click', () => this.dramatic_beat.play());
   }
 
   _set_dev_settings() {

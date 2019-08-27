@@ -97,6 +97,27 @@ class DevRoom {
     console.log(this.data.generator);
     const generator = new Generator(this.data.generator[0]);
     ProgressBar.percentage = 0.1;
+
+    // this.generator.click = () => {
+    //   Caption.render('...');
+
+    //   const fuel_item = this.player.inventory.take_by_name('oil_canister');
+    //   if(!fuel_item) return;
+
+    //   keyboardManager.disable();
+
+    //   ProgressBar
+    //     .show()
+    //     .to_percentage(fuel_item.condition)
+    //     .complete(() => {
+    //       Caption.render('The canister is empty.');
+    //       this.generator.ready();
+    //       this.generator.fuel = fuel_item.condition;
+
+    //       keyboardManager.enable();
+    //     });
+    // };
+
     generator.on('click', () => {
       if(this.player.inventory.contains('gas_canister')) {
         const fuel_item = this.player.inventory.take_by_name('gas_canister');

@@ -34,6 +34,12 @@ class Door extends Element {
     if(data.clickable) {
       this.closable = data.closable;
       this.on('click', () => {
+        if(this.state.is('locked')) {
+          Caption.render('Its locked');
+          this.locked_door_effect.play();
+          return;
+        }
+
         if(this.state.is('motion')) {
           return;
         }
@@ -62,11 +68,6 @@ class Door extends Element {
   }
 
   open() {
-    if(this.state.is('locked')) {
-      Caption.render('Its locked');
-      this.locked_door_effect.play();
-      return;
-    }
     if(this.state.is('motion')) return;
 
     this.state.open();

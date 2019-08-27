@@ -50,10 +50,10 @@ class Player extends extras.AnimatedSprite {
     });
 
     item_events.on('equip_weapon', (id, {
-      item: { name },
+      item: { image_name },
     }) => {
       if(this.id !== id) return;
-      const found_item = Item_Manager.get_item(name);
+      const found_item = Item_Manager.get_item(image_name);
       this.inventory.equip_weapon(found_item);
 
       this.animation.prefix = found_item.animation_name;

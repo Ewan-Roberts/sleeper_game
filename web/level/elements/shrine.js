@@ -35,6 +35,7 @@ class Generator extends Element {
     this.interactive = true;
     this.buttonMode  = true;
     this._fuel = 0;
+    this._disable = false;
 
     this.label(data);
 
@@ -47,6 +48,16 @@ class Generator extends Element {
     this.on('click', () => this.state_handler());
   }
 
+  get is_empty() {
+    return (this._fuel <= 0);
+  }
+
+  disable() {
+    this._disable = true;
+    return this;
+  }
+
+
   empty() {
     this.button.action_label.text = 'Fill';
     this._fuel = 0;
@@ -55,6 +66,7 @@ class Generator extends Element {
   }
 
   ready() {
+    if(this._fuel <= 0) return Caption.render('Its empty...');
     this.button.action_label.text = 'Start';
     this.state                    = 'ready';
     this.running_sound.stop();
@@ -74,6 +86,7 @@ class Generator extends Element {
   }
 
   state_handler() {
+    if(this._disable) return;
     switch(this.state) {
       case 'running' : return this.ready();
       case 'ready'   : return this.run();

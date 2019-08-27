@@ -64,7 +64,6 @@ class Light extends Element {
   async _flicker() {
     // breaks recursion
     if(!this.flicker_running) return;
-
     const randomiser = random_bound(10, 30);
     this.turn_on();
 

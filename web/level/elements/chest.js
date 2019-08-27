@@ -45,6 +45,7 @@ class Chest extends Element {
 
     if(equip_on_click) {
       this.on('click', () => {
+        console.log(data);
         item_events.emit('equip_weapon', 1, {item: data});
         this.destroy();
       });
