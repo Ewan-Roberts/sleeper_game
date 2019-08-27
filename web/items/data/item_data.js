@@ -1,5 +1,6 @@
 
 //https://www.uihere.com/free-graphics/search?q=knife
+// Migrate to database when appropriate
 const items = [
   //primary
   {

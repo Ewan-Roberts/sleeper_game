@@ -30,15 +30,15 @@ function point_collides(position) {
 //and this logic should be split out or put in ceiling
 function point_contains(player) {
   const point = player.getGlobalPosition();
-  const found = shrouds.children.find(child => child.containsPoint(point));
-  if (found){
-    if(found.remove_on_enter) {
-      found.fade_out_destroy();
-    }
-    if (found.alpha_on_enter) {
-      found.alpha = (found.alpha !== found.alpha_on_enter)?found.alpha_on_enter:1;
-    }
-  }
+  // const found = shrouds.children.find(child => child.containsPoint(point));
+  // if (found){
+  //   if(found.remove_on_enter) {
+  //     found.fade_out_destroy();
+  //   }
+  //   if (found.alpha_on_enter) {
+  //     found.alpha = (found.alpha !== found.alpha_on_enter)?found.alpha_on_enter:1;
+  //   }
+  // }
 
   const pad = pads.children.find(child => child.containsPoint(point));
   if(pad) {
@@ -46,9 +46,6 @@ function point_contains(player) {
     pad.events.emit('trigger');
     return pad.speed;
   }
-
-  player.animation.speed = 0.70;
-  //TODO
 
   if(env.dev) return 30;
   return 3;

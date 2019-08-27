@@ -56,22 +56,20 @@ class IntroRoom {
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.items       = this.data.item.map(data => new Chest(data));
     this.lamps       = this.data.lights.map(data => new Light(data));
+
     this.generator   = new Generator(this.data.generator[0]);
-
-
-    this.locked_door       = this.doors.find(door => door.id === 528);
-
-    this.study_door        = this.doors.find(door => door.id === 527);
-
-    this.bathroom_door     = this.doors.find(door => door.id === 590);
-    this.bathroom_shroud   = this.shrouds.find(shroud => shroud.id === 464);
-
-    this.shadow = new Raycast(this.player, {
+    this.shadow      = new Raycast(this.player, {
       border:       this.data.shadow_area[0],
       obstructions: this.walls,
     });
 
+    this.locked_door       = this.doors.find(door => door.id === 528);
+    this.study_door        = this.doors.find(door => door.id === 527);
+    this.bathroom_door     = this.doors.find(door => door.id === 590);
     this.exit_door         = this.doors.find(door => door.id === 619);
+
+    this.bathroom_shroud   = this.shrouds.find(shroud => shroud.id === 464);
+
     this.spear             = this.items.find(item => item.id === 601);
     this.key               = this.items.find(item => item.id === 618);
 
@@ -91,18 +89,19 @@ class IntroRoom {
     light.flicker_for(3000*3);
     light.events.on('on', ()  => {
       shroud.alpha = 0;
-      roof.alpha = 0;
+      roof.alpha = 0.2;
     });
     light.events.on('off', () => {
       shroud.alpha = 0.3;
-      roof.alpha = 0;
+      roof.alpha = 0.2;
     });
   }
 
-  _bedroom(bool) {
+  _bedroom() {
     const shroud = this.shrouds.find(shroud => shroud.id === 617);
+    const roof = this.roofs.find(roof => roof.id === 508);
+    roof.alpha = 1;
     shroud.fade_out(1000);
-    if(bool) shroud.destroy();
   }
 
   _kitchen() {
@@ -114,12 +113,12 @@ class IntroRoom {
     light.flicker_for(3000);
     light.events.on('on', () => {
       shroud.alpha = 0.3;
-      roof.alpha = 0;
+      roof.alpha = 0.2;
     });
 
     light.events.on('off', () => {
       shroud.alpha = 0.3;
-      roof.alpha = 0;
+      roof.alpha = 0.2;
     });
   }
 

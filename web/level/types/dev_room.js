@@ -94,6 +94,7 @@ class DevRoom {
       this.top_wall.destroy();
     });
 
+    console.log(this.data.generator);
     const generator = new Generator(this.data.generator[0]);
     ProgressBar.percentage = 0.1;
     generator.on('click', () => {
