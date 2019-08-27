@@ -1,11 +1,5 @@
-//const { Level_Factory } = require('./level_factory');
-const { filters      } = require('pixi.js');
-const { Player       } = require('../../character/archetypes/player');
-const { viewport    } = require('../../engine/app');
-const { random_bound } = require('../../utils/math.js');
-const { sleep        } = require('../../utils/time.js');
-const { players      } = require('../../engine/pixi_containers');
-const { env          } = require('../../../config');
+const { players } = require('../../engine/pixi_containers');
+const { env     } = require('../../../config');
 
 const {
   Wall,
@@ -19,40 +13,6 @@ const {
   Floor,
   Trigger_Pad,
 } = require('../elements');
-
-const colorMatrix = new filters.ColorMatrixFilter();
-colorMatrix.autoFit = true;
-colorMatrix.greyscale(4);
-
-async function flicker(light) {
-  const randomiser = random_bound(-10, 10);
-
-  const randomiser2 = random_bound(-100, 100);
-
-  light.alpha = 0;
-
-  await sleep(1000+randomiser2);
-  light.alpha = 0.7;
-
-  await sleep(20+randomiser);
-  light.alpha = 0;
-
-  await sleep(15+randomiser);
-  light.alpha = 0.7;
-
-  await sleep(280+randomiser2);
-  light.alpha = 0;
-
-  await sleep(20+randomiser);
-  light.alpha = 0.9;
-
-  await sleep(200+randomiser);
-  light.alpha = 0;
-
-  await sleep(9000+(randomiser2 ** 2));
-
-  await flicker(light);
-}
 
 class RanbirFloor1 {
   constructor() {
@@ -80,12 +40,9 @@ class RanbirFloor1 {
   }
 
   _set_elements() {
-    // this.player.position.copy(this.entry_point);
-    // viewport.moveCenter(this.entry_point.x, this.entry_point.y);
   }
 
   async _start() {
-    await flicker(this.light_shroud, this.data.hands);
   }
 
   _set_dev_settings() {

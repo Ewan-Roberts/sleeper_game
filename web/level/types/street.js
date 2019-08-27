@@ -66,7 +66,6 @@ class StreetRoom {
     this.lights = this.data.christmas_lights.map(light => new Floor(light));
 
     this.second_floor.forEach(roof => roof.tint = 0x909090);
-    //this.roofs.forEach(roof => roof.tint = 0x909090);
 
     this.truck_exit   = new Trigger_Pad(this.data.truck_pad[0]);
     this.truck_enter  = new Trigger_Pad(this.data.truck_pad[1]);

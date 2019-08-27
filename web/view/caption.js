@@ -31,6 +31,7 @@ stage.addChild(container);
 
 const tween = tweenManager.createTween();
 
+// TODO make this functional
 class Caption {
   static render(value) {
     this.show();

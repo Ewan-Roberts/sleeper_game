@@ -102,8 +102,8 @@ class StartRoom  {
     this.microphone_prompt = new MicrophonePrompt();
     this.script            = new Overlay_Dialog([
       '...',
-      '...Pixi.js you say...',
-      'lets give it a shot',
+      '...place holder...',
+      'lorium ipsum',
     ], this.player);
 
     this.crows     = this.data.birds.map(unit => new PathCrow(unit));

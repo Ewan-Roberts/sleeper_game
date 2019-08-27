@@ -9,16 +9,18 @@ const event = require('events');
 class Light extends Element {
   constructor(data) {
     super(data);
+    this.events = new event();
+
     this.cast_light = new Sprite(Texture.fromImage('LightStone_green30_kpl'));
     this.cast_light.height = 250;
     this.cast_light.width  = 250;
     this.cast_light.alpha  = 1;
     this.cast_light.anchor.set(0.4, 0.6);
     this.cast_light.position.copy(this);
-    this.events = new event();
 
     items.addChild(this);
     visuals.addChild(this.cast_light);
+
     this._textures();
     this._random_flickering();
     this.turn_off();
@@ -60,7 +62,6 @@ class Light extends Element {
     }, randomiser);
   }
 
-  // recursive
   async _flicker() {
     // breaks recursion
     if(!this.flicker_running) return;

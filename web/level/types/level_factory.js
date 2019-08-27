@@ -1,7 +1,6 @@
 const { clear_level_containers } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-//const { Viewport    } = require('pixi-viewport');
 const { Wall        } = require('../elements/wall');
 const { Decal       } = require('../elements/decals');
 const { Background  } = require('../elements/background');
@@ -24,7 +23,6 @@ class Level_Factory {
     const { ParkRoom     } = require('./park_room');
     const { StartRoom    } = require('./start');
     const { SimpleRoom   } = require('./simple_room');
-    const { RanbirRoom   } = require('./ranbir_room');
     const { DevRoom      } = require('./dev_room');
     const { RanbirFloor0 } = require('./ranbir_flat_0');
     const { RanbirFloor1 } = require('./ranbir_flat_1');
@@ -38,7 +36,6 @@ class Level_Factory {
       case 'defend'    : return new DefendRoom();
       case 'start'     : return new StartRoom();
       case 'park'      : return new ParkRoom();
-      case 'ranbir_flat'  : return new RanbirRoom();
       case 'ranbir_flat_0': return new RanbirFloor0(spawn_id);
       case 'ranbir_flat_1': return new RanbirFloor1();
       case 'ranbir_flat_2': return new RanbirFloor2();
@@ -47,6 +44,7 @@ class Level_Factory {
     }
   }
 
+  // TODO remove
   static generate({
     walls,
     door,
@@ -63,8 +61,6 @@ class Level_Factory {
 
     const { Trigger_Pad } = require('../elements');
     try {
-      //if(player) Camera.set_center(player[0]);
-
       background.forEach(data => new Background(data));
       decal.forEach(data => new Decal(data));
       floor.forEach(data => new Floor(data));

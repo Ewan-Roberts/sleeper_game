@@ -1,7 +1,7 @@
-const { pads            } = require('../../engine/pixi_containers');
-const { Level_Factory   } = require('../types/level_factory');
-const { env             } = require('../../../config');
-const { Element         } = require('./model');
+const { pads          } = require('../../engine/pixi_containers');
+const { Level_Factory } = require('../types/level_factory');
+const { env           } = require('../../../config');
+const { Element       } = require('./model');
 const event = require('events');
 
 class Trigger_Pad extends Element {
@@ -9,7 +9,7 @@ class Trigger_Pad extends Element {
     super({
       ...data,
       image_name: 'black_dot',
-      alpha: env.visable_pads?0.4:0,
+      alpha:       env.visable_pads?0.4:0,
     });
     this.events = new event();
     this.speed  = 30;

@@ -4,7 +4,6 @@ const { items         } = require('./data/item_data');
 
 // Temp interface
 // TODO It may be time to break this up
-// need condition and options for items
 class Item_Manager {
   static get_random_items(
     {

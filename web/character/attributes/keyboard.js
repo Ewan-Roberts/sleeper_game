@@ -7,11 +7,7 @@ const {
   items,
   borders,
   pads,
-  shrouds,
 } = require('../../engine/pixi_containers');
-
-const { Player_Inventory } = require('../../view/view_player_inventory');
-const { Interaction_Menu } = require('../../view/interaction_menu');
 
 function point_collides(position) {
   const collision_hit = collisions.children.find(child => child.containsPoint(position));
@@ -30,16 +26,6 @@ function point_collides(position) {
 //and this logic should be split out or put in ceiling
 function point_contains(player) {
   const point = player.getGlobalPosition();
-  // const found = shrouds.children.find(child => child.containsPoint(point));
-  // if (found){
-  //   if(found.remove_on_enter) {
-  //     found.fade_out_destroy();
-  //   }
-  //   if (found.alpha_on_enter) {
-  //     found.alpha = (found.alpha !== found.alpha_on_enter)?found.alpha_on_enter:1;
-  //   }
-  // }
-
   const pad = pads.children.find(child => child.containsPoint(point));
   if(pad) {
     player.animation.speed = 0.60;
@@ -61,8 +47,6 @@ class Keyboard {
     this.buffer         = 15;
     this.vitals         = vitals;
     this.inventory      = inventory;
-    this.inventory_view = new Player_Inventory();
-    this.interaction    = new Interaction_Menu();
 
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
@@ -114,46 +98,6 @@ class Keyboard {
   increase_run_speed() {
     if(env.keyboard_additions) return;
     this.speed *= 1.5;
-  }
-
-  small_inventory() {
-    if(env.keyboard_additions) return;
-    this.disable();
-    this.inventory_view.thin();
-    this.inventory_view.toggle();
-    this.inventory_view.add_primary_weapon(this.inventory.equipped);
-
-    this.inventory_view.fill_inventory('bunny');
-    this.inventory_view.character_tile('bunny');
-  }
-
-  large_inventory() {
-    if(env.keyboard_additions) return;
-    this.disable();
-    this.inventory_view.thin();
-    this.inventory_view.toggle();
-    this.inventory_view.add_primary_weapon(this.inventory.equipped);
-    const { items } = this.inventory;
-
-    const slots = this.inventory_view.populate_with_items(items);
-    slots.forEach(slot => {
-      slot.click = () => {
-        slot.remove();
-        this.inventory.remove(slot.id);
-      };
-    });
-  }
-
-  open_interaction() {
-    if(env.keyboard_additions) return;
-    this.disable();
-    this.inventory_view.wide();
-    this.inventory_view.toggle();
-    this.interaction.show();
-    this.interaction.image('bunny');
-    this.interaction.decription('its a fireplace');
-
-    this.inventory.items.forEach(item => this.interaction.populate(item));
   }
 
   disable_for(time) {
@@ -226,9 +170,6 @@ class Keyboard {
 
         // below are for dev only
         case 81: return this.increase_run_speed(); // q for speed
-        case 73: return this.large_inventory();    // i
-        case 80: return this.small_inventory();    // p
-        case 79: return this.open_interaction();   // o
       }
     });
   }

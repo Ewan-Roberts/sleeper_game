@@ -2,10 +2,14 @@ const PIXI = require('pixi.js');
 global.window.PIXI.default = PIXI;
 
 const { visuals  } = require('../engine/pixi_containers');
-const { renderer } = require('../engine/app');
 
 // Very loose function to just place a bunny (useful for testing)
-global.place_bunny = ({ x = 0, y = 0 } = {}) => {
+global.place_bunny = (
+  {
+    x = 0,
+    y = 0,
+  } = {}
+) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.copy({x, y});
   bunny.anchor.set(0.5);
@@ -14,12 +18,6 @@ global.place_bunny = ({ x = 0, y = 0 } = {}) => {
 
   visuals.addChild(bunny);
   return bunny;
-};
-
-global.env = 'prod';
-global.dev = () => {
-  renderer.backgroundColor = 0x0066CC;
-  global.env = 'dev';
 };
 
 // AUTO-REFRESH WINDOW

@@ -13,6 +13,7 @@ class SimpleRoom {
   }
 
   _set_elements() {
+    // TODO remove level factory
     Level_Factory.generate(this.data);
 
     this.player.position.copy(this.data.player_spawn[0]);

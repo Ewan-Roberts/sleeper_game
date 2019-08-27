@@ -1,26 +1,12 @@
-const { visuals } = require('../../engine/pixi_containers');
-
+const { visuals         } = require('../../engine/pixi_containers');
 const { sound, filters  } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
-const { Sprite } = require('pixi.js');
-const { Texture } = require('pixi.js');
-const { Graphics } = require('pixi.js');
-
-const { renderer   } = require('../../engine/app.js');
-const { Click_Pad  } = require('../elements/click_pad');
-const { Button     } = require('../../view/button');
-const { Caption    } = require('../../view/caption');
-const { players    } = require('../../engine/pixi_containers');
-const { Tween      } = require('../../engine/tween');
-const { viewport   } = require('../../engine/app');
-const { FadeSprite } = require('../../effects/fade_sprite.js');
-const { flash_at   } = require('../../effects/fade_sprite.js');
-const { env        } = require('../../../config');
-const { random_bound } = require('../../utils/math.js');
-const { sleep    } = require('../../utils/time.js');
-const { ProgressBar   } = require('../../view/progress_bar');
-const { Raycast } = require('../../engine/raycast');
-const { collisions    } = require('../../engine/pixi_containers');
+const { Caption         } = require('../../view/caption');
+const { players         } = require('../../engine/pixi_containers');
+const { viewport        } = require('../../engine/app');
+const { FadeSprite      } = require('../../effects/fade_sprite.js');
+const { env             } = require('../../../config');
+const { Raycast         } = require('../../engine/raycast');
 
 const {
   Trigger_Pad,
@@ -30,14 +16,11 @@ const {
   Chest,
   Roof,
   Door,
-  Shroud,
   Collision,
   Floor,
   Generator,
   Light,
 } = require('../elements');
-
-const amount = 3000;
 
 class IntroRoom {
   constructor() {
@@ -46,7 +29,6 @@ class IntroRoom {
     this.player = players.children[0];
 
     this.backgrounds = this.data.background.map(data => new Background(data));
-    //this.shrouds     = this.data.shroud.map(data => new Shroud(data));
     this.roofs       = this.data.roof.map(data => new Roof(data));
     this.collisions  = this.data.collision.map(data => new Collision(data));
     this.floors      = this.data.floor.map(data => new Floor(data));

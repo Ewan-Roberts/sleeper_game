@@ -2,8 +2,6 @@
 //const { Player       } = require('../../character/archetypes/player');
 const { viewport    } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
-const { random_bound } = require('../../utils/math.js');
-const { sleep        } = require('../../utils/time.js');
 const { env         } = require('../../../config');
 
 const {
@@ -18,38 +16,6 @@ const {
   Floor,
   Trigger_Pad,
 } = require('../elements');
-
-async function flicker(light) {
-  const randomiser = random_bound(-10, 10);
-
-  const randomiser2 = random_bound(-100, 100);
-
-  light.alpha = 0;
-
-  await sleep(1000+randomiser2);
-  light.alpha = 0.7;
-
-  await sleep(20+randomiser);
-  light.alpha = 0;
-
-  await sleep(15+randomiser);
-  light.alpha = 0.7;
-
-  await sleep(280+randomiser2);
-  light.alpha = 0;
-
-  await sleep(20+randomiser);
-  light.alpha = 0.9;
-
-  await sleep(200+randomiser);
-  light.alpha = 0;
-
-  await sleep(9000+(randomiser2 ** 2));
-
-  await flicker(light);
-}
-
-//const first = false;
 
 class RanbirFloor0 {
   constructor(spawn_id) {
@@ -77,18 +43,10 @@ class RanbirFloor0 {
   }
 
   _set_elements() {
-    // TODO solve the issue of entry point ids
-
     viewport.moveCenter(this.entry_point.x, this.entry_point.y);
-
-    // if(!first) {
-    //   this.player.position.copy(this.entry_point);
-    //   first = true;
-    // }
   }
 
   async _start() {
-    await flicker(this.light_shroud);
   }
 
   _set_dev_settings() {

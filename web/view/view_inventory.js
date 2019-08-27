@@ -13,7 +13,7 @@ class Slot extends Sprite {
   }
 }
 
-class Title extends Text{
+class Title extends Text {
   constructor() {
     super('', {fontSize: 18, fill: 'grey'});
     this.y += 48;

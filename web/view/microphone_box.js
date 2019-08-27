@@ -3,6 +3,7 @@ const { Text    } = require('pixi.js');
 const { Sprite  } = require('pixi.js');
 const { Texture } = require('pixi.js');
 
+// TODO put in container
 class MicrophonePrompt {
   constructor() {
     this.website_text = new Text('www.localhost.com want to:', {fontSize: 50});

@@ -1,29 +1,9 @@
-//const { Level_Factory } = require('./level_factory');
-//const { Player       } = require('../../character/archetypes/player');
-const { LogicRat     } = require('../../character/archetypes/logic_rat');
-const { LogicZombie  } = require('../../character/archetypes/logic_zombie');
-const { PathSprite   } = require('../../character/types/path');
-const { players      } = require('../../engine/pixi_containers');
-const { collisions    } = require('../../engine/pixi_containers');
-const { items       } = require('../../engine/pixi_containers');
-const { FloorWord    } = require('../../effects/floor_word');
-const { Debris       } = require('../../effects/debris');
-const { guis         } = require('../../engine/pixi_containers');
-const { renderer     } = require('../../engine/app');
-const { stage } = require('../../engine/app');
-const { random_bound } = require('../../utils/math.js');
-const { sleep        } = require('../../utils/time.js');
-const { env          } = require('../../../config');
-const { sound        } = require('pixi.js');
-const { Rectangle    } = require('pixi.js');
-const { Container } = require('pixi.js');
-const { filters } = require('pixi.js');
-const { flash_at     } = require('../../effects/fade_sprite.js');
-const { VideoBaseTexture, tweenManager, Sprite, Texture, Text } = require('pixi.js');
-const { Graphics } = require('pixi.js');
-const { viewport } = require('../../engine/app');
-const { Raycast } = require('../../engine/raycast');
-const { ProgressBar   } = require('../../view/progress_bar');
+const { players     } = require('../../engine/pixi_containers');
+const { collisions  } = require('../../engine/pixi_containers');
+const { env         } = require('../../../config');
+const { viewport    } = require('../../engine/app');
+const { Raycast     } = require('../../engine/raycast');
+const { ProgressBar } = require('../../view/progress_bar');
 
 const {
   Wall,
@@ -59,7 +39,6 @@ class DevRoom {
 
     this.light_shroud = this.shrouds.find(roof => roof.id === 592);
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
-
     this.exit_door    = this.doors.find(door => door.id === 619);
 
     this._set_elements();
@@ -84,12 +63,6 @@ class DevRoom {
     this.top_door = this.doors.find(door => door.id === 527);
     this.top_wall = this.walls.find(wall => wall.id === 625);
 
-    // this.bathroom_door = this.doors.find(door => door.id === 590);
-    // this.bathroom_wall = this.walls.find(wall => wall.id === 624);
-    // this.bathroom_door.click = () => {
-    //   this.bathroom_wall.destroy();
-    // };
-
     this.top_door.once('click', () => {
       this.top_wall.destroy();
     });
@@ -97,26 +70,6 @@ class DevRoom {
     console.log(this.data.generator);
     const generator = new Generator(this.data.generator[0]);
     ProgressBar.percentage = 0.1;
-
-    // this.generator.click = () => {
-    //   Caption.render('...');
-
-    //   const fuel_item = this.player.inventory.take_by_name('oil_canister');
-    //   if(!fuel_item) return;
-
-    //   keyboardManager.disable();
-
-    //   ProgressBar
-    //     .show()
-    //     .to_percentage(fuel_item.condition)
-    //     .complete(() => {
-    //       Caption.render('The canister is empty.');
-    //       this.generator.ready();
-    //       this.generator.fuel = fuel_item.condition;
-
-    //       keyboardManager.enable();
-    //     });
-    // };
 
     generator.on('click', () => {
       if(this.player.inventory.contains('gas_canister')) {

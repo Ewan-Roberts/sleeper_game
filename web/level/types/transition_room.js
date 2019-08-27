@@ -1,15 +1,11 @@
 const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
-const { distance_between } = require('../../utils/math');
-// TODO temp progress bar
-// const { ProgressBar   } = require('../../view/progress_bar');
 const { ProgressBar   } = require('../../view/progress_bar');
 const { Caption       } = require('../../view/caption');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 const { keyboardManager } = require('pixi.js');
-//const { SimpleRoom   } = require('./simple_room');
 
 const {
   Floor,
@@ -30,6 +26,7 @@ class Light extends Floor {
   }
 }
 
+// FOR TESTING
 class HubRoom {
   constructor() {
     this.name   = 'transition_room';
@@ -40,6 +37,7 @@ class HubRoom {
   }
 
   _set_data() {
+    // TODO remove level factory
     Level_Factory.generate(this.data);
 
     const { exit_pad, player } = this.data;
@@ -90,16 +88,6 @@ class HubRoom {
       generator.ready();
       keyboardManager.enable();
       generator.interactive = true;
-    });
-
-    keyboardManager.on('pressed', () => {
-      const relative_distance = distance_between(this.player, generator);
-      if(relative_distance < 200) {
-        generator.tint = 0x008b00;
-        generator.interactive = true;
-      } else {
-        generator.tint = 0xffffff;
-      }
     });
 
     const level_text = new Text(

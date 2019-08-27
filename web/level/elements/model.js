@@ -8,7 +8,7 @@ class Element extends Sprite {
     height,
     width,
     rotation,
-    tint = 0xffffff,
+    tint  = 0xffffff,
     alpha = env.brightness,
     hidden,
     x,

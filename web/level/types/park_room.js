@@ -1,13 +1,7 @@
-//const { pathfind    } = require('../../engine/pathfind.js');
-//const { LogicRat    } = require('../../character/archetypes/logic_rat');
-
 const { LogicZombie } = require('../../character/archetypes/logic_zombie');
-const { Player      } = require('../../character/archetypes/player');
-//const { renderer    } = require('../../engine/app.js');
 const { PathRat     } = require('../../character/archetypes/path_rat');
 const { env         } = require('../../../config');
-const { viewport    } = require('../../engine/app');
-const { players      } = require('../../engine/pixi_containers');
+const { players     } = require('../../engine/pixi_containers');
 
 const {
   Trigger_Pad,
@@ -20,7 +14,6 @@ const {
   Chest,
   Border,
 } = require('../elements');
-
 
 class ParkRoom  {
   constructor() {
@@ -45,27 +38,10 @@ class ParkRoom  {
     this.zombie_pad = this.exit_pad.find(pad => pad.id === 207);
 
     this._set_elements();
-    // this._set_prey();
     if(env.dev) this._set_dev_settings();
   }
 
-  _set_prey() {
-    // this.prey_exit_pad = this.exit_pad.find(pad => pad.id === 15);
-    // this.rats          = this.data.prey.map(data => {
-    //   const entity = new LogicRat(data);
-    //   entity.target(this.prey_exit_pad);
-    //   entity.rotation_offset = 1.57;
-    //   entity.width /= 4;
-    //   entity.height /= 4;
-    //   return entity;
-    // });
-
-    // this.grid = pathfind.create_level_grid(this.data.grid[0]);
-    // this.rat_pad.events.once('trigger', () => this.rats.forEach(rat => rat.logic_start()));
-  }
-
   _set_elements() {
-    //renderer.backgroundColor = 0x000000;
     console.log(players);
     console.log(this.player);
     this.player.position.copy(this.data.player_spawn[0]);
