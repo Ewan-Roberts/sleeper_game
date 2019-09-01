@@ -44625,7 +44625,13 @@ const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
 const event               = require('events');
 
-const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
+const create_texture =
+  (name, i) =>
+    Array(i)
+      .fill(name)
+      .map(
+        (filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j)
+      );
 const nothing_idle = create_texture('Armature_nothing_idle_', 37);
 
 class Player extends extras.AnimatedSprite {
@@ -46083,10 +46089,10 @@ renderer.options.roundPixels = env.round_pixels;
 global.document.body.appendChild(view);
 
 const viewport = new Viewport({
-  screenWidth:  global.window.innerWidth,
-  screenHeight: global.window.innerHeight,
-  worldWidth:   global.window.innerWidth,
-  worldHeight:  global.window.innerHeight,
+  screenWidth:  screen.width,
+  screenHeight: screen.height,
+  worldWidth:   screen.width,
+  worldHeight:  screen.height,
 });
 viewport.name = 'world';
 
@@ -46337,6 +46343,7 @@ const {
   very_close = 1,
 } = {};
 
+// TODO consider depenancy injection
 const borders = new Container();
 borders.name   = 'borders';
 borders.zIndex = low;
@@ -46400,6 +46407,7 @@ guis.zIndex = very_close;
 const fades = new Container();
 fades.name   = 'fades_container';
 fades.zIndex = very_close;
+
 
 viewport.addChild(
   borders,

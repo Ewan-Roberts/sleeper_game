@@ -44,10 +44,10 @@ renderer.options.roundPixels = env.round_pixels;
 global.document.body.appendChild(view);
 
 const viewport = new Viewport({
-  screenWidth:  global.window.innerWidth,
-  screenHeight: global.window.innerHeight,
-  worldWidth:   global.window.innerWidth,
-  worldHeight:  global.window.innerHeight,
+  screenWidth:  screen.width,
+  screenHeight: screen.height,
+  worldWidth:   screen.width,
+  worldHeight:  screen.height,
 });
 viewport.name = 'world';
 

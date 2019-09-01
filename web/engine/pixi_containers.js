@@ -16,6 +16,7 @@ const {
   very_close = 1,
 } = {};
 
+// TODO consider depenancy injection
 const borders = new Container();
 borders.name   = 'borders';
 borders.zIndex = low;
@@ -79,6 +80,7 @@ guis.zIndex = very_close;
 const fades = new Container();
 fades.name   = 'fades_container';
 fades.zIndex = very_close;
+
 
 viewport.addChild(
   borders,
