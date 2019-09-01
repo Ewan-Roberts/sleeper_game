@@ -1,4 +1,5 @@
 const { extras, Texture } = require('pixi.js');
+const { sound           } = require('pixi.js');
 const { players         } = require('../../engine/pixi_containers');
 const { Animation       } = require('../attributes/animation');
 const { Keyboard        } = require('../attributes/keyboard');
@@ -25,7 +26,7 @@ class Player extends extras.AnimatedSprite {
     this.width  = 23;
     this.height = 35;
     this.anchor.set(0.5);
-    this.animationSpeed = 0.30;
+    this.animationSpeed = 0.70;
 
     this.add_component(new Animation(this, human_frames));
     this.animation.prefix = 'nothing';
@@ -65,18 +66,18 @@ class Player extends extras.AnimatedSprite {
 
     this.animation.events.on('walk', () => {
       if(!this.walk_sound.isPlaying) {
-        // this.walk_sound.play();
+        this.walk_sound.play();
       }
     });
 
     this.animation.events.on('idle', () => {
-      // this.walk_sound.stop();
+      this.walk_sound.stop();
     });
   }
 
   _set_sounds() {
-    //this.walk_sound = sound.find('walk_normal', {loop: true});
-    //this.walk_sound.volume = 0.04;
+    this.walk_sound = sound.find('walk_normal', {loop: true});
+    this.walk_sound.volume = 0.04;
   }
 
   damage(damage) {

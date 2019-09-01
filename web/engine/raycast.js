@@ -1,8 +1,8 @@
 const { viewport  } = require('./app');
 const { ticker    } = require('./app');
 const { renderer  } = require('./app');
-
-const { visuals } = require('./pixi_containers');
+const { env       } = require('../../config');
+const { visuals   } = require('./pixi_containers');
 const { Container } = require('pixi.js');
 const { Graphics  } = require('pixi.js');
 const { Sprite    } = require('pixi.js');
@@ -128,9 +128,9 @@ class Raycast extends Container {
       ...convert_to_rays(border),
     ];
 
-    obstructions.forEach(sprite =>{
-      if(sprite._destroyed) return;
-      this.segments.push(...convert_to_rays(sprite));
+    obstructions.forEach(obstruction =>{
+      if(obstruction._destroyed) return;
+      this.segments.push(...convert_to_rays(obstruction));
     });
 
     this.shadow        = new Sprite(Texture.WHITE);
@@ -204,7 +204,12 @@ class Raycast extends Container {
   start() {
     const unique_points = this.segments.map(({a,b}) => (a,b));
 
-    ticker.add(() => {
+    // 60/30 for 30 fps
+    const fps_delta = env.dev?2:1;
+    let elapsedTime = 0;
+    ticker.add(delta => {
+      elapsedTime += delta;
+      if(elapsedTime <= fps_delta) return;
       this.raycast.clear();
       this.raycast.beginFill();
 
@@ -218,8 +223,10 @@ class Raycast extends Container {
         this.light.y = this.sprite.y - this.light.height/2;
       }
     });
+    elapsedTime = 0;
   }
 }
+
 
 module.exports = {
   Raycast,

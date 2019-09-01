@@ -1,17 +1,11 @@
 const { Sprite, Texture, tweenManager } = require('pixi.js');
 const { radian, random_bound } = require('../../utils/math');
-const { screen      } = require('../../engine/app');
 const { viewport    } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
 const { MeleeBox    } = require('../../engine/melee');
 const { guis        } = require('../../engine/pixi_containers');
+const { keyboardManager } = require('pixi.js');
 
-function get_relative_mouse_position(sprite, mouse_point) {
-  return {
-    x: (mouse_point.x - screen.width/2)  + sprite.x,
-    y: (mouse_point.y - screen.height/2) + sprite.y,
-  };
-}
 class Aiming_Cone extends Sprite {
   constructor() {
     super(Texture.fromImage('yellow_triangle'));
@@ -78,11 +72,15 @@ class Mouse {
     viewport.on('mouseup',   event => this.mouse_up(event));
     viewport.on('mousemove', event => this.mouse_move(event));
     viewport.on('mousedown', event => this.mouse_down(event));
+
+    this.keyboard_down = false;
+    keyboardManager.on('down',     () => this.keyboard_down = true);
+    keyboardManager.on('released', () => this.keyboard_down = false);
   }
 
   mouse_down(event) {
     if(!event) return;
-    const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
+    const mouse_position = event.data.getLocalPosition(viewport);
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
     if(event.data.originalEvent.shiftKey && this.animation.prefix === 'bow') {
@@ -100,7 +98,7 @@ class Mouse {
   mouse_up(event) {
     if(!event) return;
     if(!event.data.originalEvent.shiftKey) return;
-    const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
+    const mouse_position = event.data.getLocalPosition(viewport);
 
     this.animation.idle();
     // TODO Weapon manager
@@ -122,7 +120,8 @@ class Mouse {
 
   mouse_move(event) {
     if(!event) return;
-    const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
+    if(this.keyboard_down) return;
+    const mouse_position = event.data.getLocalPosition(viewport);
 
     const rotation = radian(mouse_position, this.sprite);
     this.sprite.rotation = rotation;
