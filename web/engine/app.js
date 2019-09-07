@@ -3,8 +3,13 @@ const { Application, settings } = PIXI;
 const { env      } = require('../../config');
 const { Viewport } = require('pixi-viewport');
 
-console.time();
 
+const {
+  'innerWidth':  window_width,
+  'innerHeight': window_height,
+} = global.window;
+
+console.time();
 const {
   renderer,
   stage,
@@ -12,28 +17,21 @@ const {
   screen,
   view,
 } = new Application({
-  width           : global.window.innerWidth,
-  height          : global.window.innerHeight,
-  backgroundColor : env.background_color,
-  roundPixels     : env.round_pixels,
-  antialias       : env.anti_alias,
+  width:           window_width,
+  height:          window_height,
+  backgroundColor: env.background_color,
+  roundPixels:     env.round_pixels,
+  antialias:       env.anti_alias,
 });
 
 settings.ROUND_PIXELS               = env.round_pixels;
-settings.RENDER_OPTIONS.roundPixels = env.round_pixels;
 settings.RESOLUTION                 = env.resolution;
 settings.TARGET_FPMS                = env.fps;
 renderer.roundPixels                = env.round_pixels;
 renderer.resolution                 = env.resolution;
 renderer.options.roundPixels        = env.round_pixels;
 
-const viewport = new Viewport({
-  screenWidth:  screen.width,
-  screenHeight: screen.height,
-  worldWidth:   screen.width,
-  worldHeight:  screen.height,
-});
-
+const viewport = new Viewport();
 viewport.updateLayersOrder = function () {
   viewport.children.sort(function(a,b) {
     a.zIndex = a.zIndex || 0;

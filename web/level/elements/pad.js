@@ -2,6 +2,7 @@ const { pads          } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('../types/level_factory');
 const { env           } = require('../../../config');
 const { Element       } = require('./model');
+const { Text          } = require('pixi.js');
 const event = require('events');
 
 class Trigger_Pad extends Element {
@@ -29,6 +30,11 @@ class Trigger_Pad extends Element {
     }
 
     pads.addChild(this);
+  }
+
+  set text(value) {
+    const pad_text = new Text(value, { fontSize: 100 });
+    this.addChild(pad_text);
   }
 
   on(name, callback) {

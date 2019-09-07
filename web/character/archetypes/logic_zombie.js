@@ -5,7 +5,9 @@ const { LogicSprite   } = require('../types/logic');
 class LogicZombie extends LogicSprite {
   constructor(data) {
     super(data);
+
     this.add_component(new Animation(this, zombie_frames));
+    this.animation.idle();
     this.animationSpeed = 0.30;
   }
 }

@@ -27,7 +27,7 @@ function break_at_door(path) {
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor({
-    image_name = 'bird_8',
+    image_name = 'bunny',
     height,
     width,
     id,
