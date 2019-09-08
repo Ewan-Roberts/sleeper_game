@@ -27,7 +27,9 @@ class Light extends Element {
   }
 
   turn_on() {
-    if(this.state === true) return;
+    if(this.state === true) {
+      return;
+    }
     this.state              = true;
     this.texture            = this.lamp_on_texture;
     this.cast_light = 1;
@@ -35,7 +37,9 @@ class Light extends Element {
   }
 
   turn_off() {
-    if(this.state === false) return;
+    if(this.state === false) {
+      return;
+    }
     this.state              = false;
     this.texture            = this.lamp_off_texture;
     this.cast_light = 0;
@@ -54,7 +58,9 @@ class Light extends Element {
     const randomiser = random_bound(8000, 40000);
 
     setInterval(async () => {
-      if (!this.state) return;
+      if(!this.state) {
+        return;
+      }
       this.turn_off();
       await sleep(random_bound(10, 150));
       this.turn_on();
@@ -64,20 +70,22 @@ class Light extends Element {
 
   async _flicker() {
     // breaks recursion
-    if(!this.flicker_running) return;
+    if(!this.flicker_running) {
+      return;
+    }
     const randomiser = random_bound(10, 30);
     this.turn_on();
 
-    await sleep(randomiser+400);
+    await sleep(randomiser + 400);
     this.turn_off();
 
     await sleep(randomiser);
     this.turn_on();
 
-    await sleep(randomiser*2);
+    await sleep(randomiser * 2);
     this.turn_off();
 
-    await sleep(randomiser**2);
+    await sleep(randomiser ** 2);
     this.turn_on();
 
     this._flicker();

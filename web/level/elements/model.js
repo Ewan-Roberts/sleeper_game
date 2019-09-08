@@ -23,7 +23,7 @@ class Element extends Sprite {
     this.alpha    = alpha;
     this.visible  = !hidden;
     this.anchor.set(0, 1);
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
   }
 }
 

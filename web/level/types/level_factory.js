@@ -28,7 +28,7 @@ class Level_Factory {
     const { RanbirFloor1 } = require('./ranbir_flat_1');
     const { RanbirFloor2 } = require('./ranbir_flat_2');
 
-    switch(level_name) {
+    switch (level_name) {
       case 'intro'     : return new IntroRoom();
       case 'item'      : return new ItemsRoom();
       case 'street'    : return new StreetRoom(spawn_id);
@@ -70,7 +70,9 @@ class Level_Factory {
       item.forEach(data => new Chest(data));
       door.forEach(data => new Door(data));
       shroud.forEach(data => new Shroud(data));
-      if(slow_pad) slow_pad.forEach(data => new Trigger_Pad(data));
+      if(slow_pad) {
+        slow_pad.forEach(data => new Trigger_Pad(data));
+      }
 
     } catch (error) {
       console.error(error);
@@ -79,9 +81,13 @@ class Level_Factory {
 
   static clear() {
     console.log('clear');
-    tweenManager.tweens.forEach(tween =>{
-      if(!tween.target) return;
-      if(tween.target.name === 'zombie') tween.target.remove();
+    tweenManager.tweens.forEach(tween => {
+      if(!tween.target) {
+        return;
+      }
+      if(tween.target.name === 'zombie') {
+        tween.target.remove();
+      }
     });
     clear_level_containers();
   }

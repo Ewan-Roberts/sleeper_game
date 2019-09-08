@@ -7,8 +7,8 @@ class Border extends Element {
     super({
       ...data,
 
-      image_name: 'black_dot',
-      alpha:      (env.visable_borders)?0.2:0,
+      'image_name': 'black_dot',
+      'alpha'     : (env.visable_borders) ? 0.2 : 0,
     });
 
     borders.addChild(this);

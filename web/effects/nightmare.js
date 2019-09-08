@@ -9,7 +9,7 @@ colorMatrix.greyscale(4);
 
 class Nightmare {
   static on() {
-    decals.filters = [colorMatrix];
+    decals.filters = [ colorMatrix ];
     roofs.children.forEach(roof => roof.tint = 0x000000);
     renderer.backgroundColor = 0xff0000;
   }

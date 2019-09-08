@@ -6,8 +6,8 @@ class Wall extends Element {
     super({
       ...data,
 
-      image_name: 'black_dot',
-      tint:       0x000000,
+      'image_name': 'black_dot',
+      'tint'      : 0x000000,
     });
 
     collisions.addChild(this);
@@ -17,5 +17,4 @@ class Wall extends Element {
 module.exports = {
   Wall,
 };
-
 

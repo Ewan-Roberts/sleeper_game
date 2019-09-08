@@ -42,7 +42,9 @@ class DevRoom {
     this.exit_door    = this.doors.find(door => door.id === 619);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 
@@ -95,14 +97,14 @@ class DevRoom {
 
     const light = this.collisions.find(light => light.id === 626);
     const raycaster = new Raycast(this.player, {
-      border:       this.data.shadow_area[0],
-      obstructions: walls,
-      follow:       true,
-      radius:       200,
+      'border'      : this.data.shadow_area[0],
+      'obstructions': walls,
+      'follow'      : true,
+      'radius'      : 200,
     });
     raycaster.add_light(light, 200);
 
-    viewport.on('mousemove', ({data}) => {
+    viewport.on('mousemove', ({ data }) => {
       if(raycaster.raycast.containsPoint(data.global)) {
         viewport.interactiveChildren = true;
         return;

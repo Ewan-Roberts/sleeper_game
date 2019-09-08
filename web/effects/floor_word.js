@@ -17,8 +17,8 @@ class FloorWord extends Text {
     y,
   }) {
     super(text, {
-      fontSize:   font_size,
-      fontWeight: weight,
+      'fontSize'  : font_size,
+      'fontWeight': weight,
       fill,
       align,
     });
@@ -27,7 +27,7 @@ class FloorWord extends Text {
     this.rotation = rotation * DEG_TO_RAD;
     this.tint     = tint;
     this.anchor.set(0.5);
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
 
     this.tween       = tweenManager.createTween(this);
     this.tween.delay = delay;
@@ -51,7 +51,7 @@ class FloorWord extends Text {
     this.tween.reset();
     this.tween.time = time;
     this.alpha = 0;
-    this.tween.to({alpha: 1});
+    this.tween.to({ 'alpha': 1 });
     this.tween.start();
   }
 
@@ -59,8 +59,8 @@ class FloorWord extends Text {
     this.tween.reset();
     this.tween.time = time;
     this.tween
-      .from({alpha: 1})
-      .to({alpha: 0});
+      .from({ 'alpha': 1 })
+      .to({ 'alpha': 0 });
 
     this.tween.on('end', () => {
       this.tween.remove();
@@ -72,14 +72,14 @@ class FloorWord extends Text {
 
 const default_words = [
   'Math.random()',
-  '<h2>','</html>',
+  '<h2>', '</html>',
   '</head>',
   '<script>',
   '<div>',
 ];
 
 const bounds = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const random_text = (array) => array[Math.floor(Math.random()*array.length)];
+const random_text = (array) => array[Math.floor(Math.random() * array.length)];
 
 function random_word({
   point,
@@ -91,11 +91,11 @@ function random_word({
 }) {
   const random_word_from_array = random_text(text);
   const word = new FloorWord({
-    font_size: bounds(10, size),
-    rotation:  bounds(-30, 30),
-    text :     random_word_from_array,
-    fill:      Math.random() >= 0.5?'white':'black',
-    delay:     bounds(500, 2000),
+    'font_size': bounds(10, size),
+    'rotation' : bounds(-30, 30),
+    'text'     : random_word_from_array,
+    'fill'     : Math.random() >= 0.5 ? 'white' : 'black',
+    'delay'    : bounds(500, 2000),
   });
   word.position.copy(point);
   word.x += bounds(-closeness, closeness);
@@ -112,9 +112,9 @@ const pulse_words = array => {
   array.forEach(unit => {
     const word = new FloorWord({
       ...unit,
-      text: unit.text.text,
+      'text': unit.text.text,
       delay,
-      fill: 'white',
+      'fill': 'white',
     });
     delay += 60;
     backgrounds.addChild(word);

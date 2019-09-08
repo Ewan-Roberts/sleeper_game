@@ -11,19 +11,25 @@ const {
 
 function point_collides(position) {
   const collision_hit = collisions.children.find(child => child.containsPoint(position));
-  if(collision_hit) return true;
+  if(collision_hit) {
+    return true;
+  }
 
   const border_hit = borders.children.find(child => child.containsPoint(position));
-  if(border_hit) return true;
+  if(border_hit) {
+    return true;
+  }
 
   const item_hit = items.children.find(child => child.containsPoint(position));
-  if(item_hit) return true;
+  if(item_hit) {
+    return true;
+  }
 
   return false;
 }
 
-//TODO this could be more performant using proximity
-//and this logic should be split out or put in ceiling
+// TODO this could be more performant using proximity
+// and this logic should be split out or put in ceiling
 function point_contains(player) {
   const point = player.getGlobalPosition();
   const pad = pads.children.find(child => child.containsPoint(point));
@@ -33,13 +39,15 @@ function point_contains(player) {
     return pad.speed;
   }
 
-  if(env.dev) return 30;
+  if(env.dev) {
+    return 30;
+  }
   return 3;
 }
 
 class Keyboard {
   constructor(sprite) {
-    const { animation, vitals, inventory} = sprite;
+    const { animation, vitals, inventory } = sprite;
     this.name           = 'keyboard';
     this.sprite         = sprite;
     this.animation      = animation;
@@ -51,7 +59,9 @@ class Keyboard {
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
 
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   destroy() {
@@ -59,10 +69,12 @@ class Keyboard {
   }
 
   key_down(key) {
-    if(!keyboardManager.isEnabled) return;
+    if(!keyboardManager.isEnabled) {
+      return;
+    }
     this.establish_direction();
 
-    switch(key) {
+    switch (key) {
       case 87: return this.keyboard_up();    // w
       case 83: return this.keyboard_down();  // s
       case 65: return this.keyboard_left();  // a
@@ -76,7 +88,9 @@ class Keyboard {
     const a = keyboardManager.isDown(65);
     const s = keyboardManager.isDown(83);
     const d = keyboardManager.isDown(68);
-    if(!w && !a && !s && !d) this.animation.idle();
+    if(!w && !a && !s && !d) {
+      this.animation.idle();
+    }
   }
 
   establish_direction() {
@@ -84,25 +98,43 @@ class Keyboard {
     const a = keyboardManager.isDown(65);
     const s = keyboardManager.isDown(83);
     const d = keyboardManager.isDown(68);
-    if(w && a) return this.sprite.rotation = -2.5;
-    if(w && d) return this.sprite.rotation = -0.8;
-    if(s && a) return this.sprite.rotation = 2.5;
-    if(s && d) return this.sprite.rotation = 1;
-    if(w)      return this.sprite.rotation = -2;  // up
-    if(a)      return this.sprite.rotation = -3;  // left
-    if(s)      return this.sprite.rotation = 1.5; // down
-    if(d)      return this.sprite.rotation = 0;   // right
+    if(w && a) {
+      return this.sprite.rotation = -2.5;
+    }
+    if(w && d) {
+      return this.sprite.rotation = -0.8;
+    }
+    if(s && a) {
+      return this.sprite.rotation = 2.5;
+    }
+    if(s && d) {
+      return this.sprite.rotation = 1;
+    }
+    if(w)      {
+      return this.sprite.rotation = -2;
+    }  // up
+    if(a)      {
+      return this.sprite.rotation = -3;
+    }  // left
+    if(s)      {
+      return this.sprite.rotation = 1.5;
+    } // down
+    if(d)      {
+      return this.sprite.rotation = 0;
+    }   // right
   }
 
 
   increase_run_speed() {
-    if(env.keyboard_additions) return;
+    if(env.keyboard_additions) {
+      return;
+    }
     this.speed *= 1.5;
   }
 
   disable_for(time) {
     keyboardManager.disable();
-    setTimeout(()=> keyboardManager.enable(), time);
+    setTimeout(() => keyboardManager.enable(), time);
   }
 
   enable() {
@@ -116,7 +148,9 @@ class Keyboard {
   keyboard_up() {
     const point = this.sprite.getGlobalPosition();
     point.y -= this.buffer;
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.y -= this.speed;
@@ -127,7 +161,9 @@ class Keyboard {
   keyboard_down() {
     const point = this.sprite.getGlobalPosition();
     point.y += this.buffer;
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.y += this.speed;
@@ -139,7 +175,9 @@ class Keyboard {
     const point = this.sprite.getGlobalPosition();
     point.x -= this.buffer;
 
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.x -= this.speed;
@@ -151,7 +189,9 @@ class Keyboard {
   keyboard_right() {
     const point = this.sprite.getGlobalPosition();
     point.x += this.buffer;
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.x += this.speed;
@@ -161,7 +201,7 @@ class Keyboard {
 
   _set_dev_settings() {
     keyboardManager.on('down', key => {
-      switch(key) {
+      switch (key) {
         // vim
         case 75: return this.keyboard_up();    // k
         case 74: return this.keyboard_down();  // j

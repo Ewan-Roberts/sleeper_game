@@ -45,14 +45,14 @@ class HubRoom {
 
     exit_pad.forEach(data => {
       new Trigger_Pad(data);
-      const { x, y, width, height} = data;
+      const { x, y, width, height } = data;
 
       const level_names = new Text(
-        data.level_name,{fontSize: 40, fill: 'black'}
+        data.level_name, { 'fontSize': 40, 'fill': 'black' }
       );
 
-      level_names.x = x + width/4;
-      level_names.y = y + height/2;
+      level_names.x = x + width / 4;
+      level_names.y = y + height / 2;
 
       visuals.addChild(level_names);
     });
@@ -65,7 +65,7 @@ class HubRoom {
     const generator = new Generator(this.data.generator[0]);
 
     this.player.inventory.populate_with_item(
-      'gas_canister', { condition: 0.4 }
+      'gas_canister', { 'condition': 0.4 }
     );
 
     ProgressBar.percentage = 0.1;
@@ -97,18 +97,18 @@ class HubRoom {
     const level_text = new Text(
       'THE HUB',
       {
-        fontSize: 100,
-        fill:     'grey',
-        fontWeight: 'bold',
-        dropShadow: true,
-        dropShadowColor: '#000000',
-        dropShadowBlur: 8,
-        dropShadowDistance: 10,
+        'fontSize'          : 100,
+        'fill'              : 'grey',
+        'fontWeight'        : 'bold',
+        'dropShadow'        : true,
+        'dropShadowColor'   : '#000000',
+        'dropShadowBlur'    : 8,
+        'dropShadowDistance': 10,
       }
     );
 
-    level_text.x = player[0].x -150;
-    level_text.y = player[0].y -50;
+    level_text.x = player[0].x - 150;
+    level_text.y = player[0].y - 50;
 
     visuals.addChild(level_text);
     console.timeEnd();

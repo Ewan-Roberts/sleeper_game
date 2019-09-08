@@ -24,22 +24,22 @@ const randomiser = random_bound(-10, 10);
 async function flicker(light) {
   light.alpha = 0.7;
 
-  await sleep(20+randomiser);
+  await sleep(20 + randomiser);
   light.alpha = 0;
 
-  await sleep(15+randomiser*3);
+  await sleep(15 + randomiser * 3);
   light.alpha = 0;
 
-  await sleep(randomiser*2);
+  await sleep(randomiser * 2);
   light.alpha = 0.9;
 
-  await sleep(15+randomiser);
+  await sleep(15 + randomiser);
   light.alpha = 0;
 
-  await sleep(45+randomiser*2);
+  await sleep(45 + randomiser * 2);
   light.alpha = 1;
 
-  await sleep(5000+(randomiser ** 2));
+  await sleep(5000 + (randomiser ** 2));
 
   await flicker(light);
 }
@@ -75,7 +75,9 @@ class StreetRoom {
     this._set_sounds();
     this._set_elements();
     this._set_cutscene();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _set_cutscene() {

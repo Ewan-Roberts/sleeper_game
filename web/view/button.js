@@ -1,15 +1,15 @@
 const { Text, Sprite, Texture } = require('pixi.js');
 const { guis } = require('../engine/pixi_containers');
 
-//TODO move to seperate file
+// TODO move to seperate file
 class Label extends Text{
   constructor(text) {
     super(text, {
-      fontSize: 15,
-      fill: '#D2D8D7',
-      fontVariant: 'small-caps',
-      lineJoin: 'round',
-      strokeThickness: 4,
+      'fontSize'       : 15,
+      'fill'           : '#D2D8D7',
+      'fontVariant'    : 'small-caps',
+      'lineJoin'       : 'round',
+      'strokeThickness': 4,
     });
 
     this.anchor.set(0.5);
@@ -57,14 +57,14 @@ class Button extends Sprite {
     guis.addChild(this);
   }
 
-  set_position({x, y}) {
-    this.position.copy({x, y});
+  set_position({ x, y }) {
+    this.position.copy({ x, y });
 
     if(this.action_label) {
-      this.action_label.position.copy({x, y: y+22});
+      this.action_label.position.copy({ x, 'y': y + 22 });
     }
     if(this.description_label) {
-      this.description_label.position.copy({x, y: y-22});
+      this.description_label.position.copy({ x, 'y': y - 22 });
     }
   }
 

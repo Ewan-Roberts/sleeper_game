@@ -1,5 +1,5 @@
-//const { Level_Factory } = require('./level_factory');
-//const { Player       } = require('../../character/archetypes/player');
+// const { Level_Factory } = require('./level_factory');
+// const { Player       } = require('../../character/archetypes/player');
 const { viewport    } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
 const { env         } = require('../../../config');
@@ -38,7 +38,9 @@ class RanbirFloor0 {
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 

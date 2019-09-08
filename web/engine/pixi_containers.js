@@ -103,7 +103,9 @@ viewport.updateLayersOrder();
 
 function clear_level_containers() {
   viewport.children.forEach(child => {
-    if(child.name === 'player_container') return;
+    if(child.name === 'player_container') {
+      return;
+    }
     child.removeChildren();
   });
 }

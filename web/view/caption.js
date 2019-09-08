@@ -7,7 +7,7 @@ const { Text      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
-container.x = viewport.screenWidth/2;
+container.x = viewport.screenWidth / 2;
 container.y = viewport.screenHeight;
 
 const background = new Sprite(Texture.WHITE);
@@ -22,7 +22,7 @@ dialog.position.copy(background);
 dialog.y -= 5;
 dialog.anchor.set(0.5, 1);
 
-//TODO handle gui elements in pixi_containers
+// TODO handle gui elements in pixi_containers
 container.addChild(
   background,
   dialog

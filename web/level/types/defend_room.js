@@ -2,6 +2,7 @@ const { pathfind    } = require('../../engine/pathfind.js');
 const { Trigger_Pad } = require('../elements/pad');
 const { LogicZombie } = require('../../character/archetypes/logic_zombie');
 const { players     } = require('../../engine/pixi_containers');
+const { viewport    } = require('../../engine/app');
 
 const {
   Wall,
@@ -17,9 +18,9 @@ const {
 
 class DefendRoom  {
   constructor() {
-    this.name     = 'defend_room';
-    this.player   = players.children[0];
-    this.data     = require('../data/defend_room.json');
+    this.name   = 'defend_room';
+    this.player = players.children[0];
+    this.data   = require('../data/defend_room.json');
 
     this.walls        = this.data.walls.map(data => new Wall(data));
     this.shrouds      = this.data.shroud.map(data => new Shroud(data));
@@ -33,10 +34,11 @@ class DefendRoom  {
     this.doors        = this.data.door.map(data => new Door(data));
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === 269);
     this.zombies      = this.data.prey.map(unit => new LogicZombie(unit));
+    this.obstacles    = this.data.obstacle.map(unit => new Collision(unit));
 
-    this.attack_pad   = this.exit_pad.find(pad => pad.id === 207);
+    this.attack_pad      = this.exit_pad.find(pad => pad.id === 207);
     this.attack_pad.text = 'zombie attack';
-    pathfind.create_level_grid(this.data.grid[0]);
+    this.grid            = pathfind.create_level_grid(this.data.grid[0]);
 
     this._set_elements();
   }
@@ -44,10 +46,29 @@ class DefendRoom  {
   _set_elements() {
     this.player.position.copy(this.entry_point);
 
+    const point = global.place_bunny();
+
+    const zombie = this.zombies[0];
+    zombie.target(point);
+    zombie.animation.eat();
+    zombie.logic_start({
+      'time_on_sight': 2000,
+    });
+
+
+    viewport.on('click', ({ data }) => {
+      const mouse_position = data.getLocalPosition(viewport);
+      point.position.copy(mouse_position);
+      console.log(zombie);
+      zombie.target(point);
+
+
+    });
+
     this.attack_pad.once('trigger', () => {
       this.zombies.forEach(zombie => {
         zombie.animation.eat();
-        zombie.target = this.player;
+        zombie.target(this.player);
         zombie.logic_start();
       });
     });

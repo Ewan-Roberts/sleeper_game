@@ -19,7 +19,9 @@ class Shrine extends Element {
   }
 
   give_blood(vial) {
-    if(vial) this.inventory.give(vial);
+    if(vial) {
+      this.inventory.give(vial);
+    }
   }
 
   get enough_blood() {
@@ -66,7 +68,9 @@ class Generator extends Element {
   }
 
   ready() {
-    if(this._fuel <= 0) return Caption.render('Its empty...');
+    if(this._fuel <= 0) {
+      return Caption.render('Its empty...');
+    }
     this.button.action_label.text = 'Start';
     this.state                    = 'ready';
     this.running_sound.stop();
@@ -86,8 +90,10 @@ class Generator extends Element {
   }
 
   state_handler() {
-    if(this._disable) return;
-    switch(this.state) {
+    if(this._disable) {
+      return;
+    }
+    switch (this.state) {
       case 'running' : return this.ready();
       case 'ready'   : return this.run();
       case 'empty'   : return this.ready();

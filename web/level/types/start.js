@@ -110,11 +110,13 @@ class StartRoom  {
     this.stalkers  = this.data.prey.map(unit => new Stalker(unit, this.player));
     this.generator = this.iterate();
 
-    //pathfind.create_level_grid(this.data.grid[0]);
+    // pathfind.create_level_grid(this.data.grid[0]);
     this._set_sounds();
     this._set_elements();
     this._start();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
 
@@ -170,8 +172,8 @@ class StartRoom  {
     const tween = tweenManager.createTween(this.cursor);
     tween.time = 5000;
     tween.to({
-      x: this.microphone_prompt.allow_button.x,
-      y: this.microphone_prompt.allow_button.y,
+      'x': this.microphone_prompt.allow_button.x,
+      'y': this.microphone_prompt.allow_button.y,
     });
     tween.start();
     tween.on('end', () => {
@@ -182,7 +184,7 @@ class StartRoom  {
     interaction.cursorStyles.pointer = "url('/dot.png'), auto";
     viewport.interactive = true;
     viewport.cursor = 'pointer';
-    viewport.on('mousemove', ({data}) => tween.from(data.global));
+    viewport.on('mousemove', ({ data }) => tween.from(data.global));
 
     yield;
     tween.remove();
@@ -194,10 +196,10 @@ class StartRoom  {
     shrouds.removeChildren();
     backgrounds.removeChildren();
     Array(100).fill().forEach(() => random_word({
-      point: this.player,
-      size: 150,
-      closeness: 700,
-      text: ['RUN!','RUN','RUN','DIE'],
+      'point'    : this.player,
+      'size'     : 150,
+      'closeness': 700,
+      'text'     : [ 'RUN!', 'RUN', 'RUN', 'DIE' ],
     }));
 
     let time_in = 2400;
@@ -243,8 +245,8 @@ class StartRoom  {
       distortion_amount += 0.01;
       distortion_filter.amount = distortion_amount;
 
-      const thud   = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
-      thud.filters = [distortion_filter];
+      const thud   = sound.random_sound_from([ 'thud_2', 'thud_3', 'thud_5', 'thud_6', 'thud_7' ]);
+      thud.filters = [ distortion_filter ];
       thud.volume  = volume;
       thud.play();
 
@@ -304,11 +306,11 @@ class StartRoom  {
 
     const game_title  = new Text(
       'LORIUM GAMES', {
-        fontSize: 200,
-        fill: 'white',
+        'fontSize': 200,
+        'fill'    : 'white',
       }
     );
-    game_title.width  = video.width -100;
+    game_title.width  = video.width - 100;
     game_title.height = 170;
     game_title.anchor.set(0.5);
     game_title.position.copy(this.player);
@@ -319,11 +321,11 @@ class StartRoom  {
     game_title.destroy();
     const company_name  = new Text(
       'CREATIVE TITLE', {
-        fontSize: 200,
-        fill: 'white',
+        'fontSize': 200,
+        'fill'    : 'white',
       }
     );
-    company_name.width  = video.width -100;
+    company_name.width  = video.width - 100;
     company_name.height = 170;
     company_name.anchor.set(0.5);
     company_name.position.copy(this.player);
@@ -346,8 +348,12 @@ class StartRoom  {
     this.microphone_prompt.opacity = 0;
 
     keyboardManager.on('released', event => {
-      if(event === 13) this.generator.next();
-      if(event === 32) this._leave();
+      if(event === 13) {
+        this.generator.next();
+      }
+      if(event === 32) {
+        this._leave();
+      }
     });
     keyboardManager.enable();
 

@@ -1,4 +1,4 @@
-const {Text,Sprite,Container,Texture}= require('pixi.js');
+const { Text, Sprite, Container, Texture } = require('pixi.js');
 const { guis          } = require('../engine/pixi_containers');
 const { item_events   } = require('../engine/item_handler');
 const { Fade          } = require('../effects/fade');
@@ -15,7 +15,7 @@ class Slot extends Sprite {
 
 class Title extends Text {
   constructor() {
-    super('', {fontSize: 18, fill: 'grey'});
+    super('', { 'fontSize': 18, 'fill': 'grey' });
     this.y += 48;
     this.x -= 30;
     this.visible = false;
@@ -45,9 +45,9 @@ class Title extends Text {
 
 class Description extends Text{
   constructor() {
-    super('',{
-      fontSize: 15,
-      fill: 'white',
+    super('', {
+      'fontSize': 15,
+      'fill'    : 'white',
     });
     this.y += 76;
     this.x -= 40;
@@ -61,7 +61,7 @@ class Description extends Text{
 }
 
 class Item extends Sprite {
-  constructor({image_name}) {
+  constructor({ image_name }) {
     super(Texture.fromFrame(image_name));
     this.height = 250;
     this.width  = 250;
@@ -87,12 +87,12 @@ class View_Inventory {
     this.slots = [];
   }
 
-  set_position({x, y}) {
+  set_position({ x, y }) {
     this.slot_container.position.set(x, y);
   }
 
   create_inventory_slots(slots = 3) {
-    for(let i = 0; i <= slots; i++) {
+    for (let i = 0; i <= slots; i++) {
       const slot = new Slot();
       slot.x = i * 80;
       this.slot_container.addChild(slot);
@@ -118,7 +118,7 @@ class View_Inventory {
       item.click = () => {
         console.log('click');
         console.log(loot_item);
-        item_events.emit('give', 1, { item: loot_item });
+        item_events.emit('give', 1, { 'item': loot_item });
         description.visible = false;
         title.hide();
         item.destroy();

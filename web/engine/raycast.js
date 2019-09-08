@@ -10,7 +10,7 @@ const { Texture   } = require('pixi.js');
 const { filters   } = require('pixi.js');
 
 // A reverse mask as a blend mode
-renderer.state.blendModes[20] = [0, renderer.gl.ONE_MINUS_SRC_ALPHA];
+renderer.state.blendModes[20] = [ 0, renderer.gl.ONE_MINUS_SRC_ALPHA ];
 renderer.backgroundColor = 0x000000;
 
 function get_intersection(sprite, segment, angle) {
@@ -23,33 +23,37 @@ function get_intersection(sprite, segment, angle) {
   // SEGMENT in parametric: Point + Delta*T2
   const s_px = segment.a.x;
   const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
+  const s_dx = segment.b.x - segment.a.x;
+  const s_dy = segment.b.y - segment.a.y;
 
   // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
+  const r_mag = Math.sqrt(r_dx * r_dx + r_dy * r_dy);
+  const s_mag = Math.sqrt(s_dx * s_dx + s_dy * s_dy);
 
   if(
-    r_dx/r_mag===s_dx/s_mag &&
-      r_dy/r_mag===s_dy/s_mag
+    r_dx / r_mag === s_dx / s_mag
+      && r_dy / r_mag === s_dy / s_mag
   ){
     // Unit vectors are the same.
     return null;
   }
 
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
+  const T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
+  const T1 = (s_px + s_dx * T2 - r_px) / r_dx;
 
   // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
+  if(T1 < 0) {
+    return null;
+  }
+  if(T2 < 0 || T2 > 1) {
+    return null;
+  }
 
   // Return the POINT OF INTERSECTION
   return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1,
+    'x'    : r_px + r_dx * T1,
+    'y'    : r_py + r_dy * T1,
+    'param': T1,
   };
 
 }
@@ -61,10 +65,10 @@ function convert_to_rays({
   height,
 }) {
   return [
-    {a:{x,         y         }, b:{x:x+width, y         }},
-    {a:{x:x+width, y         }, b:{x:x+width, y:y-height}},
-    {a:{x:x+width, y:y-height}, b:{x,         y:y-height}},
-    {a:{x,         y:y-height}, b:{x,         y         }},
+    { 'a': { x,         y         }, 'b': { 'x': x + width, y         } },
+    { 'a': { 'x': x + width, y         }, 'b': { 'x': x + width, 'y': y - height } },
+    { 'a': { 'x': x + width, 'y': y - height }, 'b': { x,         'y': y - height } },
+    { 'a': { x,         'y': y - height }, 'b': { x,         y         } },
   ];
 }
 
@@ -76,17 +80,21 @@ function get_intersects(sprite, segments, unique_points) {
     let closest_intersect = null;
     segments.forEach(seg => {
       const intersect = get_intersection(sprite, seg, angle);
-      if(!intersect) return;
+      if(!intersect) {
+        return;
+      }
       if(!closest_intersect || intersect.param < closest_intersect.param){
         closest_intersect = intersect;
       }
     });
-    if(!closest_intersect) return;
+    if(!closest_intersect) {
+      return;
+    }
     closest_intersect.angle = angle;
     intersects.push(closest_intersect);
   });
 
-  intersects.sort((a,b) => a.angle - b.angle);
+  intersects.sort((a, b) => a.angle - b.angle);
   return intersects;
 }
 
@@ -97,7 +105,7 @@ function get_unique_points(sprite, unique_points) {
       unique_point.y - sprite.y,
       unique_point.x - sprite.x
     );
-    unique_angles.push(angle-0.00001, angle+0.00001);
+    unique_angles.push(angle - 0.00001, angle + 0.00001);
   });
   return unique_angles;
 }
@@ -128,8 +136,10 @@ class Raycast extends Container {
       ...convert_to_rays(border),
     ];
 
-    obstructions.forEach(obstruction =>{
-      if(obstruction._destroyed) return;
+    obstructions.forEach(obstruction => {
+      if(obstruction._destroyed) {
+        return;
+      }
       this.segments.push(...convert_to_rays(obstruction));
     });
 
@@ -140,7 +150,7 @@ class Raycast extends Container {
     this.shadow.alpha  = 0.9;
     this.shadow.name   = 'shadow_area';
     this.shadow.position.copy(border);
-    this.shadow.anchor.set(0,1);
+    this.shadow.anchor.set(0, 1);
 
     this.light = new Graphics()
       .beginFill(0xFFFFFFF)
@@ -150,8 +160,8 @@ class Raycast extends Container {
     this.light.blendMode = 20;
     this.light.alpha = 0.5;
     this.light.mask = this.raycast;
-    this.light.x = sprite.x - this.light.width/2;
-    this.light.y = sprite.y - this.light.height/2;
+    this.light.x = sprite.x - this.light.width / 2;
+    this.light.y = sprite.y - this.light.height / 2;
 
     this.addChild(
       this.shadow,
@@ -159,8 +169,8 @@ class Raycast extends Container {
       this.raycast
     );
 
-    //this.filters = [new filters.BlurFilter(1)];
-    this.filters = [new filters.AlphaFilter()];
+    // this.filters = [new filters.BlurFilter(1)];
+    this.filters = [ new filters.AlphaFilter() ];
 
     visuals.addChild(this);
 
@@ -169,8 +179,8 @@ class Raycast extends Container {
 
   contains(sprite) {
     return (
-      this.light.containsPoint(sprite) &&
-      this.raycast.containsPoint(sprite)
+      this.light.containsPoint(sprite)
+      && this.raycast.containsPoint(sprite)
     );
   }
 
@@ -183,15 +193,15 @@ class Raycast extends Container {
 
     this.newlight.blendMode = 20;
     this.newlight.mask = this.raycast;
-    this.newlight.x = sprite.x - this.newlight.width/2;
-    this.newlight.y = sprite.y - this.newlight.height/2;
+    this.newlight.x = sprite.x - this.newlight.width / 2;
+    this.newlight.y = sprite.y - this.newlight.height / 2;
 
     this.addChild(this.newlight);
   }
 
   // for testing
   _move_light_with_cursor() {
-    viewport.on('mousemove', ({data}) => {
+    viewport.on('mousemove', ({ data }) => {
       this.light.x = data.global.x;
       this.light.y = data.global.y;
     });
@@ -202,25 +212,27 @@ class Raycast extends Container {
   }
 
   start() {
-    const unique_points = this.segments.map(({a,b}) => (a,b));
+    const unique_points = this.segments.map(({ a, b }) => (a, b));
 
     // 60/30 for 30 fps
-    const fps_delta = env.dev?2:1;
+    const fps_delta = env.dev ? 2 : 1;
     let elapsedTime = 0;
     ticker.add(delta => {
       elapsedTime += delta;
-      if(elapsedTime <= fps_delta) return;
+      if(elapsedTime <= fps_delta) {
+        return;
+      }
       this.raycast.clear();
       this.raycast.beginFill();
 
       const intersects = get_intersects(this.sprite, this.segments, unique_points);
-      this.raycast.moveTo(intersects[0].x,intersects[0].y);
+      this.raycast.moveTo(intersects[0].x, intersects[0].y);
 
-      intersects.forEach(inter => this.raycast.lineTo(inter.x,inter.y));
+      intersects.forEach(inter => this.raycast.lineTo(inter.x, inter.y));
 
       if(this._follow) {
-        this.light.x = this.sprite.x - this.light.width/2;
-        this.light.y = this.sprite.y - this.light.height/2;
+        this.light.x = this.sprite.x - this.light.width / 2;
+        this.light.y = this.sprite.y - this.light.height / 2;
       }
     });
     elapsedTime = 0;

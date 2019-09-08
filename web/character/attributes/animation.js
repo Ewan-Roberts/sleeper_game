@@ -11,10 +11,12 @@ class Animation {
   }
 
   switch(action) {
-    if (this.state === action) return;
+    if(this.state === action) {
+      return;
+    }
     let mixed_action;
     if(this.prefix) {
-      mixed_action = this.prefix+'_'+action;
+      mixed_action = this.prefix + '_' + action;
     } else {
       mixed_action = action;
     }
@@ -28,20 +30,32 @@ class Animation {
     this.sprite.rotation = radian(point, this.sprite);
   }
 
-  ready()  { this.switch('shoot');  }
-  wait()   { this.switch('wait');   }
+  ready()  {
+    this.switch('shoot');
+  }
+  wait()   {
+    this.switch('wait');
+  }
   idle()   {
     this.events.emit('idle');
     this.switch('idle');
   }
-  eat()    { this.switch('eat');    }
-  move()   { this.switch('move');   }
+  eat()    {
+    this.switch('eat');
+  }
+  move()   {
+    this.switch('move');
+  }
   walk()   {
     this.events.emit('walk');
     this.switch('move');
   }
-  attack() { this.switch('attack'); }
-  speed(value) { this.sprite.animationSpeed = value; }
+  attack() {
+    this.switch('attack');
+  }
+  speed(value) {
+    this.sprite.animationSpeed = value;
+  }
   kill() {
     this.switch('death');
     this.sprite.loop = false;

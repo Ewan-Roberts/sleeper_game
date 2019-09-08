@@ -14,8 +14,8 @@ class Background extends extras.TilingSprite {
     this.width  = width;
     this.height = height;
     this.alpha  = alpha;
-    this.anchor.set(0,1);
-    this.position.copy({x,y});
+    this.anchor.set(0, 1);
+    this.position.copy({ x, y });
 
     if(image_name === 'tile_floor') {
       this.tileScale.x = 0.10;

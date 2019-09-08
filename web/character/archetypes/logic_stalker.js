@@ -19,7 +19,9 @@ class Stalker extends LogicZombie {
   }
 
   set floor_hands(value) {
-    if(!value) this.destroy();
+    if(!value) {
+      this.destroy();
+    }
 
     this.hand_tween      = tweenManager.createTween(this);
     this.hand_tween.loop = true;
@@ -27,12 +29,12 @@ class Stalker extends LogicZombie {
     this.hand_tween.expire = true;
 
     let hand_state = true;
-    this.hand_tween.on('repeat',() => {
+    this.hand_tween.on('repeat', () => {
       const hands = new FadeSprite({
         ...this,
-        image_name: hand_state?'left_hand':'right_hand',
-        width:  35,
-        height: 35,
+        'image_name': hand_state ? 'left_hand' : 'right_hand',
+        'width'     : 35,
+        'height'    : 35,
       });
       hands.rotation = this.rotation + 1.5,
       hands.position.copy(this);
@@ -40,11 +42,13 @@ class Stalker extends LogicZombie {
 
       decals.addChild(hands);
 
-      if(this.floor_words) random_word({
-        point: this,
-        size: 10,
-        closeness: 40,
-      });
+      if(this.floor_words) {
+        random_word({
+          'point'    : this,
+          'size'     : 10,
+          'closeness': 40,
+        });
+      }
 
       hand_state = !hand_state;
     });
@@ -57,7 +61,9 @@ class Stalker extends LogicZombie {
   }
 
   remove() {
-    if(this.hand_tween) this.hand_tween.remove();
+    if(this.hand_tween) {
+      this.hand_tween.remove();
+    }
     this.remove_next_tick = true;
     this.tween.remove();
   }

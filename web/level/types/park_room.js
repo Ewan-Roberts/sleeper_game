@@ -38,7 +38,9 @@ class ParkRoom  {
     this.zombie_pad = this.exit_pad.find(pad => pad.id === 207);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _set_elements() {

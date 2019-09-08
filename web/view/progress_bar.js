@@ -6,7 +6,7 @@ const { Container    } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
-container.x = viewport.screenWidth/2;
+container.x = viewport.screenWidth / 2;
 container.y = viewport.screenHeight;
 
 const background = new Sprite(Texture.WHITE);
@@ -20,7 +20,7 @@ const maximum_width = background.width - 20;
 const bar = new Sprite(Texture.WHITE);
 bar.width = 0;
 bar.height = 15;
-bar.x -= maximum_width/2;
+bar.x -= maximum_width / 2;
 bar.y -= 5;
 bar.anchor.set(0, 1);
 bar.tint = 0x9acd3;
@@ -44,12 +44,12 @@ class ProgressBar {
   }
 
   static set percentage(percentage) {
-    const amount = (maximum_width)*percentage;
+    const amount = (maximum_width) * percentage;
     bar.width = amount;
   }
 
   static get percentage() {
-    const percentage = (bar.width/maximum_width);
+    const percentage = (bar.width / maximum_width);
     return percentage;
   }
 
@@ -63,7 +63,9 @@ class ProgressBar {
   }
 
   static pause() {
-    if(tween_bar) tween_bar.stop();
+    if(tween_bar) {
+      tween_bar.stop();
+    }
   }
 
   static get time_to_complete() {
@@ -88,10 +90,12 @@ class ProgressBar {
   }
 
   static to_percentage(end_percentage) {
-    if(tween_bar.active) return;
+    if(tween_bar.active) {
+      return;
+    }
 
     tween_bar.time = this.time_to_complete;
-    tween_bar.to({ width: maximum_width });
+    tween_bar.to({ 'width': maximum_width });
 
     tween_bar.on('update', () => {
       if(this.percentage > end_percentage) {

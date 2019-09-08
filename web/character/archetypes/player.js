@@ -13,12 +13,12 @@ const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
 const event               = require('events');
 
-const create_texture =
-  (name, i) =>
+const create_texture
+  = (name, i) =>
     Array(i)
       .fill(name)
       .map(
-        (filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j)
+        (filler, j) => Texture.fromFrame(j < 10 ? filler + '0' + j : filler + j)
       );
 const nothing_idle = create_texture('Armature_nothing_idle_', 37);
 
@@ -42,23 +42,29 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
 
-    damage_events.on('damage', ({id, damage}) => {
-      if(this.id !== id) return;
+    damage_events.on('damage', ({ id, damage }) => {
+      if(this.id !== id) {
+        return;
+      }
       this.damage(damage);
     });
 
     item_events.on('give', (id, {
-      item: { name, condition },
+      'item': { name, condition },
     }) => {
-      if(this.id !== id) return;
+      if(this.id !== id) {
+        return;
+      }
       const found_item = Item_Manager.get_item(name, { condition });
       this.inventory.give(found_item);
     });
 
     item_events.on('equip_weapon', (id, {
-      item: { image_name },
+      'item': { image_name },
     }) => {
-      if(this.id !== id) return;
+      if(this.id !== id) {
+        return;
+      }
       const found_item = Item_Manager.get_item(image_name);
       this.inventory.equip_weapon(found_item);
 
@@ -82,7 +88,7 @@ class Player extends extras.AnimatedSprite {
   }
 
   _set_sounds() {
-    this.walk_sound = sound.find('walk_normal', {loop: true});
+    this.walk_sound = sound.find('walk_normal', { 'loop': true });
     this.walk_sound.volume = 0.04;
   }
 
@@ -90,8 +96,12 @@ class Player extends extras.AnimatedSprite {
     this.events.emit('hit');
 
     this.vitals.damage(damage);
-    if(Math.random() >= 0.5) new Blood(this.position);
-    if(this.vitals.alive) return;
+    if(Math.random() >= 0.5) {
+      new Blood(this.position);
+    }
+    if(this.vitals.alive) {
+      return;
+    }
 
     this.events.emit('killed');
 

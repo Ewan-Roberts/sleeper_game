@@ -19,13 +19,13 @@ class Door extends Element {
     this.buttonMode = true;
     this.add_component(new Vitals());
     this.state = new StateMachine({
-      init: 'closed',
-      transitions: [
-        { name: 'lock',   from: 'closed',  to: 'locked' },
-        { name: 'unlock', from: 'locked',  to: 'closed' },
-        { name: 'open',   from: 'closed',  to: 'opened' },
-        { name: 'close',  from: 'opened',  to: 'closed' },
-        { name: 'goto',   from: '*',       to: s => s },
+      'init'       : 'closed',
+      'transitions': [
+        { 'name': 'lock',   'from': 'closed',  'to': 'locked' },
+        { 'name': 'unlock', 'from': 'locked',  'to': 'closed' },
+        { 'name': 'open',   'from': 'closed',  'to': 'opened' },
+        { 'name': 'close',  'from': 'opened',  'to': 'closed' },
+        { 'name': 'goto',   'from': '*',       'to': s => s },
       ],
     });
 
@@ -56,11 +56,17 @@ class Door extends Element {
 
     this.rotation_on_interaction = data.open_rotation || 2;
 
-    if(data.label) this.overlay(data);
-    if(data.door)  this.pathfind_logic();
+    if(data.label) {
+      this.overlay(data);
+    }
+    if(data.door)  {
+      this.pathfind_logic();
+    }
 
-    damage_events.on('damage', ({id,damage}) => {
-      if(this.id !== id) return;
+    damage_events.on('damage', ({ id, damage }) => {
+      if(this.id !== id) {
+        return;
+      }
       this.damage(damage);
     });
 
@@ -68,7 +74,9 @@ class Door extends Element {
   }
 
   open() {
-    if(this.state.is('motion')) return;
+    if(this.state.is('motion')) {
+      return;
+    }
 
     this.state.open();
     this._open();
@@ -101,7 +109,9 @@ class Door extends Element {
     this.vitals.damage(damage);
     this.wood_thump.play();
 
-    if(!this.vitals.alive) this.kill();
+    if(!this.vitals.alive) {
+      this.kill();
+    }
   }
 
   kill() {
@@ -162,13 +172,13 @@ class Door extends Element {
     this.door = true;
     this.health = 50;
 
-    damage_events.on('damage_tile', ({door_tile, damage}) => {
+    damage_events.on('damage_tile', ({ door_tile, damage }) => {
       door_tile.alpha = 0.6;
       if(door_tile.id === this.id) {
         if(this.health < 30) {
           delete door_tile.door;
           this.visible = false;
-          const broken_door = new Floor({image_name: 'door_broken'});
+          const broken_door = new Floor({ 'image_name': 'door_broken' });
 
           broken_door.position.copy(this);
         }

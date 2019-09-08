@@ -14,8 +14,8 @@ class Item_Manager {
     const number_of_items_to_return = random_number(min, max);
     const item_array = [];
 
-    for(let i = 0; i < number_of_items_to_return; i++) {
-      item_array.push(items[Math.floor(Math.random()*items.length)]);
+    for (let i = 0; i < number_of_items_to_return; i++) {
+      item_array.push(items[Math.floor(Math.random() * items.length)]);
     }
 
     return item_array;
@@ -34,7 +34,9 @@ class Item_Manager {
   static get_item(name, { condition } = {}) {
     const found_item = items.find(item => (item.name === name || item.image_name === name));
 
-    if(!found_item) throw new Error('No item found for ' + JSON.stringify(name));
+    if(!found_item) {
+      throw new Error('No item found for ' + JSON.stringify(name));
+    }
 
     found_item.condition = condition;
 
@@ -64,7 +66,9 @@ class Item_Manager {
     const item = this.get_item(name);
     const image_name = item.image_name || name;
 
-    if(!image_name) throw new Error('Can not find ' + name);
+    if(!image_name) {
+      throw new Error('Can not find ' + name);
+    }
 
     const found_sprite = new Sprite.fromFrame(image_name);
 

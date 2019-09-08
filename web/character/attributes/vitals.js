@@ -2,7 +2,7 @@ const { env } = require('../../../config');
 
 class Vitals {
   constructor() {
-    this.name   ='vitals';
+    this.name   = 'vitals';
     this.power  = 5000;
     this.speed  = env.player_speed;
     this.health = 150;
@@ -18,7 +18,9 @@ class Vitals {
   }
 
   _kill() {
-    if (this.status === 'dead') return;
+    if(this.status === 'dead') {
+      return;
+    }
     this.status = 'dead';
   }
 
@@ -29,12 +31,18 @@ class Vitals {
   }
 
   damage(damage) {
-    if (!damage) throw new Error('No damage being recieved');
-    if(this.status === 'dead') return;
+    if(!damage) {
+      throw new Error('No damage being recieved');
+    }
+    if(this.status === 'dead') {
+      return;
+    }
 
 
     this.health -= damage;
-    if(this.health < 0) this._kill();
+    if(this.health < 0) {
+      this._kill();
+    }
   }
 }
 

@@ -22,7 +22,9 @@ class Box extends Sprite {
 
 class MeleeBox{
   slash(speed, damage, origin) {
-    if(this.tween) this.tween.remove();
+    if(this.tween) {
+      this.tween.remove();
+    }
     this.box = new Box();
     this.box.position.copy(origin);
     this.box.alpha = 1;
@@ -34,7 +36,9 @@ class MeleeBox{
     this.tween.delay  = speed;
 
     this.tween.on('update', delta => {
-      if(delta > this.tween.time) this.tween.remove();
+      if(delta > this.tween.time) {
+        this.tween.remove();
+      }
 
       this.box.position.copy(origin);
       this.box.alpha = 1;
@@ -45,7 +49,7 @@ class MeleeBox{
       if(player) {
         if(player.id !== origin.id) {
           this.box.alpha = 0.2;
-          damage_events.emit('damage', {id: player.id, damage});
+          damage_events.emit('damage', { 'id': player.id, damage });
           this.tween.active = false;
           this.tween.remove();
           return;
@@ -56,18 +60,18 @@ class MeleeBox{
       if(found) {
         if(found.id !== origin.id) {
           this.box.alpha = 0.2;
-          damage_events.emit('damage', {id: found.id, damage});
+          damage_events.emit('damage', { 'id': found.id, damage });
           this.tween.active = false;
           this.tween.remove();
           return;
         }
       }
 
-      const item = items.children.find(item=> this.box.containsPoint(item.getGlobalPosition()));
+      const item = items.children.find(item => this.box.containsPoint(item.getGlobalPosition()));
       if(item) {
         if(item.id !== origin.id) {
           this.box.alpha = 0.2;
-          damage_events.emit('damage', {id: item.id, damage});
+          damage_events.emit('damage', { 'id': item.id, damage });
           this.tween.active = false;
           this.tween.remove();
           return;

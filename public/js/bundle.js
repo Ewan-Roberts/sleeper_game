@@ -21,89 +21,89 @@ class EnvironmentConfig {
 }
 
 const options = {
-  prod: new EnvironmentConfig({
-    dev:                false,
-    fps:                0.06,
-    resolution:         1,
-    anti_alias:         true,
-    background_color:   0xffffff, // black
-    keyboard_additions: false,
-    visable_pads:       false,
-    visable_borders:    false,
-    brightness:         1,
-    inventory_openable: false,
-    level_on_load:      'start',
-    draw_paths:         false,
-    player_speed:       4,
-    round_pixels:       true,
-    sound_muted:        false,
-    volume_multiplier:  1,
-    show_grid:          false,
+  'prod': new EnvironmentConfig({
+    'dev'               : false,
+    'fps'               : 0.06,
+    'resolution'        : 1,
+    'anti_alias'        : true,
+    'background_color'  : 0xffffff, // black
+    'keyboard_additions': false,
+    'visable_pads'      : false,
+    'visable_borders'   : false,
+    'brightness'        : 1,
+    'inventory_openable': false,
+    'level_on_load'     : 'start',
+    'draw_paths'        : false,
+    'player_speed'      : 4,
+    'round_pixels'      : true,
+    'sound_muted'       : false,
+    'volume_multiplier' : 1,
+    'show_grid'         : false,
   }),
 
-  dev_low: new EnvironmentConfig({
-    dev:                true,
-    fps:                0.06,
-    resolution:         0.1,
-    anti_alias:         false,
-    background_color:   0x0066CC, // blue
-    keyboard_additions: true,
-    visable_pads:       true,
-    visable_borders:    true,
-    brightness:         0.2,
-    inventory_openable: false,
-    level_on_load:      'transition',
-    draw_paths:         true,
-    player_speed:       309,
-    round_pixels:       true,
-    sound_muted:        true,
-    volume_multiplier:  0.1,
-    show_grid:          true,
+  'dev_low': new EnvironmentConfig({
+    'dev'               : true,
+    'fps'               : 0.06,
+    'resolution'        : 0.1,
+    'anti_alias'        : false,
+    'background_color'  : 0x0066CC, // blue
+    'keyboard_additions': true,
+    'visable_pads'      : true,
+    'visable_borders'   : true,
+    'brightness'        : 0.2,
+    'inventory_openable': false,
+    'level_on_load'     : 'transition',
+    'draw_paths'        : true,
+    'player_speed'      : 309,
+    'round_pixels'      : true,
+    'sound_muted'       : true,
+    'volume_multiplier' : 0.1,
+    'show_grid'         : true,
   }),
 
-  dev_medium: new EnvironmentConfig({
-    dev:                true,
-    fps:                0.03,
-    resolution:         0.4,
-    anti_alias:         false,
-    background_color:   0xffffff, // blue
-    keyboard_additions: true,
-    visable_pads:       true,
-    visable_borders:    true,
-    brightness:         1,
-    inventory_openable: false,
-    level_on_load:      'transition',
-    draw_paths:         false,
-    player_speed:       309,
-    round_pixels:       true,
-    sound_muted:        false,
-    volume_multiplier:  0.7,
-    show_grid:          true,
+  'dev_medium': new EnvironmentConfig({
+    'dev'               : true,
+    'fps'               : 0.03,
+    'resolution'        : 0.4,
+    'anti_alias'        : false,
+    'background_color'  : 0xffffff, // blue
+    'keyboard_additions': true,
+    'visable_pads'      : true,
+    'visable_borders'   : true,
+    'brightness'        : 1,
+    'inventory_openable': false,
+    'level_on_load'     : 'defend',
+    'draw_paths'        : true,
+    'player_speed'      : 309,
+    'round_pixels'      : true,
+    'sound_muted'       : false,
+    'volume_multiplier' : 0.7,
+    'show_grid'         : true,
   }),
 
-  dev_high: new EnvironmentConfig({
-    dev:                true,
-    fps:                0.06,
-    resolution:         1,
-    anti_alias:         false,
-    background_color:   0x0066CC, // blue
-    keyboard_additions: true,
-    visable_pads:       true,
-    visable_borders:    true,
-    brightness:         0.5,
-    inventory_openable: false,
-    level_on_load:      'transition',
-    draw_paths:         true,
-    player_speed:       30,
-    round_pixels:       true,
-    sound_muted:        false,
-    volume_multiplier:  0.9,
-    show_grid:          true,
+  'dev_high': new EnvironmentConfig({
+    'dev'               : true,
+    'fps'               : 0.06,
+    'resolution'        : 1,
+    'anti_alias'        : false,
+    'background_color'  : 0x0066CC, // blue
+    'keyboard_additions': true,
+    'visable_pads'      : true,
+    'visable_borders'   : true,
+    'brightness'        : 0.5,
+    'inventory_openable': false,
+    'level_on_load'     : 'transition',
+    'draw_paths'        : true,
+    'player_speed'      : 30,
+    'round_pixels'      : true,
+    'sound_muted'       : false,
+    'volume_multiplier' : 0.9,
+    'show_grid'         : true,
   }),
 };
 
 function get_dev_config(name) {
-  switch(name) {
+  switch (name) {
     case 'prod':
       return options.prod;
     case 'dev_low':
@@ -44289,20 +44289,20 @@ module.exports = {
 };
 
 },{"pixi.js":152}],200:[function(require,module,exports){
-const { Texture, sound } = require('pixi.js');
+const { Texture } = require('pixi.js');
 
-const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
+const create_texture = (name, i) => Array(i).fill(name).map((filler, j) => Texture.fromFrame(j < 10 ? filler + '0' + j : filler + j));
 const human_frames = {
-  nothing_idle : create_texture('Armature_nothing_idle_', 37),
-  nothing_move : create_texture('Armature_nothing_walk_', 49),
-  candle_idle  : create_texture('Armature_candle_idle_', 37),
-  candle_move  : create_texture('Armature_candle_walk_', 49),
-  bow_idle     : create_texture('survivor-bow-idle-', 22),
-  bow_move     : create_texture('survivor-walk_bow_', 21),
-  bow_shoot    : create_texture('survivor-bow-pull-', 35),
-  knife_idle   : Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i)),
-  knife_move   : Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i)),
-  knife_attack : Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name+i)),
+  'nothing_idle': create_texture('Armature_nothing_idle_', 37),
+  'nothing_move': create_texture('Armature_nothing_walk_', 49),
+  'candle_idle' : create_texture('Armature_candle_idle_', 37),
+  'candle_move' : create_texture('Armature_candle_walk_', 49),
+  'bow_idle'    : create_texture('survivor-bow-idle-', 22),
+  'bow_move'    : create_texture('survivor-walk_bow_', 21),
+  'bow_shoot'   : create_texture('survivor-bow-pull-', 35),
+  'knife_idle'  : Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name + i)),
+  'knife_move'  : Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name + i)),
+  'knife_attack': Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name + i)),
 };
 
 class PlayerAnimation {
@@ -44316,13 +44316,15 @@ class PlayerAnimation {
   }
 
   _set_sound() {
-    //this.walk_sound = sound.find('walk_normal');
+    // this.walk_sound = sound.find('walk_normal');
     // this.walk_sound.loop = true;
     // this.walk_sound.volume = 0.05;
   }
 
   switch(action) {
-    if (this.state === action) return;
+    if(this.state === action) {
+      return;
+    }
     this.sprite.textures = human_frames[action];
 
     this.sprite.play();
@@ -44346,7 +44348,7 @@ class PlayerAnimation {
 
   walk() {
     if(!this.walk_sound.isPlaying) {
-      //this.walk_sound.play();
+      // this.walk_sound.play();
     }
     this.switch(this.prefix + '_walk');
   }
@@ -44355,9 +44357,13 @@ class PlayerAnimation {
     this.switch(this.prefix + '_walk');
   }
 
-  set current_weapon(weapon) { this.weapon = weapon; }
+  set current_weapon(weapon) {
+    this.weapon = weapon;
+  }
 
-  get current_weapon() { return this.weapon; }
+  get current_weapon() {
+    return this.weapon;
+  }
 }
 
 module.exports = {
@@ -44433,11 +44439,11 @@ class rat_animations {
 }
 
 const rodent_frames = {
-  move:   rat_animations.move_frames(),
-  attack: rat_animations.eat_frames(),
-  death:  rat_animations.dead_frames(),
-  eat:    rat_animations.eat_frames(),
-  idle:   rat_animations.wait_frames(),
+  'move'  : rat_animations.move_frames(),
+  'attack': rat_animations.eat_frames(),
+  'death' : rat_animations.dead_frames(),
+  'eat'   : rat_animations.eat_frames(),
+  'idle'  : rat_animations.wait_frames(),
 };
 
 
@@ -44448,14 +44454,14 @@ module.exports = {
 },{"pixi.js":152}],202:[function(require,module,exports){
 
 const { Texture } = require('pixi.js');
-const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
+const create_texture = (name, i) => Array(i).fill(name).map((filler, j) => Texture.fromFrame(j < 10 ? filler + '0' + j : filler + j));
 
 const zombie_frames = {
-  move:   create_texture('walk00', 32),
-  attack: create_texture('attack01_00', 20),
-  death:  create_texture('death01_00', 16),
-  eat:    create_texture('eating00', 24),
-  idle:   create_texture('idle00', 32),
+  'move'  : create_texture('walk00', 32),
+  'attack': create_texture('attack01_00', 20),
+  'death' : create_texture('death01_00', 16),
+  'eat'   : create_texture('eating00', 24),
+  'idle'  : create_texture('idle00', 32),
 };
 
 module.exports = {
@@ -44484,7 +44490,9 @@ class Stalker extends LogicZombie {
   }
 
   set floor_hands(value) {
-    if(!value) this.destroy();
+    if(!value) {
+      this.destroy();
+    }
 
     this.hand_tween      = tweenManager.createTween(this);
     this.hand_tween.loop = true;
@@ -44492,12 +44500,12 @@ class Stalker extends LogicZombie {
     this.hand_tween.expire = true;
 
     let hand_state = true;
-    this.hand_tween.on('repeat',() => {
+    this.hand_tween.on('repeat', () => {
       const hands = new FadeSprite({
         ...this,
-        image_name: hand_state?'left_hand':'right_hand',
-        width:  35,
-        height: 35,
+        'image_name': hand_state ? 'left_hand' : 'right_hand',
+        'width'     : 35,
+        'height'    : 35,
       });
       hands.rotation = this.rotation + 1.5,
       hands.position.copy(this);
@@ -44505,11 +44513,13 @@ class Stalker extends LogicZombie {
 
       decals.addChild(hands);
 
-      if(this.floor_words) random_word({
-        point: this,
-        size: 10,
-        closeness: 40,
-      });
+      if(this.floor_words) {
+        random_word({
+          'point'    : this,
+          'size'     : 10,
+          'closeness': 40,
+        });
+      }
 
       hand_state = !hand_state;
     });
@@ -44522,7 +44532,9 @@ class Stalker extends LogicZombie {
   }
 
   remove() {
-    if(this.hand_tween) this.hand_tween.remove();
+    if(this.hand_tween) {
+      this.hand_tween.remove();
+    }
     this.remove_next_tick = true;
     this.tween.remove();
   }
@@ -44550,8 +44562,6 @@ class LogicZombie extends LogicSprite {
 module.exports = {
   LogicZombie,
 };
-
-
 
 
 },{"../animations/zombie":202,"../attributes/animation":208,"../types/logic":213}],205:[function(require,module,exports){
@@ -44610,7 +44620,6 @@ module.exports = {
 };
 
 
-
 },{"../animations/rat":201,"../attributes/animation":208,"../types/path":214}],207:[function(require,module,exports){
 const { extras, Texture } = require('pixi.js');
 const { sound           } = require('pixi.js');
@@ -44627,12 +44636,12 @@ const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
 const event               = require('events');
 
-const create_texture =
-  (name, i) =>
+const create_texture
+  = (name, i) =>
     Array(i)
       .fill(name)
       .map(
-        (filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j)
+        (filler, j) => Texture.fromFrame(j < 10 ? filler + '0' + j : filler + j)
       );
 const nothing_idle = create_texture('Armature_nothing_idle_', 37);
 
@@ -44656,23 +44665,29 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
 
-    damage_events.on('damage', ({id, damage}) => {
-      if(this.id !== id) return;
+    damage_events.on('damage', ({ id, damage }) => {
+      if(this.id !== id) {
+        return;
+      }
       this.damage(damage);
     });
 
     item_events.on('give', (id, {
-      item: { name, condition },
+      'item': { name, condition },
     }) => {
-      if(this.id !== id) return;
+      if(this.id !== id) {
+        return;
+      }
       const found_item = Item_Manager.get_item(name, { condition });
       this.inventory.give(found_item);
     });
 
     item_events.on('equip_weapon', (id, {
-      item: { image_name },
+      'item': { image_name },
     }) => {
-      if(this.id !== id) return;
+      if(this.id !== id) {
+        return;
+      }
       const found_item = Item_Manager.get_item(image_name);
       this.inventory.equip_weapon(found_item);
 
@@ -44696,7 +44711,7 @@ class Player extends extras.AnimatedSprite {
   }
 
   _set_sounds() {
-    this.walk_sound = sound.find('walk_normal', {loop: true});
+    this.walk_sound = sound.find('walk_normal', { 'loop': true });
     this.walk_sound.volume = 0.04;
   }
 
@@ -44704,8 +44719,12 @@ class Player extends extras.AnimatedSprite {
     this.events.emit('hit');
 
     this.vitals.damage(damage);
-    if(Math.random() >= 0.5) new Blood(this.position);
-    if(this.vitals.alive) return;
+    if(Math.random() >= 0.5) {
+      new Blood(this.position);
+    }
+    if(this.vitals.alive) {
+      return;
+    }
 
     this.events.emit('killed');
 
@@ -44742,10 +44761,12 @@ class Animation {
   }
 
   switch(action) {
-    if (this.state === action) return;
+    if(this.state === action) {
+      return;
+    }
     let mixed_action;
     if(this.prefix) {
-      mixed_action = this.prefix+'_'+action;
+      mixed_action = this.prefix + '_' + action;
     } else {
       mixed_action = action;
     }
@@ -44759,20 +44780,32 @@ class Animation {
     this.sprite.rotation = radian(point, this.sprite);
   }
 
-  ready()  { this.switch('shoot');  }
-  wait()   { this.switch('wait');   }
+  ready()  {
+    this.switch('shoot');
+  }
+  wait()   {
+    this.switch('wait');
+  }
   idle()   {
     this.events.emit('idle');
     this.switch('idle');
   }
-  eat()    { this.switch('eat');    }
-  move()   { this.switch('move');   }
+  eat()    {
+    this.switch('eat');
+  }
+  move()   {
+    this.switch('move');
+  }
   walk()   {
     this.events.emit('walk');
     this.switch('move');
   }
-  attack() { this.switch('attack'); }
-  speed(value) { this.sprite.animationSpeed = value; }
+  attack() {
+    this.switch('attack');
+  }
+  speed(value) {
+    this.sprite.animationSpeed = value;
+  }
   kill() {
     this.switch('death');
     this.sprite.loop = false;
@@ -44794,9 +44827,11 @@ class Inventory extends View_Inventory {
     this.name     = 'inventory';
     this.items    = random ? Item_Manager.get_random_items() : [];
     this.equipped = equip ? Item_Manager.get_item(equip) : null;
-    if(!items) return;
+    if(!items) {
+      return;
+    }
     this.items = JSON.parse(items).map(
-      ({name, condition}) => Item_Manager.get_item(name, { condition })
+      ({ name, condition }) => Item_Manager.get_item(name, { condition })
     );
     console.log(this.items);
 
@@ -44804,7 +44839,9 @@ class Inventory extends View_Inventory {
   }
 
   populate() {
-    if(this.items.length === 0) return;
+    if(this.items.length === 0) {
+      return;
+    }
     this.populate_slots(this.items);
   }
 
@@ -44891,15 +44928,19 @@ class Inventory extends View_Inventory {
   }
 
   give(item) {
-    if(!item) throw 'can not give nothing';
+    if(!item) {
+      throw 'can not give nothing';
+    }
     this.items.push(item);
   }
 
   take_by_name(name) {
     const index = this.items.findIndex(item => item.name === name);
-    if(index < 0) return undefined;
+    if(index < 0) {
+      return undefined;
+    }
 
-    const [result] = this.items.splice(index,1);
+    const [ result ] = this.items.splice(index, 1);
     return result;
   }
 }
@@ -44923,19 +44964,25 @@ const {
 
 function point_collides(position) {
   const collision_hit = collisions.children.find(child => child.containsPoint(position));
-  if(collision_hit) return true;
+  if(collision_hit) {
+    return true;
+  }
 
   const border_hit = borders.children.find(child => child.containsPoint(position));
-  if(border_hit) return true;
+  if(border_hit) {
+    return true;
+  }
 
   const item_hit = items.children.find(child => child.containsPoint(position));
-  if(item_hit) return true;
+  if(item_hit) {
+    return true;
+  }
 
   return false;
 }
 
-//TODO this could be more performant using proximity
-//and this logic should be split out or put in ceiling
+// TODO this could be more performant using proximity
+// and this logic should be split out or put in ceiling
 function point_contains(player) {
   const point = player.getGlobalPosition();
   const pad = pads.children.find(child => child.containsPoint(point));
@@ -44945,13 +44992,15 @@ function point_contains(player) {
     return pad.speed;
   }
 
-  if(env.dev) return 30;
+  if(env.dev) {
+    return 30;
+  }
   return 3;
 }
 
 class Keyboard {
   constructor(sprite) {
-    const { animation, vitals, inventory} = sprite;
+    const { animation, vitals, inventory } = sprite;
     this.name           = 'keyboard';
     this.sprite         = sprite;
     this.animation      = animation;
@@ -44963,7 +45012,9 @@ class Keyboard {
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
 
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   destroy() {
@@ -44971,10 +45022,12 @@ class Keyboard {
   }
 
   key_down(key) {
-    if(!keyboardManager.isEnabled) return;
+    if(!keyboardManager.isEnabled) {
+      return;
+    }
     this.establish_direction();
 
-    switch(key) {
+    switch (key) {
       case 87: return this.keyboard_up();    // w
       case 83: return this.keyboard_down();  // s
       case 65: return this.keyboard_left();  // a
@@ -44988,7 +45041,9 @@ class Keyboard {
     const a = keyboardManager.isDown(65);
     const s = keyboardManager.isDown(83);
     const d = keyboardManager.isDown(68);
-    if(!w && !a && !s && !d) this.animation.idle();
+    if(!w && !a && !s && !d) {
+      this.animation.idle();
+    }
   }
 
   establish_direction() {
@@ -44996,25 +45051,43 @@ class Keyboard {
     const a = keyboardManager.isDown(65);
     const s = keyboardManager.isDown(83);
     const d = keyboardManager.isDown(68);
-    if(w && a) return this.sprite.rotation = -2.5;
-    if(w && d) return this.sprite.rotation = -0.8;
-    if(s && a) return this.sprite.rotation = 2.5;
-    if(s && d) return this.sprite.rotation = 1;
-    if(w)      return this.sprite.rotation = -2;  // up
-    if(a)      return this.sprite.rotation = -3;  // left
-    if(s)      return this.sprite.rotation = 1.5; // down
-    if(d)      return this.sprite.rotation = 0;   // right
+    if(w && a) {
+      return this.sprite.rotation = -2.5;
+    }
+    if(w && d) {
+      return this.sprite.rotation = -0.8;
+    }
+    if(s && a) {
+      return this.sprite.rotation = 2.5;
+    }
+    if(s && d) {
+      return this.sprite.rotation = 1;
+    }
+    if(w)      {
+      return this.sprite.rotation = -2;
+    }  // up
+    if(a)      {
+      return this.sprite.rotation = -3;
+    }  // left
+    if(s)      {
+      return this.sprite.rotation = 1.5;
+    } // down
+    if(d)      {
+      return this.sprite.rotation = 0;
+    }   // right
   }
 
 
   increase_run_speed() {
-    if(env.keyboard_additions) return;
+    if(env.keyboard_additions) {
+      return;
+    }
     this.speed *= 1.5;
   }
 
   disable_for(time) {
     keyboardManager.disable();
-    setTimeout(()=> keyboardManager.enable(), time);
+    setTimeout(() => keyboardManager.enable(), time);
   }
 
   enable() {
@@ -45028,7 +45101,9 @@ class Keyboard {
   keyboard_up() {
     const point = this.sprite.getGlobalPosition();
     point.y -= this.buffer;
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.y -= this.speed;
@@ -45039,7 +45114,9 @@ class Keyboard {
   keyboard_down() {
     const point = this.sprite.getGlobalPosition();
     point.y += this.buffer;
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.y += this.speed;
@@ -45051,7 +45128,9 @@ class Keyboard {
     const point = this.sprite.getGlobalPosition();
     point.x -= this.buffer;
 
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.x -= this.speed;
@@ -45063,7 +45142,9 @@ class Keyboard {
   keyboard_right() {
     const point = this.sprite.getGlobalPosition();
     point.x += this.buffer;
-    if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) {
+      return this.animation.idle();
+    }
 
     this.speed = point_contains(this.sprite);
     this.sprite.x += this.speed;
@@ -45073,7 +45154,7 @@ class Keyboard {
 
   _set_dev_settings() {
     keyboardManager.on('down', key => {
-      switch(key) {
+      switch (key) {
         // vim
         case 75: return this.keyboard_up();    // k
         case 74: return this.keyboard_down();  // j
@@ -45111,9 +45192,13 @@ class Aiming_Cone extends Sprite {
   }
 
   narrow(time = 3000) {
-    if(this.tween) this.tween.remove();
+    if(this.tween) {
+      this.tween.remove();
+    }
     const tweens = tweenManager.getTweensForTarget(this);
-    if(tweens) tweens.forEach(tween => tween.remove());
+    if(tweens) {
+      tweens.forEach(tween => tween.remove());
+    }
 
     this.tween = tweenManager.createTween(this);
     this.tween.expire = true;
@@ -45124,11 +45209,11 @@ class Aiming_Cone extends Sprite {
     this.alpha   = 0;
 
     this.tween.from({
-      width: this.original_width,
-      alpha: 0,
+      'width': this.original_width,
+      'alpha': 0,
     }).to({
-      width: 5,
-      alpha: 0.3,
+      'width': 5,
+      'alpha': 0.3,
     });
 
     this.tween.on('update', () => {
@@ -45150,7 +45235,9 @@ class Aiming_Cone extends Sprite {
 
   finish() {
     this.visible = false;
-    if(this.tween) this.tween.remove();
+    if(this.tween) {
+      this.tween.remove();
+    }
   }
 }
 
@@ -45173,7 +45260,9 @@ class Mouse {
   }
 
   mouse_down(event) {
-    if(!event) return;
+    if(!event) {
+      return;
+    }
     const mouse_position = event.data.getLocalPosition(viewport);
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
@@ -45190,8 +45279,12 @@ class Mouse {
   }
 
   mouse_up(event) {
-    if(!event) return;
-    if(!event.data.originalEvent.shiftKey) return;
+    if(!event) {
+      return;
+    }
+    if(!event.data.originalEvent.shiftKey) {
+      return;
+    }
     const mouse_position = event.data.getLocalPosition(viewport);
 
     this.animation.idle();
@@ -45200,8 +45293,8 @@ class Mouse {
       const { angle } = this.cone;
       const angle_to_offset = random_bound(-angle, angle) || 29;
       shoot_arrow(200, 20, this.sprite, {
-        x: mouse_position.x + angle_to_offset,
-        y: mouse_position.y + angle_to_offset,
+        'x': mouse_position.x + angle_to_offset,
+        'y': mouse_position.y + angle_to_offset,
       });
       return;
     }
@@ -45213,8 +45306,12 @@ class Mouse {
   }
 
   mouse_move(event) {
-    if(!event) return;
-    if(this.keyboard_down) return;
+    if(!event) {
+      return;
+    }
+    if(this.keyboard_down) {
+      return;
+    }
     const mouse_position = event.data.getLocalPosition(viewport);
 
     const rotation = radian(mouse_position, this.sprite);
@@ -45233,7 +45330,7 @@ const { env } = require('../../../config');
 
 class Vitals {
   constructor() {
-    this.name   ='vitals';
+    this.name   = 'vitals';
     this.power  = 5000;
     this.speed  = env.player_speed;
     this.health = 150;
@@ -45249,7 +45346,9 @@ class Vitals {
   }
 
   _kill() {
-    if (this.status === 'dead') return;
+    if(this.status === 'dead') {
+      return;
+    }
     this.status = 'dead';
   }
 
@@ -45260,12 +45359,18 @@ class Vitals {
   }
 
   damage(damage) {
-    if (!damage) throw new Error('No damage being recieved');
-    if(this.status === 'dead') return;
+    if(!damage) {
+      throw new Error('No damage being recieved');
+    }
+    if(this.status === 'dead') {
+      return;
+    }
 
 
     this.health -= damage;
-    if(this.health < 0) this._kill();
+    if(this.health < 0) {
+      this._kill();
+    }
   }
 }
 
@@ -45295,7 +45400,7 @@ const { MeleeBox         } = require('../../engine/melee');
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
     if(path[i].door) {
-      path.length = i+1;
+      path.length = i + 1;
       return path;
     }
   }
@@ -45314,20 +45419,23 @@ class LogicSprite extends extras.AnimatedSprite {
     random,
     equip,
   }) {
-    super([Texture.fromFrame(image_name)]);
+    super([ Texture.fromFrame(image_name) ]);
     this.name = 'zombie';
     this.id   = id;
 
-    this.add_component(new Inventory({items,random,equip}));
+    this.add_component(new Inventory({ items, random, equip }));
     this.add_component(new Vitals());
     this.rotation_offset = 0;
     this.height = height || 100;
     this.width  = width || 100;
     this.anchor.set(0.5);
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
+    this._target = null;
 
-    damage_events.on('damage', ({id,damage}) => {
-      if(this.id !== id) return;
+    damage_events.on('damage', ({ id, damage }) => {
+      if(this.id !== id) {
+        return;
+      }
       this.damage(damage);
     });
 
@@ -45336,20 +45444,26 @@ class LogicSprite extends extras.AnimatedSprite {
 
   damage(damage) {
     this.vitals.damage(damage);
-    if(Math.random() >= 0.5) new Blood(this.position);
+    if(Math.random() >= 0.5) {
+      new Blood(this.position);
+    }
 
-    if(!this.vitals.alive) this.kill();
+    if(!this.vitals.alive) {
+      this.kill();
+    }
   }
 
   kill() {
-    if(this.tween) this.tween.stop();
+    if(this.tween) {
+      this.tween.stop();
+    }
     this.inventory.populate();
 
     this.interactive = true;
     this.button = new Button(this, {
-      label_action:      'Loot',
-      label_description: 'Corpse',
-      label_image:       'eye_icon',
+      'label_action'     : 'Loot',
+      'label_description': 'Corpse',
+      'label_image'      : 'eye_icon',
     });
 
     this.click = () => {
@@ -45362,13 +45476,14 @@ class LogicSprite extends extras.AnimatedSprite {
   }
 
   get _target_far_away() {
-    const distance = distance_between(this.target, this);
+    const distance = distance_between(this._target, this);
     return distance > 80;
   }
 
   // TODO change function name
   target(character) {
-    this.target = character;
+    this._target = character;
+    console.log(this.tween);
   }
 
   async _pathfind() {
@@ -45376,10 +45491,11 @@ class LogicSprite extends extras.AnimatedSprite {
 
     let normal_path;
     try {
-      normal_path = await pathfind.get_sprite_to_sprite_path(this, this.target);
-    } catch(err) {
+      normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);
+    } catch (err) {
       console.log(err);
     }
+
     if(!normal_path) {
       this.tween.time = 500;
       return;
@@ -45389,7 +45505,7 @@ class LogicSprite extends extras.AnimatedSprite {
     const door_tile = door_path[door_path.length - 1];
 
     const { damage } = this.inventory.equipped;
-    damage_events.emit('damage_tile', {door_tile, damage});
+    damage_events.emit('damage_tile', { door_tile, damage });
 
     this.tween.path.lineTo(
       door_path[0].x + 50,
@@ -45398,63 +45514,77 @@ class LogicSprite extends extras.AnimatedSprite {
 
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
-        door_path[i-1].x + 50,
-        door_path[i-1].y + 50,
+        door_path[i - 1].x + 50,
+        door_path[i - 1].y + 50,
         door_path[i].x + 50,
         door_path[i].y + 50,
         20);
     }
 
-    this.tween.time = door_path.length*500;
+    this.tween.time = door_path.length * 500;
   }
 
   // TODO: extract and refactor
   // too much going on
-  logic_start() {
+  logic_start({
+    time_on_sight    = 200,
+    time_on_pathfind = 4000,
+    time_on_attack   = 3000,
+  } = {}) {
     this.tween = tweenManager.createTween(this);
-    this.tween.time = 2000;
+    this.tween.time = 1000;
     this.tween.expire = true;
     this.tween.start();
 
     this.tween.on('end', async () => {
-      if(this.remove_next_tick) return;
+      if(this.remove_next_tick) {
+        return;
+      }
       this.tween.clear();
       this.tween.expire = true;
 
       if(!this._target_far_away) {
-        this.tween.time = 3000;
+        this.tween.time = time_on_attack;
         this.tween.start();
         this.animation.attack();
 
         // TODO
-        if(!this.target) throw 'set an enemy';
-        this.animation.face_point(this.target);
+        if(!this._target) {
+          throw 'set an enemy';
+        }
+        this.animation.face_point(this._target);
         this.melee = new MeleeBox();
 
-        damage_events.emit('damage', {id: this.target.id, damage: 10});
+        damage_events.emit('damage', { 'id': this._target.id, 'damage': 10 });
         return;
       }
 
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.x, this.y);
-      if(Sight.lineOfSight(this, this.target, collisions.children)) {
-        this.tween.path.lineTo(this.target.x, this.target.y);
+      if(Sight.lineOfSight(this, this._target, collisions.children)) {
+        this.tween.path.lineTo(this._target.x, this._target.y);
         this.animation.move();
 
-        this.tween.time = 200;
+        this.tween.time = time_on_sight;
       } else {
         await this._pathfind();
-        this.tween.time = 4000;
+        this.tween.time = time_on_pathfind;
       }
 
-      if(env.draw_paths) draw_path(this.tween.path);
+      if(env.draw_paths) {
+        draw_path(this.tween.path);
+      }
 
       this.tween.start();
     });
 
     this.tween.on('update', () => {
-      if(!this.vitals.alive) this.tween.remove();
-      if(!this.tween.path) return;
+      if(!this.vitals.alive) {
+        this.tween.remove();
+      }
+      if(!this.tween.path) {
+        return;
+      }
 
       this.rotation = radian(this, this.tween.path._tmpPoint) + this.rotation_offset;
     });
@@ -45485,7 +45615,7 @@ class PathSprite extends extras.AnimatedSprite {
     x,
     polyline,
   }) {
-    super([Texture.fromFrame(image_name || 'bird_8')]);
+    super([ Texture.fromFrame(image_name || 'bird_8') ]);
     this.id = id;
 
     this.rotation = 1;
@@ -45494,9 +45624,9 @@ class PathSprite extends extras.AnimatedSprite {
     this.tween = tweenManager.createTween(this);
     this.speed = speed;
 
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
     if(polyline) {
-      this.path = polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
+      this.path = polyline.map(({ x, y }) => ({ 'x': this.x + x, 'y': this.y + y }));
     }
     this.turn = true;
     enemys.addChild(this);
@@ -45506,8 +45636,8 @@ class PathSprite extends extras.AnimatedSprite {
     this.tween.path = new tween.TweenPath();
     for (let i = 1; i < path_array.length; i++) {
       this.tween.path.arcTo(
-        path_array[i-1].x,
-        path_array[i-1].y,
+        path_array[i - 1].x,
+        path_array[i - 1].y,
         path_array[i].x,
         path_array[i].y,
         50);
@@ -45536,8 +45666,12 @@ class PathSprite extends extras.AnimatedSprite {
   }
 
   set turn(bool) {
-    if(!bool) return;
-    if(!this.tween.path) return;
+    if(!bool) {
+      return;
+    }
+    if(!this.tween.path) {
+      return;
+    }
 
     this.tween.on('update', () => {
       this.rotation = radian(this, this.tween.path._tmpPoint) + 1.57;
@@ -45599,7 +45733,7 @@ class Fade {
     const movement  = tweenManager.createTween(sprite);
     movement.time   = 150;
     movement.expire = true;
-    movement.to({alpha: 1});
+    movement.to({ 'alpha': 1 });
     movement.start();
   }
 
@@ -45607,7 +45741,7 @@ class Fade {
     const movement  = tweenManager.createTween(sprite);
     movement.time   = 150;
     movement.expire = true;
-    movement.to({alpha: value});
+    movement.to({ 'alpha': value });
     movement.start();
     movement.on('end', () => movement.remove());
   }
@@ -45615,11 +45749,13 @@ class Fade {
   static out_destroy(sprite, time) {
     const tweens = tweenManager.getTweensForTarget(sprite);
 
-    if(tweens.length > 0) return;
+    if(tweens.length > 0) {
+      return;
+    }
     const movement  = tweenManager.createTween(sprite);
     movement.time   = time || 400;
     movement.expire = true;
-    movement.to({alpha: 0});
+    movement.to({ 'alpha': 0 });
     movement.on('end', () => {
       movement.remove();
       sprite.destroy();
@@ -45627,11 +45763,11 @@ class Fade {
     movement.start();
   }
 
-  static out(sprite, { time = 150,visible_on_end = false } = {}) {
+  static out(sprite, { time = 150, visible_on_end = false } = {}) {
     const movement  = tweenManager.createTween(sprite);
     movement.time   = time;
     movement.expire = true;
-    movement.to({alpha: 0});
+    movement.to({ 'alpha': 0 });
     movement.start();
 
     movement.on('end', () => {
@@ -45668,7 +45804,7 @@ class FadeSprite extends Sprite {
     this.height   = height;
     this.rotation = rotation * DEG_TO_RAD;
     this.anchor.set(0, 1);
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
 
     this.tween       = tweenManager.createTween(this);
     this.tween.delay = delay;
@@ -45696,8 +45832,8 @@ class FadeSprite extends Sprite {
     this.tween.reset();
     this.tween.time = time;
     this.tween
-      .from({alpha: 0})
-      .to({alpha: 1});
+      .from({ 'alpha': 0 })
+      .to({ 'alpha': 1 });
 
     this.tween.start();
   }
@@ -45706,12 +45842,14 @@ class FadeSprite extends Sprite {
     this.tween.reset();
     this.tween.time = time;
     this.tween
-      .from({alpha: this.alpha})
-      .to({alpha: 0});
+      .from({ 'alpha': this.alpha })
+      .to({ 'alpha': 0 });
 
     this.tween.on('end', () => {
       this.tween.remove();
-      if(this) this.destroy();
+      if(this) {
+        this.destroy();
+      }
     });
 
     this.tween.start();
@@ -45720,15 +45858,17 @@ class FadeSprite extends Sprite {
   _bounce_down(time = 200) {
     this.tween.reset();
     this.tween.time = time;
-    this.tween.to({y: this.y+3});
+    this.tween.to({ 'y': this.y + 3 });
     this.tween.start();
   }
 
   _bounce_up(time = 200) {
-    if(this._destroyed) return;
+    if(this._destroyed) {
+      return;
+    }
     this.tween.reset();
     this.tween.time = time;
-    this.tween.to({y: this.y-3});
+    this.tween.to({ 'y': this.y - 3 });
 
     this.tween.start();
     this.tween.on('end', () => this.fade_out(500));
@@ -45743,8 +45883,12 @@ class FadeSprite extends Sprite {
 
 
   bounce() {
-    if(this._destroyed) return;
-    if(!this) return;
+    if(this._destroyed) {
+      return;
+    }
+    if(!this) {
+      return;
+    }
     this._bounce_down();
     this.tween.on('end', () => {
       this.tween.reset();
@@ -45755,7 +45899,7 @@ class FadeSprite extends Sprite {
 }
 
 function fill_screen_at(point, tint) {
-  const overlay = new FadeSprite({image_name: 'white_square'});
+  const overlay = new FadeSprite({ 'image_name': 'white_square' });
   overlay.anchor.set(0.3);
   overlay.tint   = tint;
   overlay.width  = 3000;
@@ -45767,7 +45911,7 @@ function fill_screen_at(point, tint) {
 
 
 function flash_at(point, time = 400, tint = 0x000000, direction = 'out', delay = 0) {
-  const overlay = new FadeSprite({image_name: 'white_square'});
+  const overlay = new FadeSprite({ 'image_name': 'white_square' });
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
   overlay.tint   = tint;
@@ -45828,8 +45972,8 @@ class FloorWord extends Text {
     y,
   }) {
     super(text, {
-      fontSize:   font_size,
-      fontWeight: weight,
+      'fontSize'  : font_size,
+      'fontWeight': weight,
       fill,
       align,
     });
@@ -45838,7 +45982,7 @@ class FloorWord extends Text {
     this.rotation = rotation * DEG_TO_RAD;
     this.tint     = tint;
     this.anchor.set(0.5);
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
 
     this.tween       = tweenManager.createTween(this);
     this.tween.delay = delay;
@@ -45862,7 +46006,7 @@ class FloorWord extends Text {
     this.tween.reset();
     this.tween.time = time;
     this.alpha = 0;
-    this.tween.to({alpha: 1});
+    this.tween.to({ 'alpha': 1 });
     this.tween.start();
   }
 
@@ -45870,8 +46014,8 @@ class FloorWord extends Text {
     this.tween.reset();
     this.tween.time = time;
     this.tween
-      .from({alpha: 1})
-      .to({alpha: 0});
+      .from({ 'alpha': 1 })
+      .to({ 'alpha': 0 });
 
     this.tween.on('end', () => {
       this.tween.remove();
@@ -45883,14 +46027,14 @@ class FloorWord extends Text {
 
 const default_words = [
   'Math.random()',
-  '<h2>','</html>',
+  '<h2>', '</html>',
   '</head>',
   '<script>',
   '<div>',
 ];
 
 const bounds = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const random_text = (array) => array[Math.floor(Math.random()*array.length)];
+const random_text = (array) => array[Math.floor(Math.random() * array.length)];
 
 function random_word({
   point,
@@ -45902,11 +46046,11 @@ function random_word({
 }) {
   const random_word_from_array = random_text(text);
   const word = new FloorWord({
-    font_size: bounds(10, size),
-    rotation:  bounds(-30, 30),
-    text :     random_word_from_array,
-    fill:      Math.random() >= 0.5?'white':'black',
-    delay:     bounds(500, 2000),
+    'font_size': bounds(10, size),
+    'rotation' : bounds(-30, 30),
+    'text'     : random_word_from_array,
+    'fill'     : Math.random() >= 0.5 ? 'white' : 'black',
+    'delay'    : bounds(500, 2000),
   });
   word.position.copy(point);
   word.x += bounds(-closeness, closeness);
@@ -45923,9 +46067,9 @@ const pulse_words = array => {
   array.forEach(unit => {
     const word = new FloorWord({
       ...unit,
-      text: unit.text.text,
+      'text': unit.text.text,
       delay,
-      fill: 'white',
+      'fill': 'white',
     });
     delay += 60;
     backgrounds.addChild(word);
@@ -45951,7 +46095,7 @@ colorMatrix.greyscale(4);
 
 class Nightmare {
   static on() {
-    decals.filters = [colorMatrix];
+    decals.filters = [ colorMatrix ];
     roofs.children.forEach(roof => roof.tint = 0x000000);
     renderer.backgroundColor = 0xff0000;
   }
@@ -45980,18 +46124,18 @@ class Overlay_Dialog {
     this.point  = point;
 
     this.button = new FloorWord({
-      font_size: 40,
-      fill:      'white',
-      weight:    'bolder',
-      text:      'next',
+      'font_size': 40,
+      'fill'     : 'white',
+      'weight'   : 'bolder',
+      'text'     : 'next',
     });
   }
 
   async next_button() {
     this.button.tint = 0x383838;
     this.button.position.copy({
-      x: this.point.x+200,
-      y: this.point.y+150,
+      'x': this.point.x + 200,
+      'y': this.point.y + 150,
     });
 
     this.button.interactive = true;
@@ -46014,14 +46158,14 @@ class Overlay_Dialog {
     this.next_button();
     await sleep(3000);
 
-    while(this.script.length > 0) {
-      const word_to_render = this.script.splice(0,1);
+    while (this.script.length > 0) {
+      const word_to_render = this.script.splice(0, 1);
 
       const word = new FloorWord({
-        font_size: 100,
-        fill:      'white',
-        weight:    'bolder',
-        text:      word_to_render,
+        'font_size': 100,
+        'fill'     : 'white',
+        'weight'   : 'bolder',
+        'text'     : word_to_render,
       });
 
       word.position.copy(this.point);
@@ -46064,11 +46208,11 @@ const {
   screen,
   view,
 } = new Application({
-  width:           window_width,
-  height:          window_height,
-  backgroundColor: env.background_color,
-  roundPixels:     env.round_pixels,
-  antialias:       env.anti_alias,
+  'width'          : window_width,
+  'height'         : window_height,
+  'backgroundColor': env.background_color,
+  'roundPixels'    : env.round_pixels,
+  'antialias'      : env.anti_alias,
 });
 
 settings.ROUND_PIXELS               = env.round_pixels;
@@ -46080,7 +46224,7 @@ renderer.options.roundPixels        = env.round_pixels;
 
 const viewport = new Viewport();
 viewport.updateLayersOrder = function () {
-  viewport.children.sort(function(a,b) {
+  viewport.children.sort(function(a, b) {
     a.zIndex = a.zIndex || 0;
     b.zIndex = b.zIndex || 0;
     return b.zIndex - a.zIndex;
@@ -46090,7 +46234,7 @@ viewport.name = 'world';
 stage.addChild(viewport);
 
 // 60/30 for 30 fps
-const fps_delta = env.dev?2:1;
+const fps_delta = env.dev ? 2 : 1;
 let elapsed_time = 0;
 ticker.add(delta => {
   elapsed_time += delta;
@@ -46184,7 +46328,9 @@ class Box extends Sprite {
 
 class MeleeBox{
   slash(speed, damage, origin) {
-    if(this.tween) this.tween.remove();
+    if(this.tween) {
+      this.tween.remove();
+    }
     this.box = new Box();
     this.box.position.copy(origin);
     this.box.alpha = 1;
@@ -46196,7 +46342,9 @@ class MeleeBox{
     this.tween.delay  = speed;
 
     this.tween.on('update', delta => {
-      if(delta > this.tween.time) this.tween.remove();
+      if(delta > this.tween.time) {
+        this.tween.remove();
+      }
 
       this.box.position.copy(origin);
       this.box.alpha = 1;
@@ -46207,7 +46355,7 @@ class MeleeBox{
       if(player) {
         if(player.id !== origin.id) {
           this.box.alpha = 0.2;
-          damage_events.emit('damage', {id: player.id, damage});
+          damage_events.emit('damage', { 'id': player.id, damage });
           this.tween.active = false;
           this.tween.remove();
           return;
@@ -46218,18 +46366,18 @@ class MeleeBox{
       if(found) {
         if(found.id !== origin.id) {
           this.box.alpha = 0.2;
-          damage_events.emit('damage', {id: found.id, damage});
+          damage_events.emit('damage', { 'id': found.id, damage });
           this.tween.active = false;
           this.tween.remove();
           return;
         }
       }
 
-      const item = items.children.find(item=> this.box.containsPoint(item.getGlobalPosition()));
+      const item = items.children.find(item => this.box.containsPoint(item.getGlobalPosition()));
       if(item) {
         if(item.id !== origin.id) {
           this.box.alpha = 0.2;
-          damage_events.emit('damage', {id: item.id, damage});
+          damage_events.emit('damage', { 'id': item.id, damage });
           this.tween.active = false;
           this.tween.remove();
           return;
@@ -46263,7 +46411,7 @@ const { Grid   } = require('../utils/grid');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
-easystar.setAcceptableTiles([0,2]);
+easystar.setAcceptableTiles([ 0, 2 ]);
 easystar.setTileCost(2, 1); // only go through these tiles if you have to
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
@@ -46273,7 +46421,9 @@ const find_grid = sprite => {
   const point = sprite.getGlobalPosition();
 
   const found_tile = grid.find(tile => tile.containsPoint(point));
-  if(!found_tile) throw `${sprite.name} was not found`;
+  if(!found_tile) {
+    throw `${sprite.name} was not found`;
+  }
 
   return found_tile;
 };
@@ -46281,7 +46431,9 @@ const find_grid = sprite => {
 function path_between_grids (one, two) {
   return new Promise((resolve, reject) => {
     easystar.findPath(one.x, one.y, two.x, two.y, path => {
-      if(path) resolve(path);
+      if(path) {
+        resolve(path);
+      }
 
       reject(new Error('no path found'));
     });
@@ -46297,12 +46449,13 @@ class pathfind {
     this.grid.build_matrix();
 
     easystar.setGrid(this.grid.binary);
+    return this.grid;
   }
 
   static highlight_grid_cell_from_path(path) {
     const { sprite } = this.grid;
 
-    path.forEach(({x,y}) => sprite[y][x].alpha = 0.4);
+    path.forEach(({ x, y }) => sprite[y][x].alpha = 0.4);
   }
 
   static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
@@ -46427,7 +46580,9 @@ viewport.updateLayersOrder();
 
 function clear_level_containers() {
   viewport.children.forEach(child => {
-    if(child.name === 'player_container') return;
+    if(child.name === 'player_container') {
+      return;
+    }
     child.removeChildren();
   });
 }
@@ -46481,24 +46636,26 @@ function shoot_arrow(speed, damage, origin, point) {
   arrow.rotation = radian(point, origin);
   arrow.tween.from(origin);
   arrow.tween.to(point);
-  arrow.tween.time = speed*2;
+  arrow.tween.time = speed * 2;
 
   arrow.tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
-    if (collision_object) {
+    if(collision_object) {
       arrow.tween.stop();
-      damage_events.emit('damage', {id: collision_object.id, damage});
+      damage_events.emit('damage', { 'id': collision_object.id, damage });
       return;
     }
 
     const collision_enemies = enemies.find(enemy => enemy.containsPoint(arrow_point));
-    if (collision_enemies) {
-      if(collision_enemies.id === origin.id) return;
+    if(collision_enemies) {
+      if(collision_enemies.id === origin.id) {
+        return;
+      }
       if(!collision_enemies.dead) {
         arrow.tween.stop();
-        damage_events.emit('damage', {id: collision_enemies.id, damage});
+        damage_events.emit('damage', { 'id': collision_enemies.id, damage });
         return;
       }
     }
@@ -46525,7 +46682,7 @@ const { Texture   } = require('pixi.js');
 const { filters   } = require('pixi.js');
 
 // A reverse mask as a blend mode
-renderer.state.blendModes[20] = [0, renderer.gl.ONE_MINUS_SRC_ALPHA];
+renderer.state.blendModes[20] = [ 0, renderer.gl.ONE_MINUS_SRC_ALPHA ];
 renderer.backgroundColor = 0x000000;
 
 function get_intersection(sprite, segment, angle) {
@@ -46538,33 +46695,37 @@ function get_intersection(sprite, segment, angle) {
   // SEGMENT in parametric: Point + Delta*T2
   const s_px = segment.a.x;
   const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
+  const s_dx = segment.b.x - segment.a.x;
+  const s_dy = segment.b.y - segment.a.y;
 
   // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
+  const r_mag = Math.sqrt(r_dx * r_dx + r_dy * r_dy);
+  const s_mag = Math.sqrt(s_dx * s_dx + s_dy * s_dy);
 
   if(
-    r_dx/r_mag===s_dx/s_mag &&
-      r_dy/r_mag===s_dy/s_mag
+    r_dx / r_mag === s_dx / s_mag
+      && r_dy / r_mag === s_dy / s_mag
   ){
     // Unit vectors are the same.
     return null;
   }
 
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
+  const T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
+  const T1 = (s_px + s_dx * T2 - r_px) / r_dx;
 
   // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
+  if(T1 < 0) {
+    return null;
+  }
+  if(T2 < 0 || T2 > 1) {
+    return null;
+  }
 
   // Return the POINT OF INTERSECTION
   return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1,
+    'x'    : r_px + r_dx * T1,
+    'y'    : r_py + r_dy * T1,
+    'param': T1,
   };
 
 }
@@ -46576,10 +46737,10 @@ function convert_to_rays({
   height,
 }) {
   return [
-    {a:{x,         y         }, b:{x:x+width, y         }},
-    {a:{x:x+width, y         }, b:{x:x+width, y:y-height}},
-    {a:{x:x+width, y:y-height}, b:{x,         y:y-height}},
-    {a:{x,         y:y-height}, b:{x,         y         }},
+    { 'a': { x,         y         }, 'b': { 'x': x + width, y         } },
+    { 'a': { 'x': x + width, y         }, 'b': { 'x': x + width, 'y': y - height } },
+    { 'a': { 'x': x + width, 'y': y - height }, 'b': { x,         'y': y - height } },
+    { 'a': { x,         'y': y - height }, 'b': { x,         y         } },
   ];
 }
 
@@ -46591,17 +46752,21 @@ function get_intersects(sprite, segments, unique_points) {
     let closest_intersect = null;
     segments.forEach(seg => {
       const intersect = get_intersection(sprite, seg, angle);
-      if(!intersect) return;
+      if(!intersect) {
+        return;
+      }
       if(!closest_intersect || intersect.param < closest_intersect.param){
         closest_intersect = intersect;
       }
     });
-    if(!closest_intersect) return;
+    if(!closest_intersect) {
+      return;
+    }
     closest_intersect.angle = angle;
     intersects.push(closest_intersect);
   });
 
-  intersects.sort((a,b) => a.angle - b.angle);
+  intersects.sort((a, b) => a.angle - b.angle);
   return intersects;
 }
 
@@ -46612,7 +46777,7 @@ function get_unique_points(sprite, unique_points) {
       unique_point.y - sprite.y,
       unique_point.x - sprite.x
     );
-    unique_angles.push(angle-0.00001, angle+0.00001);
+    unique_angles.push(angle - 0.00001, angle + 0.00001);
   });
   return unique_angles;
 }
@@ -46643,8 +46808,10 @@ class Raycast extends Container {
       ...convert_to_rays(border),
     ];
 
-    obstructions.forEach(obstruction =>{
-      if(obstruction._destroyed) return;
+    obstructions.forEach(obstruction => {
+      if(obstruction._destroyed) {
+        return;
+      }
       this.segments.push(...convert_to_rays(obstruction));
     });
 
@@ -46655,7 +46822,7 @@ class Raycast extends Container {
     this.shadow.alpha  = 0.9;
     this.shadow.name   = 'shadow_area';
     this.shadow.position.copy(border);
-    this.shadow.anchor.set(0,1);
+    this.shadow.anchor.set(0, 1);
 
     this.light = new Graphics()
       .beginFill(0xFFFFFFF)
@@ -46665,8 +46832,8 @@ class Raycast extends Container {
     this.light.blendMode = 20;
     this.light.alpha = 0.5;
     this.light.mask = this.raycast;
-    this.light.x = sprite.x - this.light.width/2;
-    this.light.y = sprite.y - this.light.height/2;
+    this.light.x = sprite.x - this.light.width / 2;
+    this.light.y = sprite.y - this.light.height / 2;
 
     this.addChild(
       this.shadow,
@@ -46674,8 +46841,8 @@ class Raycast extends Container {
       this.raycast
     );
 
-    //this.filters = [new filters.BlurFilter(1)];
-    this.filters = [new filters.AlphaFilter()];
+    // this.filters = [new filters.BlurFilter(1)];
+    this.filters = [ new filters.AlphaFilter() ];
 
     visuals.addChild(this);
 
@@ -46684,8 +46851,8 @@ class Raycast extends Container {
 
   contains(sprite) {
     return (
-      this.light.containsPoint(sprite) &&
-      this.raycast.containsPoint(sprite)
+      this.light.containsPoint(sprite)
+      && this.raycast.containsPoint(sprite)
     );
   }
 
@@ -46698,15 +46865,15 @@ class Raycast extends Container {
 
     this.newlight.blendMode = 20;
     this.newlight.mask = this.raycast;
-    this.newlight.x = sprite.x - this.newlight.width/2;
-    this.newlight.y = sprite.y - this.newlight.height/2;
+    this.newlight.x = sprite.x - this.newlight.width / 2;
+    this.newlight.y = sprite.y - this.newlight.height / 2;
 
     this.addChild(this.newlight);
   }
 
   // for testing
   _move_light_with_cursor() {
-    viewport.on('mousemove', ({data}) => {
+    viewport.on('mousemove', ({ data }) => {
       this.light.x = data.global.x;
       this.light.y = data.global.y;
     });
@@ -46717,25 +46884,27 @@ class Raycast extends Container {
   }
 
   start() {
-    const unique_points = this.segments.map(({a,b}) => (a,b));
+    const unique_points = this.segments.map(({ a, b }) => (a, b));
 
     // 60/30 for 30 fps
-    const fps_delta = env.dev?2:1;
+    const fps_delta = env.dev ? 2 : 1;
     let elapsedTime = 0;
     ticker.add(delta => {
       elapsedTime += delta;
-      if(elapsedTime <= fps_delta) return;
+      if(elapsedTime <= fps_delta) {
+        return;
+      }
       this.raycast.clear();
       this.raycast.beginFill();
 
       const intersects = get_intersects(this.sprite, this.segments, unique_points);
-      this.raycast.moveTo(intersects[0].x,intersects[0].y);
+      this.raycast.moveTo(intersects[0].x, intersects[0].y);
 
-      intersects.forEach(inter => this.raycast.lineTo(inter.x,inter.y));
+      intersects.forEach(inter => this.raycast.lineTo(inter.x, inter.y));
 
       if(this._follow) {
-        this.light.x = this.sprite.x - this.light.width/2;
-        this.light.y = this.sprite.y - this.light.height/2;
+        this.light.x = this.sprite.x - this.light.width / 2;
+        this.light.y = this.sprite.y - this.light.height / 2;
       }
     });
     elapsedTime = 0;
@@ -46754,37 +46923,37 @@ const { env   } = require('../../config');
 const { sound_muted, volume_multiplier } = env;
 
 const Sound = sound.add({
-  arrow_hit_00:       'audio/arrow_hit_00.mp3',
-  page_turn:          'audio/page_turn.mp3',
-  wood_thump:         'audio/wood_thump.mp3',
-  door_locked:        'audio/door-locked-sound.mp3',
-  door_open_1:        'audio/open-door-1.mp3',
-  honk:               'audio/honk.mp3',
-  suspense_in:        'audio/suspense_in.mp3',
-  eerie_ambient:      'audio/eerie-ambient-sound.mp3',
-  horror_theme:       'audio/horror_music.mp3',
-  start_theme:        'audio/start-theme.mp3',
-  click:              'audio/click.mp3',
-  revolver_cock:      'audio/revolver_cock.mp3',
-  walk_normal:        'audio/walk_normal.mp3',
-  birds_fly_away:     'audio/birds_fly_away.mp3',
-  whisper_effect:     'audio/whisper_effect.mp3',
-  dramatic_beat:      'audio/dramatic_beat.mp3',
-  keys_jingle:        'audio/keys_jingle.mp3',
-  thud_1:             'audio/thud_1.mp3',
-  thud_2:             'audio/thud_2.mp3',
-  thud_3:             'audio/thud_3.mp3',
-  thud_4:             'audio/thud_4.mp3',
-  thud_5:             'audio/thud_5.mp3',
-  thud_6:             'audio/thud_6.mp3',
-  thud_7:             'audio/thud_7.mp3',
-  woman_weeping:      'audio/woman_weeping.mp3',
-  crazy_woman_repent: 'audio/crazy_woman_repent.mp3',
-  generator_sound:    'audio/generator_sound.mp3',
+  'arrow_hit_00'      : 'audio/arrow_hit_00.mp3',
+  'page_turn'         : 'audio/page_turn.mp3',
+  'wood_thump'        : 'audio/wood_thump.mp3',
+  'door_locked'       : 'audio/door-locked-sound.mp3',
+  'door_open_1'       : 'audio/open-door-1.mp3',
+  'honk'              : 'audio/honk.mp3',
+  'suspense_in'       : 'audio/suspense_in.mp3',
+  'eerie_ambient'     : 'audio/eerie-ambient-sound.mp3',
+  'horror_theme'      : 'audio/horror_music.mp3',
+  'start_theme'       : 'audio/start-theme.mp3',
+  'click'             : 'audio/click.mp3',
+  'revolver_cock'     : 'audio/revolver_cock.mp3',
+  'walk_normal'       : 'audio/walk_normal.mp3',
+  'birds_fly_away'    : 'audio/birds_fly_away.mp3',
+  'whisper_effect'    : 'audio/whisper_effect.mp3',
+  'dramatic_beat'     : 'audio/dramatic_beat.mp3',
+  'keys_jingle'       : 'audio/keys_jingle.mp3',
+  'thud_1'            : 'audio/thud_1.mp3',
+  'thud_2'            : 'audio/thud_2.mp3',
+  'thud_3'            : 'audio/thud_3.mp3',
+  'thud_4'            : 'audio/thud_4.mp3',
+  'thud_5'            : 'audio/thud_5.mp3',
+  'thud_6'            : 'audio/thud_6.mp3',
+  'thud_7'            : 'audio/thud_7.mp3',
+  'woman_weeping'     : 'audio/woman_weeping.mp3',
+  'crazy_woman_repent': 'audio/crazy_woman_repent.mp3',
+  'generator_sound'   : 'audio/generator_sound.mp3',
 });
 
 sound.random_sound_from = array => {
-  const name = array[Math.floor(Math.random()*array.length)];
+  const name = array[Math.floor(Math.random() * array.length)];
   return sound.find(name);
 };
 
@@ -46810,431 +46979,429 @@ loader.load(() => {
 });
 
 
-
-
 },{"./engine/boot_loader.js":222,"./engine/packer":226,"./utils/globals":274}],233:[function(require,module,exports){
 
-//https://www.uihere.com/free-graphics/search?q=knife
+// https://www.uihere.com/free-graphics/search?q=knife
 // Migrate to database when appropriate
 const items = [
-  //primary
+  // primary
   {
-    name:           'rusty_knife',
-    animation_name: 'knife',
-    id:             0,
-    rank:           0,
-    cost:           50,
-    category:       'weapon',
-    range:          20,
-    damage:         10,
-    speed:          400,
+    'name'          : 'rusty_knife',
+    'animation_name': 'knife',
+    'id'            : 0,
+    'rank'          : 0,
+    'cost'          : 50,
+    'category'      : 'weapon',
+    'range'         : 20,
+    'damage'        : 10,
+    'speed'         : 400,
 
-    visual_name:    'rusty knife',
-    description:    'The rusty knife someone sharpened on what looks like a rock',
-    image_name:     'rusty_knife',
+    'visual_name': 'rusty knife',
+    'description': 'The rusty knife someone sharpened on what looks like a rock',
+    'image_name' : 'rusty_knife',
   },
   {
-    name:           'rusty_knife',
-    animation_name: 'knife',
-    id:             1,
-    rank:           0,
-    cost:           50,
-    category:       'weapon',
-    range:          20,
-    damage:         20,
-    speed:          400,
+    'name'          : 'rusty_knife',
+    'animation_name': 'knife',
+    'id'            : 1,
+    'rank'          : 0,
+    'cost'          : 50,
+    'category'      : 'weapon',
+    'range'         : 20,
+    'damage'        : 20,
+    'speed'         : 400,
 
-    visual_name:    'rusty knife',
-    description:    'The rusty knife someone sharpened on what looks like a rock',
+    'visual_name': 'rusty knife',
+    'description': 'The rusty knife someone sharpened on what looks like a rock',
     // TODO place holder
-    image_name:     'spear-png-spear-png-1600_582',
+    'image_name' : 'spear-png-spear-png-1600_582',
   },
   {
-    name:           'dev_knife',
-    animation_name: 'knife',
-    id:             2,
-    rank:           99,
-    cost:           999,
-    category:       'weapon',
-    range:          20,
-    damage:         999,
-    speed:          100,
+    'name'          : 'dev_knife',
+    'animation_name': 'knife',
+    'id'            : 2,
+    'rank'          : 99,
+    'cost'          : 999,
+    'category'      : 'weapon',
+    'range'         : 20,
+    'damage'        : 999,
+    'speed'         : 100,
 
-    visual_name:    'rusty knife',
-    description:    'You call that a knife???',
-    image_name:     'rusty_knife',
+    'visual_name': 'rusty knife',
+    'description': 'You call that a knife???',
+    'image_name' : 'rusty_knife',
   },
   {
-    name:           'old_bow',
-    animation_name: 'bow',
-    id:             3,
-    rank:           0,
-    cost:           200,
-    category:       'weapon',
-    type:           'projectile',
-    ammo:           'arrow',
-    range:          200,
-    damage:         40,
-    speed:          400,
+    'name'          : 'old_bow',
+    'animation_name': 'bow',
+    'id'            : 3,
+    'rank'          : 0,
+    'cost'          : 200,
+    'category'      : 'weapon',
+    'type'          : 'projectile',
+    'ammo'          : 'arrow',
+    'range'         : 200,
+    'damage'        : 40,
+    'speed'         : 400,
 
-    visual_name:    'old bow',
-    description:    'An old bow still working but not for long...',
-    image_name:     'bow_00',
+    'visual_name': 'old bow',
+    'description': 'An old bow still working but not for long...',
+    'image_name' : 'bow_00',
   },
   {
-    name:           'weak_bow',
-    animation_name: 'bow',
-    id:             4,
-    rank:           0,
-    cost:           200,
-    category:       'weapon',
-    type:           'projectile',
-    ammo:           'arrow',
-    range:          200,
-    damage:         1,
-    speed:          400,
+    'name'          : 'weak_bow',
+    'animation_name': 'bow',
+    'id'            : 4,
+    'rank'          : 0,
+    'cost'          : 200,
+    'category'      : 'weapon',
+    'type'          : 'projectile',
+    'ammo'          : 'arrow',
+    'range'         : 200,
+    'damage'        : 1,
+    'speed'         : 400,
 
-    visual_name:    'weak bow',
-    description:    'A weak bow for testing',
-    image_name:     'bunny',
-  },
-
-  {
-    name:           'dev_bow',
-    animation_name: 'bow',
-    id:             5,
-    rank:           99,
-    cost:           999,
-    category:       'weapon',
-    type:           'projectile',
-    ammo:           'arrow',
-    range:          999,
-    damage:         999,
-    speed:          100,
-
-    visual_name:    'old bow',
-    description:    'this is my dev bow, there are many like it but this one kills',
-    image_name:     'bunny',
-  },
-  {
-    name:        'rat_teeth',
-    id:          6,
-    rank:        1,
-    cost:        80,
-    category:    'weapon',
-    range:       20,
-    damage:      20,
-    speed:       10,
-
-    visual_name: 'rat teeth',
-    description: 'the gnashing teeth of a diseased rat',
-    image_name:  'bunny',
+    'visual_name': 'weak bow',
+    'description': 'A weak bow for testing',
+    'image_name' : 'bunny',
   },
 
   {
-    name:        'wrench_blade',
-    id:          7,
-    rank:        1,
-    cost:        80,
-    category:    'weapon',
-    range:       20,
-    damage:      50,
-    speed:       1,
+    'name'          : 'dev_bow',
+    'animation_name': 'bow',
+    'id'            : 5,
+    'rank'          : 99,
+    'cost'          : 999,
+    'category'      : 'weapon',
+    'type'          : 'projectile',
+    'ammo'          : 'arrow',
+    'range'         : 999,
+    'damage'        : 999,
+    'speed'         : 100,
 
-    visual_name: 'wrench blade',
-    description: 'This blade looks to be a hastily sharped from an old wrench',
-    image_name:  'wrench_blade',
-  },
-
-  //secondary
-  {
-    name:        'pistol',
-    id:          8,
-    rank:        0,
-    cost:        50,
-    category:    'weapon',
-    range:       20,
-    damage:      10,
-    speed:       400,
-
-    visual_name: 'pistol',
-    description: 'a pistol from a cop',
-    image_name:  'bunny',
-  },
-
-  //melee
-  {
-    name:         'wrench_blade',
-    id:           9,
-    rank:         1,
-    cost:         80,
-    category:     'weapon',
-    range:        20,
-    damage:       2,
-    speed:        1,
-
-    visual_name:  'wrench blade',
-    display_name: 'wrench blade',
-    description:  'This blade looks to be a hastily sharped from an old wrench',
-
-    image_name: 'bunny',
-  },
-
-  //util
-  {
-    name: 'util',
-    id: 10,
-    rank: 0,
-    cost: 20,
-    category: 'armour',
-
-    visual_name: 'util',
-    description: 'some util thing',
-    image_name: 'bunny',
-  },
-
-  //hat
-  {
-    name: 'old_helmet',
-    position: 'hat',
-    id: 11,
-    rank: 0,
-    cost: 20,
-    category: 'armour',
-
-    visual_name: 'old helmet',
-    description: 'A rusty old helmet that looks a WW2 replica',
-    image_name: 'old_helmet',
-  },
-
-  //chest
-  {
-    name: 'old_clothes',
-    id: 12,
-    rank: 0,
-    cost: 20,
-    category: 'armour',
-
-    visual_name: 'torn clothes',
-    description: 'torn clothes',
-    image_name: 'old_clothes',
-  },
-
-  //feet
-  {
-    name: 'old_boots',
-    id: 13,
-    rank: 0,
-    cost: 20,
-    category: 'armour',
-
-    visual_name: 'old boots',
-    description: 'A set of old boots, the bottom of them are worn and wont last long...',
-    image_name: 'old_boots',
-  },
-
-  //slot
-  {
-    name: 'keys',
-    id: 14,
-    rank: 0,
-    cost: 20,
-    category: 'material',
-
-    visual_name: 'keys',
-    description: 'keys',
-    image_name: 'bunny',
+    'visual_name': 'old bow',
+    'description': 'this is my dev bow, there are many like it but this one kills',
+    'image_name' : 'bunny',
   },
   {
-    name: 'ball',
-    id: 15,
-    rank: 0,
-    cost: 20,
-    category: 'material',
+    'name'    : 'rat_teeth',
+    'id'      : 6,
+    'rank'    : 1,
+    'cost'    : 80,
+    'category': 'weapon',
+    'range'   : 20,
+    'damage'  : 20,
+    'speed'   : 10,
 
-    visual_name: 'ball',
-    description: 'ball',
-    image_name: 'bunny',
+    'visual_name': 'rat teeth',
+    'description': 'the gnashing teeth of a diseased rat',
+    'image_name' : 'bunny',
   },
 
-  //head
   {
-    name: 'old_bandana',
-    id: 16,
-    rank: 0,
-    cost: 20,
-    category: 'armour',
+    'name'    : 'wrench_blade',
+    'id'      : 7,
+    'rank'    : 1,
+    'cost'    : 80,
+    'category': 'weapon',
+    'range'   : 20,
+    'damage'  : 50,
+    'speed'   : 1,
 
-    visual_name: 'old bandana',
-    description: 'An old shirt wrapped into a face mask',
-    image_name: 'old_bandana',
+    'visual_name': 'wrench blade',
+    'description': 'This blade looks to be a hastily sharped from an old wrench',
+    'image_name' : 'wrench_blade',
   },
 
-  //misc
+  // secondary
   {
-    name: 'meat',
-    id: 17,
-    rank: 0,
-    cost: 20,
-    category: 'food',
+    'name'    : 'pistol',
+    'id'      : 8,
+    'rank'    : 0,
+    'cost'    : 50,
+    'category': 'weapon',
+    'range'   : 20,
+    'damage'  : 10,
+    'speed'   : 400,
 
-    visual_name: 'hunk of meat',
-    description: 'rat meat',
-    image_name: 'rat_meat',
+    'visual_name': 'pistol',
+    'description': 'a pistol from a cop',
+    'image_name' : 'bunny',
+  },
+
+  // melee
+  {
+    'name'    : 'wrench_blade',
+    'id'      : 9,
+    'rank'    : 1,
+    'cost'    : 80,
+    'category': 'weapon',
+    'range'   : 20,
+    'damage'  : 2,
+    'speed'   : 1,
+
+    'visual_name' : 'wrench blade',
+    'display_name': 'wrench blade',
+    'description' : 'This blade looks to be a hastily sharped from an old wrench',
+
+    'image_name': 'bunny',
+  },
+
+  // util
+  {
+    'name'    : 'util',
+    'id'      : 10,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'armour',
+
+    'visual_name': 'util',
+    'description': 'some util thing',
+    'image_name' : 'bunny',
+  },
+
+  // hat
+  {
+    'name'    : 'old_helmet',
+    'position': 'hat',
+    'id'      : 11,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'armour',
+
+    'visual_name': 'old helmet',
+    'description': 'A rusty old helmet that looks a WW2 replica',
+    'image_name' : 'old_helmet',
+  },
+
+  // chest
+  {
+    'name'    : 'old_clothes',
+    'id'      : 12,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'armour',
+
+    'visual_name': 'torn clothes',
+    'description': 'torn clothes',
+    'image_name' : 'old_clothes',
+  },
+
+  // feet
+  {
+    'name'    : 'old_boots',
+    'id'      : 13,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'armour',
+
+    'visual_name': 'old boots',
+    'description': 'A set of old boots, the bottom of them are worn and wont last long...',
+    'image_name' : 'old_boots',
+  },
+
+  // slot
+  {
+    'name'    : 'keys',
+    'id'      : 14,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'material',
+
+    'visual_name': 'keys',
+    'description': 'keys',
+    'image_name' : 'bunny',
   },
   {
-    name: 'blood',
-    id: 18,
-    rank: 0,
-    cost: 10,
-    category: 'fuel',
+    'name'    : 'ball',
+    'id'      : 15,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'material',
 
-    visual_name: 'blood',
-    description: 'the fuel for the cooker',
-    image_name: 'blood_vial',
+    'visual_name': 'ball',
+    'description': 'ball',
+    'image_name' : 'bunny',
+  },
+
+  // head
+  {
+    'name'    : 'old_bandana',
+    'id'      : 16,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'armour',
+
+    'visual_name': 'old bandana',
+    'description': 'An old shirt wrapped into a face mask',
+    'image_name' : 'old_bandana',
+  },
+
+  // misc
+  {
+    'name'    : 'meat',
+    'id'      : 17,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'food',
+
+    'visual_name': 'hunk of meat',
+    'description': 'rat meat',
+    'image_name' : 'rat_meat',
   },
   {
-    name: 'rat_hide',
-    id: 19,
-    rank: 0,
-    cost: 80,
-    category: 'material',
+    'name'    : 'blood',
+    'id'      : 18,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'fuel',
 
-    visual_name: 'rat hide',
-    description: 'the hide of a rat hide',
-    image_name: 'rat_hide',
+    'visual_name': 'blood',
+    'description': 'the fuel for the cooker',
+    'image_name' : 'blood_vial',
   },
   {
-    name: 'rat_teeth',
-    id: 20,
-    rank: 0,
-    cost: 40,
-    category: 'material',
+    'name'    : 'rat_hide',
+    'id'      : 19,
+    'rank'    : 0,
+    'cost'    : 80,
+    'category': 'material',
 
-    visual_name: 'rat teeth',
-    description: 'the teeth of a rat hide',
-    image_name: 'rat_hide',
+    'visual_name': 'rat hide',
+    'description': 'the hide of a rat hide',
+    'image_name' : 'rat_hide',
   },
   {
-    name: 'rat_femur',
-    id: 21,
-    rank: 0,
-    cost: 20,
-    category: 'material',
+    'name'    : 'rat_teeth',
+    'id'      : 20,
+    'rank'    : 0,
+    'cost'    : 40,
+    'category': 'material',
 
-    visual_name: 'rat femur',
-    description: 'the femur of a rat',
-    image_name: 'femur',
+    'visual_name': 'rat teeth',
+    'description': 'the teeth of a rat hide',
+    'image_name' : 'rat_hide',
   },
   {
-    name: 'rag',
-    id: 22,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'rat_femur',
+    'id'      : 21,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'material',
 
-    visual_name: 'a rag',
-    description: 'an old rag',
-    image_name: 'dirty_rag_1',
+    'visual_name': 'rat femur',
+    'description': 'the femur of a rat',
+    'image_name' : 'femur',
   },
   {
-    name: 'oil_can',
-    id: 23,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'rag',
+    'id'      : 22,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'a small oil can',
-    description: 'an oil can',
-    image_name: 'bunny',
+    'visual_name': 'a rag',
+    'description': 'an old rag',
+    'image_name' : 'dirty_rag_1',
   },
   {
-    name: 'arrow',
-    id:   24,
-    rank: 0,
-    cost: 15,
-    category: 'ammo',
+    'name'    : 'oil_can',
+    'id'      : 23,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'used arrow',
-    description: 'Theres some dry blood on the tip...',
-    image_name: 'flying_arrow',
+    'visual_name': 'a small oil can',
+    'description': 'an oil can',
+    'image_name' : 'bunny',
   },
   {
-    name: 'skull_cap_bone',
-    id:   25,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'arrow',
+    'id'      : 24,
+    'rank'    : 0,
+    'cost'    : 15,
+    'category': 'ammo',
 
-    visual_name: 'rat bone chip',
-    description: 'a bone chip of a rat',
-    image_name: 'skull_cap_bone',
+    'visual_name': 'used arrow',
+    'description': 'Theres some dry blood on the tip...',
+    'image_name' : 'flying_arrow',
   },
   {
-    name: 'gas_canister',
-    id:   25,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'skull_cap_bone',
+    'id'      : 25,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'a gas canister',
-    description: 'there is some left',
-    image_name: 'Gasoline_Canister',
+    'visual_name': 'rat bone chip',
+    'description': 'a bone chip of a rat',
+    'image_name' : 'skull_cap_bone',
   },
   {
-    name: 'oil_canister',
-    id:   25,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'gas_canister',
+    'id'      : 25,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'a small gas canister',
-    description: 'some cheap fuel',
-    image_name: 'Industrial_oil_canister',
+    'visual_name': 'a gas canister',
+    'description': 'there is some left',
+    'image_name' : 'Gasoline_Canister',
   },
   {
-    name: 'rat_leg_bone',
-    id:   26,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'oil_canister',
+    'id'      : 25,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'rat leg bone',
-    description: 'the leg bone of a rat',
-    image_name: 'right_leg_bone',
+    'visual_name': 'a small gas canister',
+    'description': 'some cheap fuel',
+    'image_name' : 'Industrial_oil_canister',
   },
   {
-    name: 'old_book',
-    id: 27,
-    rank: 0,
-    cost: 10,
-    category: 'material',
+    'name'    : 'rat_leg_bone',
+    'id'      : 26,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'old book',
-    description: 'maybe it will hold a flame...',
-    image_name: 'old_book',
+    'visual_name': 'rat leg bone',
+    'description': 'the leg bone of a rat',
+    'image_name' : 'right_leg_bone',
   },
   {
-    name: 'empty',
-    id:   28,
-    rank: 0,
-    cost: 0,
-    category: 'none',
+    'name'    : 'old_book',
+    'id'      : 27,
+    'rank'    : 0,
+    'cost'    : 10,
+    'category': 'material',
 
-    visual_name: 'empty',
-    description: '',
-    image_name:  'empty_image',
+    'visual_name': 'old book',
+    'description': 'maybe it will hold a flame...',
+    'image_name' : 'old_book',
   },
   {
-    name: 'keys_brass',
-    id: 15,
-    rank: 0,
-    cost: 20,
-    category: 'material',
+    'name'    : 'empty',
+    'id'      : 28,
+    'rank'    : 0,
+    'cost'    : 0,
+    'category': 'none',
 
-    visual_name: 'brass keys',
-    description: 'Keys to the front door',
-    image_name: 'keys_brass',
+    'visual_name': 'empty',
+    'description': '',
+    'image_name' : 'empty_image',
+  },
+  {
+    'name'    : 'keys_brass',
+    'id'      : 15,
+    'rank'    : 0,
+    'cost'    : 20,
+    'category': 'material',
+
+    'visual_name': 'brass keys',
+    'description': 'Keys to the front door',
+    'image_name' : 'keys_brass',
   },
 ];
 
@@ -47260,8 +47427,8 @@ class Item_Manager {
     const number_of_items_to_return = random_number(min, max);
     const item_array = [];
 
-    for(let i = 0; i < number_of_items_to_return; i++) {
-      item_array.push(items[Math.floor(Math.random()*items.length)]);
+    for (let i = 0; i < number_of_items_to_return; i++) {
+      item_array.push(items[Math.floor(Math.random() * items.length)]);
     }
 
     return item_array;
@@ -47280,7 +47447,9 @@ class Item_Manager {
   static get_item(name, { condition } = {}) {
     const found_item = items.find(item => (item.name === name || item.image_name === name));
 
-    if(!found_item) throw new Error('No item found for ' + JSON.stringify(name));
+    if(!found_item) {
+      throw new Error('No item found for ' + JSON.stringify(name));
+    }
 
     found_item.condition = condition;
 
@@ -47310,7 +47479,9 @@ class Item_Manager {
     const item = this.get_item(name);
     const image_name = item.image_name || name;
 
-    if(!image_name) throw new Error('Can not find ' + name);
+    if(!image_name) {
+      throw new Error('Can not find ' + name);
+    }
 
     const found_sprite = new Sprite.fromFrame(image_name);
 
@@ -47338,7 +47509,7 @@ module.exports = {
 
 
 },{"../engine/app":221,"../utils/math":278,"./data/item_data":233,"pixi.js":152}],235:[function(require,module,exports){
-module.exports={"grid":[{"height":2514,"id":223,"rotation":0,"type":"","width":3012,"x":1572,"y":144}],"background":[{"gid":1,"height":2540,"id":244,"rotation":0,"type":"","width":3031,"x":1658,"y":2735,"image_name":"grass_tile"}],"decal":[],"roof":[],"shroud":[],"prey":[{"height":0,"id":257,"point":true,"rotation":0,"type":"","width":0,"x":2600,"y":398,"equip":"rat_teeth"},{"height":0,"id":258,"point":true,"rotation":0,"type":"","width":0,"x":2973,"y":393,"equip":"rat_teeth"}],"item":[{"height":96,"id":235,"rotation":-526,"type":"","width":80,"x":3042,"y":1016,"equip_on_click":true,"image_name":"bow_00","label":true,"label_action":"Take","label_description":"Old Bow","label_image":"take_icon"},{"height":28,"id":262,"rotation":-414,"type":"","width":77,"x":2477,"y":663,"equip_on_click":true,"image_name":"rusty_knife","label":true,"label_action":"Pick up","label_description":"Rusty Knife","label_image":"take_icon"},{"gid":5,"height":52,"id":264,"rotation":-526,"type":"","width":52,"x":3822,"y":604,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":5,"height":52,"id":265,"rotation":-526,"type":"","width":52,"x":3938,"y":790,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":5,"height":52,"id":266,"rotation":-526,"type":"","width":52,"x":4020,"y":1027,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":6,"height":47,"id":268,"rotation":-41,"type":"note","width":129,"x":3247,"y":1605,"image_name":"spear-png-spear-png-1600_582","dialog_on_click":"Nice...","equip_on_click":true,"image_on_click":"spear-png-spear-png-1600_582","label":true,"label_action":"Pick up","label_description":"Makeshift spear","label_image":"gear_icon","remove_on_click":true}],"walls":[{"gid":3,"height":36,"id":250,"rotation":0,"type":"","width":1190,"x":2374,"y":1984,"image_name":"dot"},{"gid":3,"height":1172,"id":251,"rotation":0,"type":"","width":29,"x":3534,"y":1980,"image_name":"dot"},{"gid":3,"height":654,"id":252,"rotation":0,"type":"","width":29,"x":2377,"y":1973,"image_name":"dot"},{"gid":3,"height":36,"id":254,"rotation":0,"type":"","width":228,"x":1870,"y":1414,"image_name":"dot"},{"gid":3,"height":36,"id":255,"rotation":0,"type":"","width":834,"x":2404,"y":1360,"image_name":"dot"}],"lights":[],"player":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":3062,"y":1485,"equip":"rat_teeth"}],"floor":[],"collision":[{"height":77,"id":186,"rotation":64,"type":"","width":77,"x":2087,"y":950,"image_name":"chair_03"},{"gid":4,"height":136,"id":256,"rotation":0,"type":"","width":272,"x":1821,"y":1409,"image_name":"barricade_1"}],"door":[{"height":33,"id":231,"rotation":-1,"type":"","width":141,"x":3304,"y":819,"door":true,"health":50,"image_name":"door_01"}],"exit_pad":[{"height":183,"id":15,"rotation":0,"type":"","width":217,"x":3729,"y":1491},{"height":183,"id":207,"rotation":0,"type":"","width":217,"x":2973,"y":1646},{"height":134,"id":236,"rotation":0,"type":"","width":141,"x":2607,"y":1435}],"player_spawn":[{"height":0,"id":269,"point":true,"rotation":0,"type":"","width":0,"x":3346,"y":1413}]}
+module.exports={"grid":[{"height":2514,"id":223,"rotation":0,"type":"","width":3012,"x":1572,"y":144}],"background":[{"gid":1,"height":2540,"id":244,"rotation":0,"type":"","width":3031,"x":1658,"y":2735,"image_name":"grass_tile"}],"decal":[],"roof":[],"shroud":[],"prey":[{"height":0,"id":257,"point":true,"rotation":0,"type":"","width":0,"x":2600,"y":398,"equip":"rat_teeth"}],"item":[{"height":96,"id":235,"rotation":-526,"type":"","width":80,"x":3042,"y":1016,"equip_on_click":true,"image_name":"bow_00","label":true,"label_action":"Take","label_description":"Old Bow","label_image":"take_icon"},{"height":28,"id":262,"rotation":-414,"type":"","width":77,"x":2477,"y":663,"equip_on_click":true,"image_name":"rusty_knife","label":true,"label_action":"Pick up","label_description":"Rusty Knife","label_image":"take_icon"},{"gid":5,"height":52,"id":264,"rotation":-526,"type":"","width":52,"x":3822,"y":604,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":5,"height":52,"id":265,"rotation":-526,"type":"","width":52,"x":3938,"y":790,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":5,"height":52,"id":266,"rotation":-526,"type":"","width":52,"x":4020,"y":1027,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":6,"height":47,"id":268,"rotation":-41,"type":"note","width":129,"x":3247,"y":1605,"image_name":"spear-png-spear-png-1600_582","dialog_on_click":"Nice...","equip_on_click":true,"image_on_click":"spear-png-spear-png-1600_582","label":true,"label_action":"Pick up","label_description":"Makeshift spear","label_image":"gear_icon","remove_on_click":true}],"walls":[{"gid":3,"height":36,"id":250,"rotation":0,"type":"","width":1190,"x":2374,"y":1984,"image_name":"dot"},{"gid":3,"height":1172,"id":251,"rotation":0,"type":"","width":29,"x":3534,"y":1980,"image_name":"dot"},{"gid":3,"height":654,"id":252,"rotation":0,"type":"","width":29,"x":2377,"y":1973,"image_name":"dot"},{"gid":3,"height":36,"id":254,"rotation":0,"type":"","width":228,"x":1870,"y":1414,"image_name":"dot"},{"gid":3,"height":36,"id":255,"rotation":0,"type":"","width":834,"x":2404,"y":1360,"image_name":"dot"}],"lights":[],"player":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":2698,"y":877,"equip":"rat_teeth"}],"floor":[],"collision":[{"height":77,"id":186,"rotation":64,"type":"","width":77,"x":2087,"y":950,"image_name":"chair_03"},{"gid":4,"height":136,"id":256,"rotation":0,"type":"","width":272,"x":1821,"y":1409,"image_name":"barricade_1"}],"door":[{"height":33,"id":231,"rotation":-1,"type":"","width":141,"x":3304,"y":819,"door":true,"health":50,"image_name":"door_01"},{"gid":7,"height":16,"id":270,"rotation":-180,"type":"","width":85,"x":3090,"y":1197,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Study Door","label_image":"take_icon","open_rotation":"-1"}],"exit_pad":[{"height":183,"id":15,"rotation":0,"type":"","width":217,"x":3729,"y":1491},{"height":183,"id":207,"rotation":0,"type":"","width":217,"x":2973,"y":1646},{"height":134,"id":236,"rotation":0,"type":"","width":141,"x":2607,"y":1435}],"player_spawn":[{"height":0,"id":269,"point":true,"rotation":0,"type":"","width":0,"x":2856,"y":923}],"obstacle":[{"gid":4,"height":168,"id":273,"rotation":0,"type":"","width":182,"x":3301,"y":1398,"image_name":"barricade_1"}]}
 },{}],236:[function(require,module,exports){
 module.exports={"background":[{"gid":24,"height":391,"id":431,"rotation":0,"type":"","width":251,"x":1515,"y":1145,"image_name":"tile_floor"},{"gid":43,"height":905,"id":514,"rotation":0,"type":"","width":686,"x":839,"y":1157,"image_name":"wood_planks_vertical"}],"shadow_area":[{"gid":18,"height":1042,"id":623,"rotation":0,"type":"","width":968,"x":812,"y":1215,"image_name":"dot"}],"exit_pad":[{"height":85,"id":177,"rotation":0,"type":"","width":125,"x":1076,"y":145,"level_name":"street","spawn_id":137}],"decal":[{"gid":27,"height":343,"id":516,"rotation":53,"type":"","width":343,"x":790,"y":480,"image_name":"fog_00"},{"gid":27,"height":175,"id":519,"rotation":332,"type":"","width":175,"x":1445,"y":492,"image_name":"fog_00"},{"gid":29,"height":98,"id":438,"rotation":0,"type":"","width":104,"x":1025,"y":331,"image_name":"wood_decal_01","alpha":0.6},{"gid":38,"height":124,"id":452,"rotation":270,"type":"","width":52,"x":1134,"y":246,"image_name":"floor_decal_01"},{"gid":37,"height":145,"id":449,"rotation":90,"type":"","width":61,"x":1016,"y":214,"image_name":"wall_crumble"},{"gid":19,"height":280,"id":422,"rotation":40,"type":"","width":280,"x":1059,"y":1024,"image_name":"rug_01"},{"gid":25,"height":392,"id":434,"rotation":0,"type":"","width":339,"x":1425,"y":1151,"image_name":"floor_decal_02"},{"gid":27,"height":449,"id":554,"rotation":90,"type":"","width":449,"x":1127,"y":562,"image_name":"fog_00"},{"gid":27,"height":800,"id":436,"rotation":0,"type":"","width":800,"x":765,"y":988,"image_name":"fog_00"},{"gid":28,"height":70,"id":437,"rotation":-180,"type":"","width":127,"x":1523,"y":725,"image_name":"wood_decal_00"},{"gid":31,"height":101,"id":441,"rotation":0,"type":"","width":101,"x":1372,"y":502,"image_name":"wood_decal_03"},{"gid":27,"height":343,"id":517,"rotation":0,"type":"","width":343,"x":-25,"y":1812,"image_name":"fog_00"},{"gid":27,"height":415,"id":520,"rotation":0,"type":"","width":415,"x":952,"y":796,"image_name":"fog_00"},{"gid":27,"height":343,"id":553,"rotation":53,"type":"","width":343,"x":1072,"y":527,"image_name":"fog_00"},{"gid":27,"height":449,"id":555,"rotation":90,"type":"","width":449,"x":915,"y":384,"image_name":"fog_00"},{"gid":50,"height":425,"id":556,"rotation":360,"type":"","width":245,"x":964,"y":596,"image_name":"fireplace-light","alpha":0.4},{"gid":52,"height":146,"id":620,"rotation":107,"type":"","width":146,"x":1378,"y":296,"image_name":"Burnt_book_SC_R99"}],"floor":[{"gid":49,"height":299,"id":544,"rotation":289,"type":"","width":329,"x":1257,"y":721,"image_name":"carpet-hole_chg"},{"gid":21,"height":366,"id":425,"rotation":-90,"type":"","width":400,"x":1186,"y":617,"image_name":"Scorch-a"},{"gid":22,"height":395,"id":426,"rotation":0,"type":"","width":243,"x":835,"y":795,"image_name":"Scorch-d"},{"gid":35,"height":83,"id":445,"rotation":18,"type":"","width":124,"x":1522,"y":1092,"image_name":"rug_1"},{"gid":48,"height":268,"id":545,"rotation":-1170,"type":"","width":535,"x":1773,"y":773,"image_name":"Overlay_Fire001","alpha":0.8,"tint":"0x392613"},{"gid":34,"height":209,"id":558,"rotation":15,"type":"","width":104,"x":834,"y":1041,"image_name":"rug_00"},{"gid":51,"height":116,"id":563,"rotation":0,"type":"","width":157,"x":849,"y":1038,"image_name":"dirty_matress"},{"gid":5,"height":42,"id":561,"rotation":0,"type":"","width":42,"x":875,"y":925,"image_name":"box_06"},{"gid":10,"height":49,"id":562,"rotation":-273,"type":"","width":42,"x":1020,"y":925,"image_name":"chair_00"}],"collision":[{"gid":9,"height":211,"id":551,"rotation":-307,"type":"","width":211,"x":787,"y":636,"image_name":"table_chairs"},{"gid":5,"height":32,"id":207,"rotation":710,"type":"","width":36,"x":1243,"y":360,"image_name":"box_06"},{"gid":3,"height":60,"id":86,"rotation":-440,"type":"","width":163,"x":724,"y":273,"image_name":"wood_table"},{"gid":10,"height":42,"id":395,"rotation":-270,"type":"","width":42,"x":1211,"y":965,"image_name":"chair_00"},{"gid":12,"height":70,"id":397,"rotation":0,"type":"","width":71,"x":1529,"y":330,"image_name":"fridge_00"},{"gid":13,"height":63,"id":398,"rotation":0,"type":"","width":63,"x":1602,"y":322,"image_name":"stove_00"},{"gid":10,"height":38,"id":399,"rotation":-495,"type":"","width":38,"x":1576,"y":407,"image_name":"chair_00"},{"gid":14,"height":90,"id":400,"rotation":180,"type":"","width":180,"x":1377,"y":250,"image_name":"barricade_1"},{"gid":15,"height":79,"id":401,"rotation":-180,"type":"","width":98,"x":1516,"y":252,"image_name":"stove_01"},{"gid":16,"height":53,"id":403,"rotation":180,"type":"","width":79,"x":1646,"y":1090,"image_name":"sink_04"},{"gid":20,"height":92,"id":424,"rotation":0,"type":"","width":92,"x":1536,"y":862,"image_name":"toilet_00"},{"gid":33,"height":12,"id":443,"rotation":180,"type":"","width":107,"x":1659,"y":1137,"image_name":"mirror_00"},{"gid":44,"height":147,"id":515,"rotation":4,"type":"","width":81,"x":1140,"y":917,"image_name":"88270-Desk_1_1x2"},{"gid":45,"height":69,"id":524,"rotation":30,"type":"","width":137,"x":925,"y":168,"image_name":"dumpster_00"},{"gid":40,"height":53,"id":552,"rotation":0,"type":"","width":46,"x":1322,"y":410,"image_name":"88490-Table_Round_2x2"},{"gid":2,"height":109,"id":560,"rotation":0,"type":"","width":138,"x":946,"y":1137,"image_name":"bookcase_00"},{"gid":54,"height":108,"id":592,"rotation":90,"type":"","width":216,"x":1643,"y":768,"image_name":"MI01_FurnitureShower_05x10[shower, standing shower, shower stall, bathroom, water closet]"},{"gid":17,"height":107,"id":596,"rotation":0,"type":"","width":64,"x":1563,"y":710,"image_name":"table_00"},{"gid":60,"height":42,"id":626,"rotation":0,"type":"","width":42,"x":1124,"y":730,"image_name":"MI01_FurnitureFloorLampOff_05x05[lamp, floor lamp, lamp off, lamp turned off, standing lamp, upright lamp, room lamp]"}],"item":[{"gid":5,"height":52,"id":258,"rotation":-526,"type":"","width":52,"x":1734,"y":271,"image_name":"box_06","container":true,"items":"[{\"name\":\"oil_canister\", \"condition\": 0.2},{\"name\":\"empty\"}]","label":true,"label_action":"Take","label_description":"Large box","label_image":"take_icon"},{"gid":8,"height":15,"id":263,"rotation":-657,"type":"","width":154,"x":1173,"y":256,"image_name":"bookcase","container":true,"items":"[{\"name\":\"old_book\"}]","label":true,"label_action":"Examine","label_description":"bookcase","label_image":"eye_icon"},{"gid":1,"height":122,"id":303,"rotation":90,"type":"","width":239,"x":1132,"y":909,"image_name":"messy_table","collision":true,"container":true,"dialog_on_click":"We need to get away from our work","label":true,"label_action":"Search","label_description":"Desk","label_image":"eye_icon"},{"gid":4,"height":17,"id":304,"rotation":-18,"type":"note","width":12,"x":1599,"y":687,"image_name":"full-note-written-small","image_on_click":"torn-paper","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","post_open_dialog":"So i opened this note and now i am talking about that I have ... ","sound_file":"page_turn","text":"Stay out of the dark","text_colour":"black"},{"gid":4,"height":27,"id":327,"rotation":-427,"type":"note","width":19,"x":959,"y":671,"image_name":"full-note-written-small","image_on_click":"note_sticky","label":true,"label_action":"Read","label_description":"Note","label_image":"eye_icon","sound_file":"page_turn","text":"There is safety in the light... Lock the doors at night"},{"gid":56,"height":47,"id":601,"rotation":-41,"type":"note","width":129,"x":1571,"y":726,"image_name":"spear-png-spear-png-1600_582","dialog_on_click":"Nice...","equip_on_click":true,"image_on_click":"spear-png-spear-png-1600_582","label":true,"label_action":"Pick up","label_description":"Makeshift spear","label_image":"gear_icon","remove_on_click":true},{"gid":57,"height":24,"id":602,"rotation":0,"type":"","width":25,"x":1572,"y":315,"image_name":"can1","dialog_on_click":"Last can left...","label":true,"label_action":"Take","label_description":"Can of food","label_image":"gear_icon","remove_on_click":true},{"gid":39,"height":209,"id":616,"rotation":92,"type":"","width":129,"x":1309,"y":1037,"image_name":"88254-Cot_1_1x2","dialog_on_click":"I just got up...","label":true,"label_action":"Examine","label_description":"Bed","label_image":"eye_icon"},{"gid":61,"height":28,"id":618,"rotation":0,"type":"note","width":28,"x":1549,"y":424,"image_name":"keys_brass","dialog_on_click":"Lets go get some fuel","give_on_click":true,"image_on_click":"keys_brass","items":"[{\"name\": \"keys_brass\"}]","label":true,"label_action":"Pick Up","label_description":"Key","label_image":"eye_icon","remove_on_click":true,"sound_file":"keys_jingle"}],"lights":[{"gid":60,"height":39,"id":613,"rotation":0,"type":"","width":39,"x":1588,"y":636,"image_name":"MI01_FurnitureFloorLampOff_05x05[lamp, floor lamp, lamp off, lamp turned off, standing lamp, upright lamp, room lamp]"},{"gid":60,"height":42,"id":614,"rotation":0,"type":"","width":42,"x":932,"y":637,"image_name":"MI01_FurnitureFloorLampOff_05x05[lamp, floor lamp, lamp off, lamp turned off, standing lamp, upright lamp, room lamp]"},{"gid":60,"height":26,"id":615,"rotation":0,"type":"","width":26,"x":1339,"y":383,"image_name":"MI01_FurnitureFloorLampOff_05x05[lamp, floor lamp, lamp off, lamp turned off, standing lamp, upright lamp, room lamp]"}],"generator":[{"gid":58,"height":107,"id":630,"rotation":0,"type":"","width":107,"x":1172,"y":749,"image_name":"gsv190","label":true,"label_action":"Fill","label_description":"Generator","label_image":"gear_icon"}],"walls":[{"gid":18,"height":21,"id":408,"rotation":0,"type":"","width":222,"x":826,"y":258,"image_name":"dot"},{"gid":18,"height":21,"id":410,"rotation":0,"type":"","width":142,"x":837,"y":768,"image_name":"dot"},{"gid":18,"height":19,"id":411,"rotation":0,"type":"","width":220,"x":1072,"y":770,"image_name":"dot"},{"gid":18,"height":18,"id":412,"rotation":0,"type":"","width":226,"x":1527,"y":770,"image_name":"dot"},{"gid":18,"height":909,"id":413,"rotation":0,"type":"","width":16,"x":820,"y":1607,"image_name":"dot"},{"gid":18,"height":17,"id":414,"rotation":0,"type":"","width":945,"x":826,"y":1165,"image_name":"dot"},{"gid":18,"height":908,"id":415,"rotation":0,"type":"","width":18,"x":1752,"y":1161,"image_name":"dot"},{"gid":18,"height":256,"id":418,"rotation":0,"type":"","width":17,"x":1510,"y":510,"image_name":"dot"},{"gid":18,"height":281,"id":419,"rotation":0,"type":"","width":17,"x":1511,"y":890,"image_name":"dot"},{"gid":18,"height":175,"id":420,"rotation":0,"type":"","width":18,"x":1512,"y":1149,"image_name":"dot"},{"gid":18,"height":380,"id":421,"rotation":0,"type":"","width":23,"x":1119,"y":1149,"image_name":"dot"},{"gid":18,"height":18,"id":621,"rotation":0,"type":"","width":137,"x":1374,"y":770,"image_name":"dot"},{"gid":18,"height":11,"id":625,"rotation":0,"type":"","width":99,"x":1283,"y":767,"image_name":"dot"}],"player_spawn":[{"height":0,"id":137,"point":true,"rotation":0,"type":"","width":0,"x":1365,"y":975},{"height":0,"id":383,"point":true,"rotation":0,"type":"","width":0,"x":1297,"y":939},{"height":0,"id":564,"point":true,"rotation":0,"type":"","width":0,"x":1198,"y":748}],"click_pad":[{"height":78,"id":381,"rotation":359,"type":"","width":176,"x":1000,"y":237,"label":true,"label_action":"Pry open","label_description":"Dumpster","label_image":"take_icon"}],"door":[{"gid":46,"height":16,"id":527,"rotation":-180,"type":"","width":85,"x":1480,"y":793,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Study Door","label_image":"take_icon","open_rotation":"-1"},{"gid":46,"height":16,"id":590,"rotation":-450,"type":"","width":85,"x":1528,"y":974,"image_name":"door_01","clickable":true,"label":true,"label_action":"Open","label_description":"Bathroom Door","label_image":"take_icon","open_rotation":"-1"},{"gid":46,"height":20,"id":619,"rotation":-180,"type":"","width":91,"x":1138,"y":239,"image_name":"door_01","clickable":true,"dialog_on_click":"We never found the key ...","label":true,"label_action":"Unlock","label_description":"Front Door","label_image":"gear_icon","open_rotation":"-1"}],"roof":[{"gid":42,"height":414,"id":512,"rotation":0,"type":"","width":250,"x":1838,"y":1125,"image_name":"shadow_square_large","alpha":0.7}],"shroud":[{"gid":41,"height":515,"id":463,"rotation":0,"type":"","width":257,"x":1902,"y":706,"image_name":"black_dot","alpha":0.9,"remove_on_enter":false}]}
 },{}],237:[function(require,module,exports){
@@ -47376,8 +47547,8 @@ class Background extends extras.TilingSprite {
     this.width  = width;
     this.height = height;
     this.alpha  = alpha;
-    this.anchor.set(0,1);
-    this.position.copy({x,y});
+    this.anchor.set(0, 1);
+    this.position.copy({ x, y });
 
     if(image_name === 'tile_floor') {
       this.tileScale.x = 0.10;
@@ -47429,8 +47600,8 @@ class Border extends Element {
     super({
       ...data,
 
-      image_name: 'black_dot',
-      alpha:      (env.visable_borders)?0.2:0,
+      'image_name': 'black_dot',
+      'alpha'     : (env.visable_borders) ? 0.2 : 0,
     });
 
     borders.addChild(this);
@@ -47485,45 +47656,55 @@ class Chest extends Element {
     } = data;
 
     // TODO handle player acquisition better
-    if(type === 'note') this.on('click', () => {
-      const {
-        image_on_click,
-        text,
-        text_colour,
-        sound_file,
-      } = data;
+    if(type === 'note') {
+      this.on('click', () => {
+        const {
+          image_on_click,
+          text,
+          text_colour,
+          sound_file,
+        } = data;
 
-      new Note({
-        image_on_click,
-        text,
-        text_colour,
-        sound_file,
+        new Note({
+          image_on_click,
+          text,
+          text_colour,
+          sound_file,
+        });
       });
-    });
+    }
 
     this.inventory = new Inventory(data);
 
     if(equip_on_click) {
       this.on('click', () => {
         console.log(data);
-        item_events.emit('equip_weapon', 1, {item: data});
+        item_events.emit('equip_weapon', 1, { 'item': data });
         this.destroy();
       });
     }
 
     if(give_on_click) {
       this.on('click', () => {
-        //TODO this implies only one, which may be ok
-        const [item] = this.inventory.items;
-        item_events.emit('give', 1, {item});
+        // TODO this implies only one, which may be ok
+        const [ item ] = this.inventory.items;
+        item_events.emit('give', 1, { item });
         this.destroy();
       });
     }
 
-    if(label) this.label(data);
-    if(dialog_on_click) this.on('click', () => Caption.render(dialog_on_click));
-    if(container) this.container(data);
-    if(collision) collisions.addChild(this);
+    if(label) {
+      this.label(data);
+    }
+    if(dialog_on_click) {
+      this.on('click', () => Caption.render(dialog_on_click));
+    }
+    if(container) {
+      this.container(data);
+    }
+    if(collision) {
+      collisions.addChild(this);
+    }
 
     items.addChild(this);
   }
@@ -47594,8 +47775,6 @@ module.exports = {
 };
 
 
-
-
 },{"../../engine/pixi_containers":228,"./model":256}],252:[function(require,module,exports){
 const { items        } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
@@ -47618,13 +47797,13 @@ class Door extends Element {
     this.buttonMode = true;
     this.add_component(new Vitals());
     this.state = new StateMachine({
-      init: 'closed',
-      transitions: [
-        { name: 'lock',   from: 'closed',  to: 'locked' },
-        { name: 'unlock', from: 'locked',  to: 'closed' },
-        { name: 'open',   from: 'closed',  to: 'opened' },
-        { name: 'close',  from: 'opened',  to: 'closed' },
-        { name: 'goto',   from: '*',       to: s => s },
+      'init'       : 'closed',
+      'transitions': [
+        { 'name': 'lock',   'from': 'closed',  'to': 'locked' },
+        { 'name': 'unlock', 'from': 'locked',  'to': 'closed' },
+        { 'name': 'open',   'from': 'closed',  'to': 'opened' },
+        { 'name': 'close',  'from': 'opened',  'to': 'closed' },
+        { 'name': 'goto',   'from': '*',       'to': s => s },
       ],
     });
 
@@ -47655,11 +47834,17 @@ class Door extends Element {
 
     this.rotation_on_interaction = data.open_rotation || 2;
 
-    if(data.label) this.overlay(data);
-    if(data.door)  this.pathfind_logic();
+    if(data.label) {
+      this.overlay(data);
+    }
+    if(data.door)  {
+      this.pathfind_logic();
+    }
 
-    damage_events.on('damage', ({id,damage}) => {
-      if(this.id !== id) return;
+    damage_events.on('damage', ({ id, damage }) => {
+      if(this.id !== id) {
+        return;
+      }
       this.damage(damage);
     });
 
@@ -47667,7 +47852,9 @@ class Door extends Element {
   }
 
   open() {
-    if(this.state.is('motion')) return;
+    if(this.state.is('motion')) {
+      return;
+    }
 
     this.state.open();
     this._open();
@@ -47700,7 +47887,9 @@ class Door extends Element {
     this.vitals.damage(damage);
     this.wood_thump.play();
 
-    if(!this.vitals.alive) this.kill();
+    if(!this.vitals.alive) {
+      this.kill();
+    }
   }
 
   kill() {
@@ -47761,13 +47950,13 @@ class Door extends Element {
     this.door = true;
     this.health = 50;
 
-    damage_events.on('damage_tile', ({door_tile, damage}) => {
+    damage_events.on('damage_tile', ({ door_tile, damage }) => {
       door_tile.alpha = 0.6;
       if(door_tile.id === this.id) {
         if(this.health < 30) {
           delete door_tile.door;
           this.visible = false;
-          const broken_door = new Floor({image_name: 'door_broken'});
+          const broken_door = new Floor({ 'image_name': 'door_broken' });
 
           broken_door.position.copy(this);
         }
@@ -47863,7 +48052,9 @@ class Light extends Element {
   }
 
   turn_on() {
-    if(this.state === true) return;
+    if(this.state === true) {
+      return;
+    }
     this.state              = true;
     this.texture            = this.lamp_on_texture;
     this.cast_light = 1;
@@ -47871,7 +48062,9 @@ class Light extends Element {
   }
 
   turn_off() {
-    if(this.state === false) return;
+    if(this.state === false) {
+      return;
+    }
     this.state              = false;
     this.texture            = this.lamp_off_texture;
     this.cast_light = 0;
@@ -47890,7 +48083,9 @@ class Light extends Element {
     const randomiser = random_bound(8000, 40000);
 
     setInterval(async () => {
-      if (!this.state) return;
+      if(!this.state) {
+        return;
+      }
       this.turn_off();
       await sleep(random_bound(10, 150));
       this.turn_on();
@@ -47900,20 +48095,22 @@ class Light extends Element {
 
   async _flicker() {
     // breaks recursion
-    if(!this.flicker_running) return;
+    if(!this.flicker_running) {
+      return;
+    }
     const randomiser = random_bound(10, 30);
     this.turn_on();
 
-    await sleep(randomiser+400);
+    await sleep(randomiser + 400);
     this.turn_off();
 
     await sleep(randomiser);
     this.turn_on();
 
-    await sleep(randomiser*2);
+    await sleep(randomiser * 2);
     this.turn_off();
 
-    await sleep(randomiser**2);
+    await sleep(randomiser ** 2);
     this.turn_on();
 
     this._flicker();
@@ -47957,7 +48154,7 @@ class Element extends Sprite {
     this.alpha    = alpha;
     this.visible  = !hidden;
     this.anchor.set(0, 1);
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
   }
 }
 
@@ -47977,20 +48174,20 @@ class Trigger_Pad extends Element {
   constructor(data) {
     super({
       ...data,
-      image_name: 'black_dot',
-      alpha:       env.visable_pads?0.4:0,
+      'image_name': 'black_dot',
+      'alpha'     : env.visable_pads ? 0.4 : 0,
     });
     this.events = new event();
     this.speed  = 30;
     if(data.speed) {
       this.speed = 2;
     } else {
-      this.speed = (env.dev)?25:4;
+      this.speed = (env.dev) ? 25 : 4;
     }
 
     this.anchor.set(0);
 
-    const {level_name, spawn_id} = data;
+    const { level_name, spawn_id } = data;
     if(level_name) {
       this.events.once('trigger', () => {
         Level_Factory.create(level_name, spawn_id);
@@ -48001,7 +48198,7 @@ class Trigger_Pad extends Element {
   }
 
   set text(value) {
-    const pad_text = new Text(value, { fontSize: 100 });
+    const pad_text = new Text(value, { 'fontSize': 100 });
     this.addChild(pad_text);
   }
 
@@ -48043,7 +48240,9 @@ class Shrine extends Element {
   }
 
   give_blood(vial) {
-    if(vial) this.inventory.give(vial);
+    if(vial) {
+      this.inventory.give(vial);
+    }
   }
 
   get enough_blood() {
@@ -48090,7 +48289,9 @@ class Generator extends Element {
   }
 
   ready() {
-    if(this._fuel <= 0) return Caption.render('Its empty...');
+    if(this._fuel <= 0) {
+      return Caption.render('Its empty...');
+    }
     this.button.action_label.text = 'Start';
     this.state                    = 'ready';
     this.running_sound.stop();
@@ -48110,8 +48311,10 @@ class Generator extends Element {
   }
 
   state_handler() {
-    if(this._disable) return;
-    switch(this.state) {
+    if(this._disable) {
+      return;
+    }
+    switch (this.state) {
       case 'running' : return this.ready();
       case 'ready'   : return this.run();
       case 'empty'   : return this.ready();
@@ -48165,7 +48368,7 @@ class Shroud extends Element {
   constructor(data) {
     super({
       ...data,
-      image_name:'black_dot',
+      'image_name': 'black_dot',
     });
     this.remove_on_enter = data.remove_on_enter;
     this.alpha_on_enter  = data.alpha_on_enter;
@@ -48174,13 +48377,17 @@ class Shroud extends Element {
   }
 
   fade_out_destroy() {
-    if(this._destroyed) return;
+    if(this._destroyed) {
+      return;
+    }
     Fade.out_destroy(this);
   }
 
   fade_out(time) {
-    if(this._destroyed) return;
-    Fade.out(this, { time, visible_on_end: true });
+    if(this._destroyed) {
+      return;
+    }
+    Fade.out(this, { time, 'visible_on_end': true });
   }
 }
 
@@ -48197,8 +48404,8 @@ class Wall extends Element {
     super({
       ...data,
 
-      image_name: 'black_dot',
-      tint:       0x000000,
+      'image_name': 'black_dot',
+      'tint'      : 0x000000,
     });
 
     collisions.addChild(this);
@@ -48210,12 +48417,13 @@ module.exports = {
 };
 
 
-
 },{"../../engine/pixi_containers":228,"./model":256}],261:[function(require,module,exports){
+(function (global){
 const { pathfind    } = require('../../engine/pathfind.js');
 const { Trigger_Pad } = require('../elements/pad');
 const { LogicZombie } = require('../../character/archetypes/logic_zombie');
 const { players     } = require('../../engine/pixi_containers');
+const { viewport    } = require('../../engine/app');
 
 const {
   Wall,
@@ -48231,9 +48439,9 @@ const {
 
 class DefendRoom  {
   constructor() {
-    this.name     = 'defend_room';
-    this.player   = players.children[0];
-    this.data     = require('../data/defend_room.json');
+    this.name   = 'defend_room';
+    this.player = players.children[0];
+    this.data   = require('../data/defend_room.json');
 
     this.walls        = this.data.walls.map(data => new Wall(data));
     this.shrouds      = this.data.shroud.map(data => new Shroud(data));
@@ -48247,10 +48455,11 @@ class DefendRoom  {
     this.doors        = this.data.door.map(data => new Door(data));
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === 269);
     this.zombies      = this.data.prey.map(unit => new LogicZombie(unit));
+    this.obstacles    = this.data.obstacle.map(unit => new Collision(unit));
 
-    this.attack_pad   = this.exit_pad.find(pad => pad.id === 207);
+    this.attack_pad      = this.exit_pad.find(pad => pad.id === 207);
     this.attack_pad.text = 'zombie attack';
-    pathfind.create_level_grid(this.data.grid[0]);
+    this.grid            = pathfind.create_level_grid(this.data.grid[0]);
 
     this._set_elements();
   }
@@ -48258,10 +48467,29 @@ class DefendRoom  {
   _set_elements() {
     this.player.position.copy(this.entry_point);
 
+    const point = global.place_bunny();
+
+    const zombie = this.zombies[0];
+    zombie.target(point);
+    zombie.animation.eat();
+    zombie.logic_start({
+      'time_on_sight': 2000,
+    });
+
+
+    viewport.on('click', ({ data }) => {
+      const mouse_position = data.getLocalPosition(viewport);
+      point.position.copy(mouse_position);
+      console.log(zombie);
+      zombie.target(point);
+
+
+    });
+
     this.attack_pad.once('trigger', () => {
       this.zombies.forEach(zombie => {
         zombie.animation.eat();
-        zombie.target = this.player;
+        zombie.target(this.player);
         zombie.logic_start();
       });
     });
@@ -48272,7 +48500,8 @@ module.exports = {
   DefendRoom,
 };
 
-},{"../../character/archetypes/logic_zombie":204,"../../engine/pathfind.js":227,"../../engine/pixi_containers":228,"../data/defend_room.json":235,"../elements":254,"../elements/pad":257}],262:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../character/archetypes/logic_zombie":204,"../../engine/app":221,"../../engine/pathfind.js":227,"../../engine/pixi_containers":228,"../data/defend_room.json":235,"../elements":254,"../elements/pad":257}],262:[function(require,module,exports){
 const { players     } = require('../../engine/pixi_containers');
 const { collisions  } = require('../../engine/pixi_containers');
 const { env         } = require('../../../config');
@@ -48317,7 +48546,9 @@ class DevRoom {
     this.exit_door    = this.doors.find(door => door.id === 619);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 
@@ -48370,14 +48601,14 @@ class DevRoom {
 
     const light = this.collisions.find(light => light.id === 626);
     const raycaster = new Raycast(this.player, {
-      border:       this.data.shadow_area[0],
-      obstructions: walls,
-      follow:       true,
-      radius:       200,
+      'border'      : this.data.shadow_area[0],
+      'obstructions': walls,
+      'follow'      : true,
+      'radius'      : 200,
     });
     raycaster.add_light(light, 200);
 
-    viewport.on('mousemove', ({data}) => {
+    viewport.on('mousemove', ({ data }) => {
       if(raycaster.raycast.containsPoint(data.global)) {
         viewport.interactiveChildren = true;
         return;
@@ -48435,8 +48666,8 @@ class IntroRoom {
 
     this.generator   = new Generator(this.data.generator[0]);
     this.shadow      = new Raycast(this.player, {
-      border:       this.data.shadow_area[0],
-      obstructions: this.walls,
+      'border'      : this.data.shadow_area[0],
+      'obstructions': this.walls,
     });
 
     this.locked_door       = this.doors.find(door => door.id === 528);
@@ -48450,7 +48681,9 @@ class IntroRoom {
     this._set_sounds();
     this._set_elements();
     this._set_cutscene();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _main_room() {
@@ -48458,7 +48691,7 @@ class IntroRoom {
     const bedroom_roof = this.roofs.find(roof => roof.id === 508);
 
     const light = this.lamps.find(light => light.id === 614);
-    light.flicker_for(3000*3);
+    light.flicker_for(3000 * 3);
     light.events.on('on', ()  => {
       main_roof.alpha = 0.3;
       bedroom_roof.alpha = 0.3;
@@ -48483,7 +48716,7 @@ class IntroRoom {
     white_filter.greyscale(3);
 
     const hand = new FadeSprite(this.data.white_hands[0]);
-    hand.filters = [white_filter];
+    hand.filters = [ white_filter ];
     hand.fade_in_wait_out(100, 500, 4000);
     visuals.addChild(hand);
 
@@ -48505,12 +48738,12 @@ class IntroRoom {
   _set_elements() {
     this.theme_song.play();
 
-    const spawn_point = this.data.player_spawn.find(spawn=>spawn.id===137);
+    const spawn_point = this.data.player_spawn.find(spawn => spawn.id === 137);
     this.player.position.copy(spawn_point);
 
     viewport.moveCenter(this.player.x, this.player.y);
     viewport.on('mousemove', (
-      { data: { global } }
+      { 'data': { global } }
     ) => {
       const mouse_is_in_shadows = this.shadow.contains(global);
       viewport.interactiveChildren = mouse_is_in_shadows;
@@ -48550,7 +48783,7 @@ class IntroRoom {
   }
 
   _set_dev_settings() {
-    const spawn_point = this.data.player_spawn.find(spawn=>spawn.id===564);
+    const spawn_point = this.data.player_spawn.find(spawn => spawn.id === 564);
     this.player.position.copy(spawn_point);
     viewport.moveCenter(this.player.x, this.player.y);
 
@@ -48621,7 +48854,7 @@ class Level_Factory {
     const { RanbirFloor1 } = require('./ranbir_flat_1');
     const { RanbirFloor2 } = require('./ranbir_flat_2');
 
-    switch(level_name) {
+    switch (level_name) {
       case 'intro'     : return new IntroRoom();
       case 'item'      : return new ItemsRoom();
       case 'street'    : return new StreetRoom(spawn_id);
@@ -48663,7 +48896,9 @@ class Level_Factory {
       item.forEach(data => new Chest(data));
       door.forEach(data => new Door(data));
       shroud.forEach(data => new Shroud(data));
-      if(slow_pad) slow_pad.forEach(data => new Trigger_Pad(data));
+      if(slow_pad) {
+        slow_pad.forEach(data => new Trigger_Pad(data));
+      }
 
     } catch (error) {
       console.error(error);
@@ -48672,9 +48907,13 @@ class Level_Factory {
 
   static clear() {
     console.log('clear');
-    tweenManager.tweens.forEach(tween =>{
-      if(!tween.target) return;
-      if(tween.target.name === 'zombie') tween.target.remove();
+    tweenManager.tweens.forEach(tween => {
+      if(!tween.target) {
+        return;
+      }
+      if(tween.target.name === 'zombie') {
+        tween.target.remove();
+      }
     });
     clear_level_containers();
   }
@@ -48725,7 +48964,9 @@ class ParkRoom  {
     this.zombie_pad = this.exit_pad.find(pad => pad.id === 207);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _set_elements() {
@@ -48753,8 +48994,8 @@ module.exports = {
 };
 
 },{"../../../config":1,"../../character/archetypes/logic_zombie":204,"../../character/archetypes/path_rat":206,"../../engine/pixi_containers":228,"../data/park_room.json":240,"../elements":254}],267:[function(require,module,exports){
-//const { Level_Factory } = require('./level_factory');
-//const { Player       } = require('../../character/archetypes/player');
+// const { Level_Factory } = require('./level_factory');
+// const { Player       } = require('../../character/archetypes/player');
 const { viewport    } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
 const { env         } = require('../../../config');
@@ -48793,7 +49034,9 @@ class RanbirFloor0 {
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 
@@ -48847,10 +49090,12 @@ class RanbirFloor1 {
     this.collisions  = this.data.collision.map(data => new Collision(data));
 
     this.light_shroud = this.shrouds.find(roof => roof.id === 591);
-    //this.entry_point = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
+    // this.entry_point = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 
@@ -48903,7 +49148,9 @@ class RanbirFloor2 {
     this.light_shroud = this.shrouds.find(roof => roof.id === 594);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 
@@ -48930,7 +49177,9 @@ class SimpleRoom {
     this.name   = 'simple_room';
     this.player = new Player();
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _set_elements() {
@@ -49063,11 +49312,13 @@ class StartRoom  {
     this.stalkers  = this.data.prey.map(unit => new Stalker(unit, this.player));
     this.generator = this.iterate();
 
-    //pathfind.create_level_grid(this.data.grid[0]);
+    // pathfind.create_level_grid(this.data.grid[0]);
     this._set_sounds();
     this._set_elements();
     this._start();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
 
@@ -49123,8 +49374,8 @@ class StartRoom  {
     const tween = tweenManager.createTween(this.cursor);
     tween.time = 5000;
     tween.to({
-      x: this.microphone_prompt.allow_button.x,
-      y: this.microphone_prompt.allow_button.y,
+      'x': this.microphone_prompt.allow_button.x,
+      'y': this.microphone_prompt.allow_button.y,
     });
     tween.start();
     tween.on('end', () => {
@@ -49135,7 +49386,7 @@ class StartRoom  {
     interaction.cursorStyles.pointer = "url('/dot.png'), auto";
     viewport.interactive = true;
     viewport.cursor = 'pointer';
-    viewport.on('mousemove', ({data}) => tween.from(data.global));
+    viewport.on('mousemove', ({ data }) => tween.from(data.global));
 
     yield;
     tween.remove();
@@ -49147,10 +49398,10 @@ class StartRoom  {
     shrouds.removeChildren();
     backgrounds.removeChildren();
     Array(100).fill().forEach(() => random_word({
-      point: this.player,
-      size: 150,
-      closeness: 700,
-      text: ['RUN!','RUN','RUN','DIE'],
+      'point'    : this.player,
+      'size'     : 150,
+      'closeness': 700,
+      'text'     : [ 'RUN!', 'RUN', 'RUN', 'DIE' ],
     }));
 
     let time_in = 2400;
@@ -49196,8 +49447,8 @@ class StartRoom  {
       distortion_amount += 0.01;
       distortion_filter.amount = distortion_amount;
 
-      const thud   = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
-      thud.filters = [distortion_filter];
+      const thud   = sound.random_sound_from([ 'thud_2', 'thud_3', 'thud_5', 'thud_6', 'thud_7' ]);
+      thud.filters = [ distortion_filter ];
       thud.volume  = volume;
       thud.play();
 
@@ -49257,11 +49508,11 @@ class StartRoom  {
 
     const game_title  = new Text(
       'LORIUM GAMES', {
-        fontSize: 200,
-        fill: 'white',
+        'fontSize': 200,
+        'fill'    : 'white',
       }
     );
-    game_title.width  = video.width -100;
+    game_title.width  = video.width - 100;
     game_title.height = 170;
     game_title.anchor.set(0.5);
     game_title.position.copy(this.player);
@@ -49272,11 +49523,11 @@ class StartRoom  {
     game_title.destroy();
     const company_name  = new Text(
       'CREATIVE TITLE', {
-        fontSize: 200,
-        fill: 'white',
+        'fontSize': 200,
+        'fill'    : 'white',
       }
     );
-    company_name.width  = video.width -100;
+    company_name.width  = video.width - 100;
     company_name.height = 170;
     company_name.anchor.set(0.5);
     company_name.position.copy(this.player);
@@ -49299,8 +49550,12 @@ class StartRoom  {
     this.microphone_prompt.opacity = 0;
 
     keyboardManager.on('released', event => {
-      if(event === 13) this.generator.next();
-      if(event === 32) this._leave();
+      if(event === 13) {
+        this.generator.next();
+      }
+      if(event === 32) {
+        this._leave();
+      }
     });
     keyboardManager.enable();
 
@@ -49341,22 +49596,22 @@ const randomiser = random_bound(-10, 10);
 async function flicker(light) {
   light.alpha = 0.7;
 
-  await sleep(20+randomiser);
+  await sleep(20 + randomiser);
   light.alpha = 0;
 
-  await sleep(15+randomiser*3);
+  await sleep(15 + randomiser * 3);
   light.alpha = 0;
 
-  await sleep(randomiser*2);
+  await sleep(randomiser * 2);
   light.alpha = 0.9;
 
-  await sleep(15+randomiser);
+  await sleep(15 + randomiser);
   light.alpha = 0;
 
-  await sleep(45+randomiser*2);
+  await sleep(45 + randomiser * 2);
   light.alpha = 1;
 
-  await sleep(5000+(randomiser ** 2));
+  await sleep(5000 + (randomiser ** 2));
 
   await flicker(light);
 }
@@ -49392,7 +49647,9 @@ class StreetRoom {
     this._set_sounds();
     this._set_elements();
     this._set_cutscene();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _set_cutscene() {
@@ -49480,14 +49737,14 @@ class HubRoom {
 
     exit_pad.forEach(data => {
       new Trigger_Pad(data);
-      const { x, y, width, height} = data;
+      const { x, y, width, height } = data;
 
       const level_names = new Text(
-        data.level_name,{fontSize: 40, fill: 'black'}
+        data.level_name, { 'fontSize': 40, 'fill': 'black' }
       );
 
-      level_names.x = x + width/4;
-      level_names.y = y + height/2;
+      level_names.x = x + width / 4;
+      level_names.y = y + height / 2;
 
       visuals.addChild(level_names);
     });
@@ -49500,7 +49757,7 @@ class HubRoom {
     const generator = new Generator(this.data.generator[0]);
 
     this.player.inventory.populate_with_item(
-      'gas_canister', { condition: 0.4 }
+      'gas_canister', { 'condition': 0.4 }
     );
 
     ProgressBar.percentage = 0.1;
@@ -49532,18 +49789,18 @@ class HubRoom {
     const level_text = new Text(
       'THE HUB',
       {
-        fontSize: 100,
-        fill:     'grey',
-        fontWeight: 'bold',
-        dropShadow: true,
-        dropShadowColor: '#000000',
-        dropShadowBlur: 8,
-        dropShadowDistance: 10,
+        'fontSize'          : 100,
+        'fill'              : 'grey',
+        'fontWeight'        : 'bold',
+        'dropShadow'        : true,
+        'dropShadowColor'   : '#000000',
+        'dropShadowBlur'    : 8,
+        'dropShadowDistance': 10,
       }
     );
 
-    level_text.x = player[0].x -150;
-    level_text.y = player[0].y -50;
+    level_text.x = player[0].x - 150;
+    level_text.y = player[0].y - 50;
 
     visuals.addChild(level_text);
     console.timeEnd();
@@ -49570,7 +49827,7 @@ global.place_bunny = (
   } = {}
 ) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
-  bunny.position.copy({x, y});
+  bunny.position.copy({ x, y });
   bunny.anchor.set(0.5);
   bunny.width  = 100;
   bunny.height = 100;
@@ -49594,12 +49851,12 @@ const { grids      } = require('../engine/pixi_containers');
 const { collisions } = require('../engine/pixi_containers');
 const { env } = require('../../config');
 
-//this is for y axis 1
+// this is for y axis 1
 function check(rect1, rect2) {
-  if (rect1.x < rect2.x + rect2.width &&
-    rect1.x + rect1.width > rect2.x &&
-    rect1.y < rect2.y &&
-    rect1.y + rect1.height > rect2.y - rect2.height) {
+  if(rect1.x < rect2.x + rect2.width
+    && rect1.x + rect1.width > rect2.x
+    && rect1.y < rect2.y
+    && rect1.y + rect1.height > rect2.y - rect2.height) {
     return true;
   }
   return false;
@@ -49625,8 +49882,8 @@ class Grid {
     this.x = Math.round(data.x);
     this.y = Math.round(data.y);
 
-    this.tile_width  = Math.ceil(data.width/100);
-    this.tile_height = Math.ceil(data.height/100);
+    this.tile_width  = Math.ceil(data.width / 100);
+    this.tile_height = Math.ceil(data.height / 100);
     this.tile_area   = this.tile_height * this.tile_width;
   }
 
@@ -49634,14 +49891,14 @@ class Grid {
     let grid_x = 0;
     let grid_y = 0;
 
-    for(let i=0; i<=this.tile_area; i++){
+    for (let i = 0; i <= this.tile_area; i++){
       const tile = new Tile();
       tile.position.copy(this);
 
       // This is for the pathfinder
       tile.cell_position = {
-        x: grid_x,
-        y: grid_y,
+        'x': grid_x,
+        'y': grid_y,
       };
 
       this.x += 100;
@@ -49679,10 +49936,14 @@ class Grid {
 
     grids.children.forEach((tile, i) => {
       if(!tile.passable) {
-        if(env.show_grid) tile.alpha = 0.3;
+        if(env.show_grid) {
+          tile.alpha = 0.3;
+        }
         if(tile.door) {
           binary_line.push(2);
-          if(env.show_grid) tile.alpha = 1;
+          if(env.show_grid) {
+            tile.alpha = 1;
+          }
 
         } else {
           binary_line.push(1);
@@ -49746,8 +50007,8 @@ module.exports = {
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
 class Sight {
   static _getCenter(o, dimension, axis) {
-    if (o.anchor !== undefined) {
-      if (o.anchor[axis] !== 0) {
+    if(o.anchor !== undefined) {
+      if(o.anchor[axis] !== 0) {
         return 0;
       }
       return dimension / 2;
@@ -49812,11 +50073,11 @@ class Sight {
       });
     });
 
-    //Return the true/false value of the collision test
+    // Return the true/false value of the collision test
     return noObstacles;
   }
 }
-//for none y axis handling
+// for none y axis handling
 // const left = point.x > sprite.x,
 //   right = point.x < (sprite.x + sprite.width),
 //   top = point.y > sprite.y,
@@ -49836,7 +50097,7 @@ function distance_between(point_1, point_2) {
   return Math.sqrt((dx * dx) + (dy * dy));
 }
 
-//TODO replace random number with this
+// TODO replace random number with this
 function random_bound(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -49850,9 +50111,11 @@ function radian(anchor, point){
   const radian_value = Math.atan2(anchor.y - point.y, anchor.x - point.x);
 
   if(
-    global.isNaN(radian_value) ||
-    radian_value === undefined
-  ) throw new Error('invald radian ' + radian_value);
+    global.isNaN(radian_value)
+    || radian_value === undefined
+  ) {
+    throw new Error('invald radian ' + radian_value);
+  }
 
   return radian_value;
 }
@@ -49897,15 +50160,15 @@ module.exports = {
 const { Text, Sprite, Texture } = require('pixi.js');
 const { guis } = require('../engine/pixi_containers');
 
-//TODO move to seperate file
+// TODO move to seperate file
 class Label extends Text{
   constructor(text) {
     super(text, {
-      fontSize: 15,
-      fill: '#D2D8D7',
-      fontVariant: 'small-caps',
-      lineJoin: 'round',
-      strokeThickness: 4,
+      'fontSize'       : 15,
+      'fill'           : '#D2D8D7',
+      'fontVariant'    : 'small-caps',
+      'lineJoin'       : 'round',
+      'strokeThickness': 4,
     });
 
     this.anchor.set(0.5);
@@ -49953,14 +50216,14 @@ class Button extends Sprite {
     guis.addChild(this);
   }
 
-  set_position({x, y}) {
-    this.position.copy({x, y});
+  set_position({ x, y }) {
+    this.position.copy({ x, y });
 
     if(this.action_label) {
-      this.action_label.position.copy({x, y: y+22});
+      this.action_label.position.copy({ x, 'y': y + 22 });
     }
     if(this.description_label) {
-      this.description_label.position.copy({x, y: y-22});
+      this.description_label.position.copy({ x, 'y': y - 22 });
     }
   }
 
@@ -50005,7 +50268,7 @@ const { Text      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
-container.x = viewport.screenWidth/2;
+container.x = viewport.screenWidth / 2;
 container.y = viewport.screenHeight;
 
 const background = new Sprite(Texture.WHITE);
@@ -50020,7 +50283,7 @@ dialog.position.copy(background);
 dialog.y -= 5;
 dialog.anchor.set(0.5, 1);
 
-//TODO handle gui elements in pixi_containers
+// TODO handle gui elements in pixi_containers
 container.addChild(
   background,
   dialog
@@ -50069,8 +50332,8 @@ const { Texture } = require('pixi.js');
 // TODO put in container
 class MicrophonePrompt {
   constructor() {
-    this.website_text = new Text('www.localhost.com want to:', {fontSize: 50});
-    this.prompt_text = new Text('Use take control of your browser', {fontSize: 50});
+    this.website_text = new Text('www.localhost.com want to:', { 'fontSize': 50 });
+    this.prompt_text = new Text('Use take control of your browser', { 'fontSize': 50 });
     this.microphone_icon = new Sprite.fromFrame('microphone');
     this.allow_button = new Sprite.fromFrame('allow_button');
     this.allow_button_2 = new Sprite.fromFrame('allow_button');
@@ -50152,7 +50415,7 @@ module.exports = {
 
 },{"../engine/app":221,"pixi.js":152}],283:[function(require,module,exports){
 (function (global){
-const { Texture, Sprite, Text }= require('pixi.js');
+const { Texture, Sprite, Text } = require('pixi.js');
 const { guis     } = require('../engine/pixi_containers');
 const { viewport    } = require('../engine/app');
 const { Fade     } = require('../effects/fade');
@@ -50167,7 +50430,7 @@ class Background extends Sprite {
     guis.addChild(this);
   }
 
-  set_position({x, y}) {
+  set_position({ x, y }) {
     this.position.set(x, y);
   }
 
@@ -50183,8 +50446,10 @@ class Note {
     text_colour = 'grey',
     sound_file,
   }) {
-    //TODO Don't imply sound on instantiation
-    if(sound_file) PIXI.sound.play(sound_file);
+    // TODO Don't imply sound on instantiation
+    if(sound_file) {
+      PIXI.sound.play(sound_file);
+    }
 
     this.name = 'note';
     this.background = new Background();
@@ -50198,7 +50463,7 @@ class Note {
     this.sprite = new Sprite(Texture.fromImage(image_on_click));
     this.sprite.position.copy(this.background.position);
 
-    //TODO make image size relative to viewport
+    // TODO make image size relative to viewport
     if(this.sprite.width > global.window.innerWidth) {
       this.sprite.scale.set(0.5);
     }
@@ -50212,11 +50477,11 @@ class Note {
     this.text = new Text(
       text,
       {
-        fontSize:      20,
-        fill:          text_colour,
-        align:         'center',
-        wordWrap:      true,
-        wordWrapWidth: 200,
+        'fontSize'     : 20,
+        'fill'         : text_colour,
+        'align'        : 'center',
+        'wordWrap'     : true,
+        'wordWrapWidth': 200,
       }
     );
     this.text.anchor.set(0.5);
@@ -50248,7 +50513,7 @@ const { Container    } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
-container.x = viewport.screenWidth/2;
+container.x = viewport.screenWidth / 2;
 container.y = viewport.screenHeight;
 
 const background = new Sprite(Texture.WHITE);
@@ -50262,7 +50527,7 @@ const maximum_width = background.width - 20;
 const bar = new Sprite(Texture.WHITE);
 bar.width = 0;
 bar.height = 15;
-bar.x -= maximum_width/2;
+bar.x -= maximum_width / 2;
 bar.y -= 5;
 bar.anchor.set(0, 1);
 bar.tint = 0x9acd3;
@@ -50286,12 +50551,12 @@ class ProgressBar {
   }
 
   static set percentage(percentage) {
-    const amount = (maximum_width)*percentage;
+    const amount = (maximum_width) * percentage;
     bar.width = amount;
   }
 
   static get percentage() {
-    const percentage = (bar.width/maximum_width);
+    const percentage = (bar.width / maximum_width);
     return percentage;
   }
 
@@ -50305,7 +50570,9 @@ class ProgressBar {
   }
 
   static pause() {
-    if(tween_bar) tween_bar.stop();
+    if(tween_bar) {
+      tween_bar.stop();
+    }
   }
 
   static get time_to_complete() {
@@ -50330,10 +50597,12 @@ class ProgressBar {
   }
 
   static to_percentage(end_percentage) {
-    if(tween_bar.active) return;
+    if(tween_bar.active) {
+      return;
+    }
 
     tween_bar.time = this.time_to_complete;
-    tween_bar.to({ width: maximum_width });
+    tween_bar.to({ 'width': maximum_width });
 
     tween_bar.on('update', () => {
       if(this.percentage > end_percentage) {
@@ -50354,7 +50623,7 @@ module.exports = {
 };
 
 },{"../engine/app":221,"pixi.js":152}],285:[function(require,module,exports){
-const {Text,Sprite,Container,Texture}= require('pixi.js');
+const { Text, Sprite, Container, Texture } = require('pixi.js');
 const { guis          } = require('../engine/pixi_containers');
 const { item_events   } = require('../engine/item_handler');
 const { Fade          } = require('../effects/fade');
@@ -50371,7 +50640,7 @@ class Slot extends Sprite {
 
 class Title extends Text {
   constructor() {
-    super('', {fontSize: 18, fill: 'grey'});
+    super('', { 'fontSize': 18, 'fill': 'grey' });
     this.y += 48;
     this.x -= 30;
     this.visible = false;
@@ -50401,9 +50670,9 @@ class Title extends Text {
 
 class Description extends Text{
   constructor() {
-    super('',{
-      fontSize: 15,
-      fill: 'white',
+    super('', {
+      'fontSize': 15,
+      'fill'    : 'white',
     });
     this.y += 76;
     this.x -= 40;
@@ -50417,7 +50686,7 @@ class Description extends Text{
 }
 
 class Item extends Sprite {
-  constructor({image_name}) {
+  constructor({ image_name }) {
     super(Texture.fromFrame(image_name));
     this.height = 250;
     this.width  = 250;
@@ -50443,12 +50712,12 @@ class View_Inventory {
     this.slots = [];
   }
 
-  set_position({x, y}) {
+  set_position({ x, y }) {
     this.slot_container.position.set(x, y);
   }
 
   create_inventory_slots(slots = 3) {
-    for(let i = 0; i <= slots; i++) {
+    for (let i = 0; i <= slots; i++) {
       const slot = new Slot();
       slot.x = i * 80;
       this.slot_container.addChild(slot);
@@ -50474,7 +50743,7 @@ class View_Inventory {
       item.click = () => {
         console.log('click');
         console.log(loot_item);
-        item_events.emit('give', 1, { item: loot_item });
+        item_events.emit('give', 1, { 'item': loot_item });
         description.visible = false;
         title.hide();
         item.destroy();
@@ -50511,10 +50780,10 @@ const { Text       } = require('pixi.js');
 
 class KeyboardKey extends FadeSprite {
   constructor(letter) {
-    super({image_name: 'key'});
+    super({ 'image_name': 'key' });
 
     const text = new Text(letter, {
-      fontSize: 55,
+      'fontSize': 55,
     });
     text.x += 55;
     text.y -= 100;
@@ -50526,7 +50795,9 @@ class KeyboardKey extends FadeSprite {
   }
 
   bounce_out() {
-    if(this.fired) return;
+    if(this.fired) {
+      return;
+    }
     this.alpha = 0.5;
     this.tint = 0x32cd80;
     this.bounce();
@@ -50563,7 +50834,7 @@ class WASD {
   }
 
   press(key) {
-    switch(key) {
+    switch (key) {
       case 87: return this.w_letter.bounce_out();
       case 65: return this.a_letter.bounce_out();
       case 83: return this.s_letter.bounce_out();
@@ -50573,10 +50844,10 @@ class WASD {
 
   get complete() {
     return (
-      this.w_letter.fired &&
-      this.a_letter.fired &&
-      this.s_letter.fired &&
-      this.d_letter.fired
+      this.w_letter.fired
+      && this.a_letter.fired
+      && this.s_letter.fired
+      && this.d_letter.fired
     );
   }
 }

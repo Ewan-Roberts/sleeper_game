@@ -32,10 +32,12 @@ class RanbirFloor1 {
     this.collisions  = this.data.collision.map(data => new Collision(data));
 
     this.light_shroud = this.shrouds.find(roof => roof.id === 591);
-    //this.entry_point = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
+    // this.entry_point = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 

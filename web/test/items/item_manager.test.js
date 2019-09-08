@@ -5,12 +5,12 @@ const { items } = require('../../items/data/item_data');
 describe('items/item_manager', function() {
   describe('get_random_items()', function() {
     it('returns between 1 - 10 random items', function() {
-      const items = Item_Manager.get_random_items({ min: 1, max: 10 });
+      const items = Item_Manager.get_random_items({ 'min': 1, 'max': 10 });
       expect(items.length).to.be.closeTo(5, 5);
     });
 
     it('returns 1 random item', function() {
-      const items = Item_Manager.get_random_items({ min: 1, max: 1 });
+      const items = Item_Manager.get_random_items({ 'min': 1, 'max': 1 });
       expect(items.length).to.equal(1);
     });
 
@@ -55,7 +55,7 @@ describe('items/item_manager', function() {
       const condition_of_item = 0.3;
 
       const item = Item_Manager.get_item('rusty_knife', {
-        condition: condition_of_item,
+        'condition': condition_of_item,
       });
 
       expect(item.condition).to.equal(condition_of_item);

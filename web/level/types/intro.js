@@ -41,8 +41,8 @@ class IntroRoom {
 
     this.generator   = new Generator(this.data.generator[0]);
     this.shadow      = new Raycast(this.player, {
-      border:       this.data.shadow_area[0],
-      obstructions: this.walls,
+      'border'      : this.data.shadow_area[0],
+      'obstructions': this.walls,
     });
 
     this.locked_door       = this.doors.find(door => door.id === 528);
@@ -56,7 +56,9 @@ class IntroRoom {
     this._set_sounds();
     this._set_elements();
     this._set_cutscene();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _main_room() {
@@ -64,7 +66,7 @@ class IntroRoom {
     const bedroom_roof = this.roofs.find(roof => roof.id === 508);
 
     const light = this.lamps.find(light => light.id === 614);
-    light.flicker_for(3000*3);
+    light.flicker_for(3000 * 3);
     light.events.on('on', ()  => {
       main_roof.alpha = 0.3;
       bedroom_roof.alpha = 0.3;
@@ -89,7 +91,7 @@ class IntroRoom {
     white_filter.greyscale(3);
 
     const hand = new FadeSprite(this.data.white_hands[0]);
-    hand.filters = [white_filter];
+    hand.filters = [ white_filter ];
     hand.fade_in_wait_out(100, 500, 4000);
     visuals.addChild(hand);
 
@@ -111,12 +113,12 @@ class IntroRoom {
   _set_elements() {
     this.theme_song.play();
 
-    const spawn_point = this.data.player_spawn.find(spawn=>spawn.id===137);
+    const spawn_point = this.data.player_spawn.find(spawn => spawn.id === 137);
     this.player.position.copy(spawn_point);
 
     viewport.moveCenter(this.player.x, this.player.y);
     viewport.on('mousemove', (
-      { data: { global } }
+      { 'data': { global } }
     ) => {
       const mouse_is_in_shadows = this.shadow.contains(global);
       viewport.interactiveChildren = mouse_is_in_shadows;
@@ -156,7 +158,7 @@ class IntroRoom {
   }
 
   _set_dev_settings() {
-    const spawn_point = this.data.player_spawn.find(spawn=>spawn.id===564);
+    const spawn_point = this.data.player_spawn.find(spawn => spawn.id === 564);
     this.player.position.copy(spawn_point);
     viewport.moveCenter(this.player.x, this.player.y);
 

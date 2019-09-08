@@ -4,7 +4,7 @@ const { Text       } = require('pixi.js');
 
 class KeyboardKey extends FadeSprite {
   constructor(letter) {
-    super({image_name: 'key'});
+    super({ 'image_name': 'key' });
 
     const text = new Text(letter);
     text.style.fontSize = 50;
@@ -17,7 +17,9 @@ class KeyboardKey extends FadeSprite {
   }
 
   bounce_out() {
-    if(this.fired) return;
+    if(this.fired) {
+      return;
+    }
     this.alpha = 0.5;
     this.tint = 0x32cd80;
     this.bounce();

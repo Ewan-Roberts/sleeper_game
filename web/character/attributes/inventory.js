@@ -8,9 +8,11 @@ class Inventory extends View_Inventory {
     this.name     = 'inventory';
     this.items    = random ? Item_Manager.get_random_items() : [];
     this.equipped = equip ? Item_Manager.get_item(equip) : null;
-    if(!items) return;
+    if(!items) {
+      return;
+    }
     this.items = JSON.parse(items).map(
-      ({name, condition}) => Item_Manager.get_item(name, { condition })
+      ({ name, condition }) => Item_Manager.get_item(name, { condition })
     );
     console.log(this.items);
 
@@ -18,7 +20,9 @@ class Inventory extends View_Inventory {
   }
 
   populate() {
-    if(this.items.length === 0) return;
+    if(this.items.length === 0) {
+      return;
+    }
     this.populate_slots(this.items);
   }
 
@@ -105,15 +109,19 @@ class Inventory extends View_Inventory {
   }
 
   give(item) {
-    if(!item) throw 'can not give nothing';
+    if(!item) {
+      throw 'can not give nothing';
+    }
     this.items.push(item);
   }
 
   take_by_name(name) {
     const index = this.items.findIndex(item => item.name === name);
-    if(index < 0) return undefined;
+    if(index < 0) {
+      return undefined;
+    }
 
-    const [result] = this.items.splice(index,1);
+    const [ result ] = this.items.splice(index, 1);
     return result;
   }
 }

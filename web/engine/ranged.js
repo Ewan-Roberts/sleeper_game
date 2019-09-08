@@ -27,24 +27,26 @@ function shoot_arrow(speed, damage, origin, point) {
   arrow.rotation = radian(point, origin);
   arrow.tween.from(origin);
   arrow.tween.to(point);
-  arrow.tween.time = speed*2;
+  arrow.tween.time = speed * 2;
 
   arrow.tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
-    if (collision_object) {
+    if(collision_object) {
       arrow.tween.stop();
-      damage_events.emit('damage', {id: collision_object.id, damage});
+      damage_events.emit('damage', { 'id': collision_object.id, damage });
       return;
     }
 
     const collision_enemies = enemies.find(enemy => enemy.containsPoint(arrow_point));
-    if (collision_enemies) {
-      if(collision_enemies.id === origin.id) return;
+    if(collision_enemies) {
+      if(collision_enemies.id === origin.id) {
+        return;
+      }
       if(!collision_enemies.dead) {
         arrow.tween.stop();
-        damage_events.emit('damage', {id: collision_enemies.id, damage});
+        damage_events.emit('damage', { 'id': collision_enemies.id, damage });
         return;
       }
     }

@@ -2,7 +2,7 @@ const { zombie_frames } = require('../animations/zombie');
 const { Animation     } = require('../attributes/animation');
 const { LogicSprite   } = require('../types/logic');
 
-class LogicZombie extends LogicSprite {
+class LogicTest extends LogicSprite {
   constructor(data) {
     super(data);
 
@@ -13,6 +13,6 @@ class LogicZombie extends LogicSprite {
 }
 
 module.exports = {
-  LogicZombie,
+  LogicTest,
 };
 

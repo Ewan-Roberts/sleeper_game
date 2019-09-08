@@ -5,7 +5,7 @@ function distance_between(point_1, point_2) {
   return Math.sqrt((dx * dx) + (dy * dy));
 }
 
-//TODO replace random number with this
+// TODO replace random number with this
 function random_bound(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -19,9 +19,11 @@ function radian(anchor, point){
   const radian_value = Math.atan2(anchor.y - point.y, anchor.x - point.x);
 
   if(
-    global.isNaN(radian_value) ||
-    radian_value === undefined
-  ) throw new Error('invald radian ' + radian_value);
+    global.isNaN(radian_value)
+    || radian_value === undefined
+  ) {
+    throw new Error('invald radian ' + radian_value);
+  }
 
   return radian_value;
 }

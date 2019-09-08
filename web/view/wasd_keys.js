@@ -4,10 +4,10 @@ const { Text       } = require('pixi.js');
 
 class KeyboardKey extends FadeSprite {
   constructor(letter) {
-    super({image_name: 'key'});
+    super({ 'image_name': 'key' });
 
     const text = new Text(letter, {
-      fontSize: 55,
+      'fontSize': 55,
     });
     text.x += 55;
     text.y -= 100;
@@ -19,7 +19,9 @@ class KeyboardKey extends FadeSprite {
   }
 
   bounce_out() {
-    if(this.fired) return;
+    if(this.fired) {
+      return;
+    }
     this.alpha = 0.5;
     this.tint = 0x32cd80;
     this.bounce();
@@ -56,7 +58,7 @@ class WASD {
   }
 
   press(key) {
-    switch(key) {
+    switch (key) {
       case 87: return this.w_letter.bounce_out();
       case 65: return this.a_letter.bounce_out();
       case 83: return this.s_letter.bounce_out();
@@ -66,10 +68,10 @@ class WASD {
 
   get complete() {
     return (
-      this.w_letter.fired &&
-      this.a_letter.fired &&
-      this.s_letter.fired &&
-      this.d_letter.fired
+      this.w_letter.fired
+      && this.a_letter.fired
+      && this.s_letter.fired
+      && this.d_letter.fired
     );
   }
 }

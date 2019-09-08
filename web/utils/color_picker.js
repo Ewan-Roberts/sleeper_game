@@ -1,6 +1,6 @@
 class Color_Pick {
   static get_hex_from(name) {
-    switch(name) {
+    switch (name) {
       case 'red'    : return 0xff0000;
       case 'yellow' : return 0xbdb76b;
       case 'white'  : return 0xffffff;

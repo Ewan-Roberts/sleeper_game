@@ -1,4 +1,4 @@
-const { Texture, Sprite, Text }= require('pixi.js');
+const { Texture, Sprite, Text } = require('pixi.js');
 const { guis     } = require('../engine/pixi_containers');
 const { viewport    } = require('../engine/app');
 const { Fade     } = require('../effects/fade');
@@ -13,7 +13,7 @@ class Background extends Sprite {
     guis.addChild(this);
   }
 
-  set_position({x, y}) {
+  set_position({ x, y }) {
     this.position.set(x, y);
   }
 
@@ -29,8 +29,10 @@ class Note {
     text_colour = 'grey',
     sound_file,
   }) {
-    //TODO Don't imply sound on instantiation
-    if(sound_file) PIXI.sound.play(sound_file);
+    // TODO Don't imply sound on instantiation
+    if(sound_file) {
+      PIXI.sound.play(sound_file);
+    }
 
     this.name = 'note';
     this.background = new Background();
@@ -44,7 +46,7 @@ class Note {
     this.sprite = new Sprite(Texture.fromImage(image_on_click));
     this.sprite.position.copy(this.background.position);
 
-    //TODO make image size relative to viewport
+    // TODO make image size relative to viewport
     if(this.sprite.width > global.window.innerWidth) {
       this.sprite.scale.set(0.5);
     }
@@ -58,11 +60,11 @@ class Note {
     this.text = new Text(
       text,
       {
-        fontSize:      20,
-        fill:          text_colour,
-        align:         'center',
-        wordWrap:      true,
-        wordWrapWidth: 200,
+        'fontSize'     : 20,
+        'fill'         : text_colour,
+        'align'        : 'center',
+        'wordWrap'     : true,
+        'wordWrapWidth': 200,
       }
     );
     this.text.anchor.set(0.5);

@@ -17,9 +17,13 @@ class Aiming_Cone extends Sprite {
   }
 
   narrow(time = 3000) {
-    if(this.tween) this.tween.remove();
+    if(this.tween) {
+      this.tween.remove();
+    }
     const tweens = tweenManager.getTweensForTarget(this);
-    if(tweens) tweens.forEach(tween => tween.remove());
+    if(tweens) {
+      tweens.forEach(tween => tween.remove());
+    }
 
     this.tween = tweenManager.createTween(this);
     this.tween.expire = true;
@@ -30,11 +34,11 @@ class Aiming_Cone extends Sprite {
     this.alpha   = 0;
 
     this.tween.from({
-      width: this.original_width,
-      alpha: 0,
+      'width': this.original_width,
+      'alpha': 0,
     }).to({
-      width: 5,
-      alpha: 0.3,
+      'width': 5,
+      'alpha': 0.3,
     });
 
     this.tween.on('update', () => {
@@ -56,7 +60,9 @@ class Aiming_Cone extends Sprite {
 
   finish() {
     this.visible = false;
-    if(this.tween) this.tween.remove();
+    if(this.tween) {
+      this.tween.remove();
+    }
   }
 }
 
@@ -79,7 +85,9 @@ class Mouse {
   }
 
   mouse_down(event) {
-    if(!event) return;
+    if(!event) {
+      return;
+    }
     const mouse_position = event.data.getLocalPosition(viewport);
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
@@ -96,8 +104,12 @@ class Mouse {
   }
 
   mouse_up(event) {
-    if(!event) return;
-    if(!event.data.originalEvent.shiftKey) return;
+    if(!event) {
+      return;
+    }
+    if(!event.data.originalEvent.shiftKey) {
+      return;
+    }
     const mouse_position = event.data.getLocalPosition(viewport);
 
     this.animation.idle();
@@ -106,8 +118,8 @@ class Mouse {
       const { angle } = this.cone;
       const angle_to_offset = random_bound(-angle, angle) || 29;
       shoot_arrow(200, 20, this.sprite, {
-        x: mouse_position.x + angle_to_offset,
-        y: mouse_position.y + angle_to_offset,
+        'x': mouse_position.x + angle_to_offset,
+        'y': mouse_position.y + angle_to_offset,
       });
       return;
     }
@@ -119,8 +131,12 @@ class Mouse {
   }
 
   mouse_move(event) {
-    if(!event) return;
-    if(this.keyboard_down) return;
+    if(!event) {
+      return;
+    }
+    if(this.keyboard_down) {
+      return;
+    }
     const mouse_position = event.data.getLocalPosition(viewport);
 
     const rotation = radian(mouse_position, this.sprite);

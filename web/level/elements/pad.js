@@ -9,20 +9,20 @@ class Trigger_Pad extends Element {
   constructor(data) {
     super({
       ...data,
-      image_name: 'black_dot',
-      alpha:       env.visable_pads?0.4:0,
+      'image_name': 'black_dot',
+      'alpha'     : env.visable_pads ? 0.4 : 0,
     });
     this.events = new event();
     this.speed  = 30;
     if(data.speed) {
       this.speed = 2;
     } else {
-      this.speed = (env.dev)?25:4;
+      this.speed = (env.dev) ? 25 : 4;
     }
 
     this.anchor.set(0);
 
-    const {level_name, spawn_id} = data;
+    const { level_name, spawn_id } = data;
     if(level_name) {
       this.events.once('trigger', () => {
         Level_Factory.create(level_name, spawn_id);
@@ -33,7 +33,7 @@ class Trigger_Pad extends Element {
   }
 
   set text(value) {
-    const pad_text = new Text(value, { fontSize: 100 });
+    const pad_text = new Text(value, { 'fontSize': 100 });
     this.addChild(pad_text);
   }
 

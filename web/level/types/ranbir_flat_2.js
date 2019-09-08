@@ -32,7 +32,9 @@ class RanbirFloor2 {
     this.light_shroud = this.shrouds.find(roof => roof.id === 594);
 
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
     this._start();
   }
 

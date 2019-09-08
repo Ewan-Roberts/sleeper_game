@@ -17,11 +17,11 @@ const {
   screen,
   view,
 } = new Application({
-  width:           window_width,
-  height:          window_height,
-  backgroundColor: env.background_color,
-  roundPixels:     env.round_pixels,
-  antialias:       env.anti_alias,
+  'width'          : window_width,
+  'height'         : window_height,
+  'backgroundColor': env.background_color,
+  'roundPixels'    : env.round_pixels,
+  'antialias'      : env.anti_alias,
 });
 
 settings.ROUND_PIXELS               = env.round_pixels;
@@ -33,7 +33,7 @@ renderer.options.roundPixels        = env.round_pixels;
 
 const viewport = new Viewport();
 viewport.updateLayersOrder = function () {
-  viewport.children.sort(function(a,b) {
+  viewport.children.sort(function(a, b) {
     a.zIndex = a.zIndex || 0;
     b.zIndex = b.zIndex || 0;
     return b.zIndex - a.zIndex;
@@ -43,7 +43,7 @@ viewport.name = 'world';
 stage.addChild(viewport);
 
 // 60/30 for 30 fps
-const fps_delta = env.dev?2:1;
+const fps_delta = env.dev ? 2 : 1;
 let elapsed_time = 0;
 ticker.add(delta => {
   elapsed_time += delta;

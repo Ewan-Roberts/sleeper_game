@@ -9,7 +9,9 @@ class SimpleRoom {
     this.name   = 'simple_room';
     this.player = new Player();
     this._set_elements();
-    if(env.dev) this._set_dev_settings();
+    if(env.dev) {
+      this._set_dev_settings();
+    }
   }
 
   _set_elements() {

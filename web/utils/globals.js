@@ -11,7 +11,7 @@ global.place_bunny = (
   } = {}
 ) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
-  bunny.position.copy({x, y});
+  bunny.position.copy({ x, y });
   bunny.anchor.set(0.5);
   bunny.width  = 100;
   bunny.height = 100;

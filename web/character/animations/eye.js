@@ -2,7 +2,7 @@
 const { Texture, extras } = require('pixi.js');
 const { visuals          } = require('../../engine/pixi_containers');
 
-const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
+const create_texture = (name, i) => Array(i).fill(name).map((filler, j) => Texture.fromFrame(j < 10 ? filler + '0' + j : filler + j));
 
 class Eye extends extras.AnimatedSprite {
   constructor(data) {
@@ -20,6 +20,4 @@ class Eye extends extras.AnimatedSprite {
 module.exports = {
   Eye,
 };
-
-
 

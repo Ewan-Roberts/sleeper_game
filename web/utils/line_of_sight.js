@@ -1,8 +1,8 @@
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
 class Sight {
   static _getCenter(o, dimension, axis) {
-    if (o.anchor !== undefined) {
-      if (o.anchor[axis] !== 0) {
+    if(o.anchor !== undefined) {
+      if(o.anchor[axis] !== 0) {
         return 0;
       }
       return dimension / 2;
@@ -67,11 +67,11 @@ class Sight {
       });
     });
 
-    //Return the true/false value of the collision test
+    // Return the true/false value of the collision test
     return noObstacles;
   }
 }
-//for none y axis handling
+// for none y axis handling
 // const left = point.x > sprite.x,
 //   right = point.x < (sprite.x + sprite.width),
 //   top = point.y > sprite.y,

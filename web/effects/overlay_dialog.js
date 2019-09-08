@@ -10,18 +10,18 @@ class Overlay_Dialog {
     this.point  = point;
 
     this.button = new FloorWord({
-      font_size: 40,
-      fill:      'white',
-      weight:    'bolder',
-      text:      'next',
+      'font_size': 40,
+      'fill'     : 'white',
+      'weight'   : 'bolder',
+      'text'     : 'next',
     });
   }
 
   async next_button() {
     this.button.tint = 0x383838;
     this.button.position.copy({
-      x: this.point.x+200,
-      y: this.point.y+150,
+      'x': this.point.x + 200,
+      'y': this.point.y + 150,
     });
 
     this.button.interactive = true;
@@ -44,14 +44,14 @@ class Overlay_Dialog {
     this.next_button();
     await sleep(3000);
 
-    while(this.script.length > 0) {
-      const word_to_render = this.script.splice(0,1);
+    while (this.script.length > 0) {
+      const word_to_render = this.script.splice(0, 1);
 
       const word = new FloorWord({
-        font_size: 100,
-        fill:      'white',
-        weight:    'bolder',
-        text:      word_to_render,
+        'font_size': 100,
+        'fill'     : 'white',
+        'weight'   : 'bolder',
+        'text'     : word_to_render,
       });
 
       word.position.copy(this.point);

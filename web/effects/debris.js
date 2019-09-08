@@ -19,9 +19,9 @@ class Debris extends Sprite {
     const random_rotation = Math.random() * 4 - 1;
 
     this.tween.to({
-      x: this.x + random_distance_from_center,
-      y: this.y - random_distance_from_center,
-      rotation: random_rotation,
+      'x'       : this.x + random_distance_from_center,
+      'y'       : this.y - random_distance_from_center,
+      'rotation': random_rotation,
     });
     this.tween.time = 500;
     this.tween.start();

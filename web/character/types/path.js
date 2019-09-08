@@ -13,7 +13,7 @@ class PathSprite extends extras.AnimatedSprite {
     x,
     polyline,
   }) {
-    super([Texture.fromFrame(image_name || 'bird_8')]);
+    super([ Texture.fromFrame(image_name || 'bird_8') ]);
     this.id = id;
 
     this.rotation = 1;
@@ -22,9 +22,9 @@ class PathSprite extends extras.AnimatedSprite {
     this.tween = tweenManager.createTween(this);
     this.speed = speed;
 
-    this.position.copy({x,y});
+    this.position.copy({ x, y });
     if(polyline) {
-      this.path = polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
+      this.path = polyline.map(({ x, y }) => ({ 'x': this.x + x, 'y': this.y + y }));
     }
     this.turn = true;
     enemys.addChild(this);
@@ -34,8 +34,8 @@ class PathSprite extends extras.AnimatedSprite {
     this.tween.path = new tween.TweenPath();
     for (let i = 1; i < path_array.length; i++) {
       this.tween.path.arcTo(
-        path_array[i-1].x,
-        path_array[i-1].y,
+        path_array[i - 1].x,
+        path_array[i - 1].y,
         path_array[i].x,
         path_array[i].y,
         50);
@@ -64,8 +64,12 @@ class PathSprite extends extras.AnimatedSprite {
   }
 
   set turn(bool) {
-    if(!bool) return;
-    if(!this.tween.path) return;
+    if(!bool) {
+      return;
+    }
+    if(!this.tween.path) {
+      return;
+    }
 
     this.tween.on('update', () => {
       this.rotation = radian(this, this.tween.path._tmpPoint) + 1.57;

@@ -16,8 +16,10 @@ class LogicRat extends PathSprite {
     this.add_component(new Vitals());
     this.add_component(new Inventory(data));
 
-    damage_events.on('damage', ({id, damage}) => {
-      if(this.id !== id) return;
+    damage_events.on('damage', ({ id, damage }) => {
+      if(this.id !== id) {
+        return;
+      }
       this.damage(damage);
     });
 
@@ -26,20 +28,26 @@ class LogicRat extends PathSprite {
 
   damage(damage) {
     this.vitals.damage(damage);
-    if(Math.random() >= 0.5) new Blood(this.position);
+    if(Math.random() >= 0.5) {
+      new Blood(this.position);
+    }
 
-    if(this.vitals.alive) this.kill();
+    if(this.vitals.alive) {
+      this.kill();
+    }
   }
 
   kill() {
-    if(this.tween) this.tween.stop();
+    if(this.tween) {
+      this.tween.stop();
+    }
     this.inventory.populate();
 
     this.interactive = true;
     this.button = new Button(this, {
-      label_action: 'Loot',
-      label_description: 'Corpse',
-      label_image: 'eye_icon',
+      'label_action'     : 'Loot',
+      'label_description': 'Corpse',
+      'label_image'      : 'eye_icon',
     });
 
     this.click = () => {
@@ -55,5 +63,4 @@ class LogicRat extends PathSprite {
 module.exports = {
   LogicRat,
 };
-
 
