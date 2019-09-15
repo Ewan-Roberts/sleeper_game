@@ -8,37 +8,42 @@ const { damage_events   } = require('./damage_handler');
 const { env             } = require('../../config');
 
 class Box extends Sprite {
-  constructor() {
+  constructor(speed) {
     super(Texture.fromImage('black_dot'));
     this.name   = 'box';
     this.width  = 150;
     this.height = 50;
     this.anchor.set(0, 0.5);
     this.visible = env.dev;
+    this.alpha = 0.2;
+
+    this.tween        = tweenManager.createTween(this);
+    this.tween.time   = 1000;
+    this.tween.delay  = speed;
 
     guis.addChild(this);
+  }
+
+  destroy() {
+    super.destroy();
+    this.tween.remove();
   }
 }
 
 class MeleeBox{
   slash(speed, damage, origin) {
-    if(this.tween) {
-      this.tween.remove();
-    }
-    this.box = new Box();
+    this.box = new Box(speed);
     this.box.position.copy(origin);
-    this.box.alpha = 0.2;
     this.box.rotation = origin.rotation;
 
-    this.tween        = tweenManager.createTween(this.box);
-    this.tween.time   = 1000;
-    this.tween.expire = true;
-    this.tween.delay  = speed;
-
-    console.log(damage);
-    this.tween.on('update', delta => {
-      if(delta > this.tween.time) {
-        this.tween.remove();
+    this.box.tween.on('update', delta => {
+      if(delta > this.box.tween.time) {
+        this.box.destroy();
+        return;
+      }
+      // TODO remove reliance on transform
+      if(!this.box.transform) {
+        return;
       }
 
       this.box.position.copy(origin);
@@ -49,9 +54,6 @@ class MeleeBox{
       if(player) {
         if(player.id !== origin.id) {
           damage_events.emit('damage', { 'id': player.id, damage });
-          // TODO dont make and remove
-          this.tween.active = false;
-          this.tween.remove();
           this.box.destroy();
           return;
         }
@@ -59,11 +61,8 @@ class MeleeBox{
 
       const found = enemys.children.find(enemy => this.box.containsPoint(enemy.getGlobalPosition()));
       if(found) {
-        console.log(enemys.children);
         if(found.id !== origin.id) {
           damage_events.emit('damage', { 'id': found.id, damage });
-          this.tween.active = false;
-          this.tween.remove();
           this.box.destroy();
           return;
         }
@@ -73,15 +72,13 @@ class MeleeBox{
       if(item) {
         if(item.id !== origin.id) {
           damage_events.emit('damage', { 'id': item.id, damage });
-          this.tween.active = false;
-          this.tween.remove();
           this.box.destroy();
           return;
         }
       }
     });
 
-    this.tween.start();
+    this.box.tween.start();
   }
 }
 
