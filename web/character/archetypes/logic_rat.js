@@ -29,7 +29,7 @@ class LogicRat extends PathSprite {
   damage(damage) {
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) {
-      new Blood(this.position);
+      Blood.random_at(this.position);
     }
 
     if(this.vitals.alive) {

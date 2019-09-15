@@ -1,6 +1,7 @@
 const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
+const { decals           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
 const { distance_between } = require('../../utils/math');
@@ -11,19 +12,7 @@ const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood            } = require('../../effects/blood');
-const { env              } = require('../../../config');
-const { MeleeBox         } = require('../../engine/melee');
 
-// TODO
-function break_at_door(path) {
-  for (let i = 0; i < path.length; i++) {
-    if(path[i].door) {
-      path.length = i + 1;
-      return path;
-    }
-  }
-  return path;
-}
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor({
@@ -41,29 +30,29 @@ class LogicSprite extends extras.AnimatedSprite {
     this.name = 'zombie';
     this.id   = id;
 
+    this.tween = tweenManager.createTween();
     this.add_component(new Inventory({ items, random, equip }));
     this.add_component(new Vitals());
     this.rotation_offset = 0;
-    this.height = height || 100;
-    this.width  = width || 100;
+    this.height = height || 50;
+    this.width  = width  || 40;
     this.anchor.set(0.5);
     this.position.copy({ x, y });
     this._target = null;
 
-    damage_events.on('damage', ({ id, damage }) => {
-      if(this.id !== id) {
-        return;
-      }
-      this.damage(damage);
-    });
+    damage_events.on('damage', data => this.damage(data));
 
     enemys.addChild(this);
   }
 
-  damage(damage) {
+  damage({ id, damage }) {
+    if(this.id !== id) {
+      return;
+    }
+    this.damage(damage);
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) {
-      new Blood(this.position);
+      Blood.random_at(this.position);
     }
 
     if(!this.vitals.alive) {
@@ -90,7 +79,10 @@ class LogicSprite extends extras.AnimatedSprite {
     };
 
     this.animation.kill();
-    damage_events.removeListener('damage', this.damage);
+    damage_events.removeListener('damage', () => this.damage);
+
+    const removed_enemy = enemys.removeChild(this);
+    decals.addChild(removed_enemy);
   }
 
   get _target_far_away() {
@@ -101,111 +93,69 @@ class LogicSprite extends extras.AnimatedSprite {
   // TODO change function name
   target(character) {
     this._target = character;
-    console.log(this.tween);
   }
 
-  async _pathfind() {
-    this.animation.move();
-
-    let normal_path;
-    try {
-      normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);
-    } catch (err) {
-      console.log(err);
-    }
-
-    if(!normal_path) {
-      this.tween.time = 500;
-      return;
-    }
-
-    const door_path = break_at_door(normal_path);
-    const door_tile = door_path[door_path.length - 1];
-
-    const { damage } = this.inventory.equipped;
-    damage_events.emit('damage_tile', { door_tile, damage });
-
-    this.tween.path.lineTo(
-      door_path[0].x + 50,
-      door_path[0].y + 50
-    );
-
-    for (let i = 1; i < door_path.length; i++) {
-      this.tween.path.arcTo(
-        door_path[i - 1].x + 50,
-        door_path[i - 1].y + 50,
-        door_path[i].x + 50,
-        door_path[i].y + 50,
-        20);
-    }
-
-    this.tween.time = door_path.length * 500;
+  get sees_target() {
+    return Sight.lineOfSight(this, this._target, collisions.children);
   }
 
   // TODO: extract and refactor
-  // too much going on
+  // What is general and what is unique?
   logic_start({
-    time_on_sight    = 200,
-    time_on_pathfind = 4000,
-    time_on_attack   = 3000,
+    speed = 1000,
   } = {}) {
-    this.tween = tweenManager.createTween(this);
-    this.tween.time = 1000;
-    this.tween.expire = true;
-    this.tween.start();
+    this.tween.time   = speed;
+    this.tween.repeat = 20;
+    const path_tween = tweenManager.createTween(this);
 
-    this.tween.on('end', async () => {
-      if(this.remove_next_tick) {
+    this.tween.on('repeat', async () => {
+      // TODO this is a hack and shouldn't be done in here
+      if(
+        this._destroyed
+        || this._target._destroyed
+        || !this._target.vitals.alive
+        || !this.vitals.alive
+      ) {
+        this.tween.remove();
         return;
       }
-      this.tween.clear();
-      this.tween.expire = true;
+
+      path_tween.clear();
+      path_tween.time = speed;
+      this.rotation = radian(this._target, this) + this.rotation_offset;
 
       if(!this._target_far_away) {
-        this.tween.time = time_on_attack;
-        this.tween.start();
         this.animation.attack();
-
-        // TODO
-        if(!this._target) {
-          throw 'set an enemy';
-        }
         this.animation.face_point(this._target);
-        this.melee = new MeleeBox();
-
-        damage_events.emit('damage', { 'id': this._target.id, 'damage': 10 });
+        damage_events.emit('damage', { 'id': this._target.id, 'damage': 30 });
         return;
       }
 
-      this.tween.path = new tween.TweenPath();
-      this.tween.path.moveTo(this.x, this.y);
-      if(Sight.lineOfSight(this, this._target, collisions.children)) {
-        this.tween.path.lineTo(this._target.x, this._target.y);
-        this.animation.move();
-
-        this.tween.time = time_on_sight;
-      } else {
-        await this._pathfind();
-        this.tween.time = time_on_pathfind;
-      }
-
-      if(env.draw_paths) {
-        draw_path(this.tween.path);
-      }
-
-      this.tween.start();
-    });
-
-    this.tween.on('update', () => {
-      if(!this.vitals.alive) {
-        this.tween.remove();
-      }
-      if(!this.tween.path) {
+      this.animation.move();
+      if(this.sees_target) {
+        const { x, y } = this._target;
+        path_tween.from(this).to({ x, y }).start();
         return;
       }
 
-      this.rotation = radian(this, this.tween.path._tmpPoint) + this.rotation_offset;
+      const normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);
+      path_tween.path = new tween.TweenPath();
+      path_tween.path.moveTo(this.x, this.y);
+
+      for (let i = 3; i < normal_path.length; i++) {
+        path_tween.path.arcTo(
+          normal_path[i - 1].x + 50,
+          normal_path[i - 1].y + 50,
+          normal_path[i].x + 50,
+          normal_path[i].y + 50,
+          20);
+      }
+
+      draw_path(path_tween.path);
+      this.tween.chain(path_tween).start();
     });
+
+    this.tween.start();
   }
 
   add_component(component) {

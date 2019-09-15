@@ -2,7 +2,7 @@ const { grids  } = require('./pixi_containers');
 const { Grid   } = require('../utils/grid');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
-easystar.setIterationsPerCalculation(2000);
+easystar.setIterationsPerCalculation(1000);
 easystar.setAcceptableTiles([ 0, 2 ]);
 easystar.setTileCost(2, 1); // only go through these tiles if you have to
 easystar.enableDiagonals();

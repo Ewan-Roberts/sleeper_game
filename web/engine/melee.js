@@ -27,7 +27,7 @@ class MeleeBox{
     }
     this.box = new Box();
     this.box.position.copy(origin);
-    this.box.alpha = 1;
+    this.box.alpha = 0.2;
     this.box.rotation = origin.rotation;
 
     this.tween        = tweenManager.createTween(this.box);
@@ -35,34 +35,36 @@ class MeleeBox{
     this.tween.expire = true;
     this.tween.delay  = speed;
 
+    console.log(damage);
     this.tween.on('update', delta => {
       if(delta > this.tween.time) {
         this.tween.remove();
       }
 
       this.box.position.copy(origin);
-      this.box.alpha = 1;
       this.box.rotation = origin.rotation;
       const player = players.children.find(player =>
         this.box.containsPoint(player.getGlobalPosition()));
 
       if(player) {
         if(player.id !== origin.id) {
-          this.box.alpha = 0.2;
           damage_events.emit('damage', { 'id': player.id, damage });
+          // TODO dont make and remove
           this.tween.active = false;
           this.tween.remove();
+          this.box.destroy();
           return;
         }
       }
 
       const found = enemys.children.find(enemy => this.box.containsPoint(enemy.getGlobalPosition()));
       if(found) {
+        console.log(enemys.children);
         if(found.id !== origin.id) {
-          this.box.alpha = 0.2;
           damage_events.emit('damage', { 'id': found.id, damage });
           this.tween.active = false;
           this.tween.remove();
+          this.box.destroy();
           return;
         }
       }
@@ -70,10 +72,10 @@ class MeleeBox{
       const item = items.children.find(item => this.box.containsPoint(item.getGlobalPosition()));
       if(item) {
         if(item.id !== origin.id) {
-          this.box.alpha = 0.2;
           damage_events.emit('damage', { 'id': item.id, damage });
           this.tween.active = false;
           this.tween.remove();
+          this.box.destroy();
           return;
         }
       }

@@ -41,11 +41,14 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
+    this.vitals.health = 200;
 
     damage_events.on('damage', ({ id, damage }) => {
       if(this.id !== id) {
         return;
       }
+      console.log('player hit');
+      console.log(this);
       this.damage(damage);
     });
 
@@ -57,6 +60,11 @@ class Player extends extras.AnimatedSprite {
       }
       const found_item = Item_Manager.get_item(name, { condition });
       this.inventory.give(found_item);
+    });
+
+    // GAME OVER
+    this.events.on('killed', () => {
+      // debugger;
     });
 
     item_events.on('equip_weapon', (id, {
@@ -97,7 +105,7 @@ class Player extends extras.AnimatedSprite {
 
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) {
-      new Blood(this.position);
+      Blood.random_at(this.position);
     }
     if(this.vitals.alive) {
       return;

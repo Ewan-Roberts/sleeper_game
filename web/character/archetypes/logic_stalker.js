@@ -9,7 +9,7 @@ class Stalker extends LogicZombie {
     super(data);
     this.visible     = false;
     this.floor_words = false;
-    this.target      = target;
+    this.target(target);
 
     this._set_sound();
   }
