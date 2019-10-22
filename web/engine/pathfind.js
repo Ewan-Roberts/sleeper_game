@@ -35,6 +35,11 @@ function path_between_grids (one, two) {
 }
 
 class pathfind {
+
+  static no_highlights() {
+    grids.children.forEach(grid => grid.alpha = 0);
+  }
+
   static create_level_grid(tiled_level_data) {
     this.grid = new Grid(tiled_level_data);
     this.grid.build();

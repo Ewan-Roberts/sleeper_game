@@ -10,16 +10,17 @@ const { env             } = require('../../config');
 class Box extends Sprite {
   constructor(speed) {
     super(Texture.fromImage('black_dot'));
-    this.name   = 'box';
-    this.width  = 150;
-    this.height = 50;
-    this.anchor.set(0, 0.5);
+    this.name    = 'box';
+    this.width   = 100;
+    this.height  = 50;
     this.visible = env.dev;
-    this.alpha = 0.2;
+    this.alpha   = 0.2;
+    this.anchor.set(0, 0.5);
 
     this.tween        = tweenManager.createTween(this);
-    this.tween.time   = 1000;
+    this.tween.time   = 400;
     this.tween.delay  = speed;
+    this.tween.expire = true;
 
     guis.addChild(this);
   }
@@ -31,16 +32,25 @@ class Box extends Sprite {
 }
 
 class MeleeBox{
+  constructor () {
+    this.name = 'melee';
+  }
+
   slash(speed, damage, origin) {
     this.box = new Box(speed);
     this.box.position.copy(origin);
     this.box.rotation = origin.rotation;
+    this.box.renderable = false;
 
-    this.box.tween.on('update', delta => {
-      if(delta > this.box.tween.time) {
-        this.box.destroy();
+    this.box.tween.on('end', () => {
+      if(this.box._destroyed) {
         return;
       }
+      this.box.destroy();
+    });
+
+    this.box.tween.on('update', () => {
+      this.box.renderable = true;
       // TODO remove reliance on transform
       if(!this.box.transform) {
         return;

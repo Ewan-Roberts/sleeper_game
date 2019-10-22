@@ -14,6 +14,17 @@ class Trigger_Pad extends Element {
     });
     this.events = new event();
     this.speed  = 30;
+
+    // TODO look at the player speed as a number and the pad
+    // that you walk onlo timesing the player speed by a modifier
+    // player speed is for example 30 then on a slow bit you times by 0.5
+    // pretend its by 0.5
+    // dumpy data
+    data.speed = 0.5;
+    if(data.speed) {
+      this.speed_modifier = data.speed;
+    }
+
     if(data.speed) {
       this.speed = 2;
     } else {

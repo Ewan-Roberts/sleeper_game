@@ -1,3 +1,5 @@
+const { Point } = require('pixi.js');
+
 function distance_between(point_1, point_2) {
   const dx = point_2.x - point_1.x;
   const dy = point_2.y - point_1.y;
@@ -45,6 +47,19 @@ function angle_360(anchor, point) {
   return Math.atan2(anchor.y - point.y, anchor.x - point.x) * 180 / Math.PI + 180;
 }
 
+function point_radius_away_from_point(p1, p2, radius = -100) {
+  const distance_point = Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+  const ratio = radius / distance_point;
+
+  const x1 = ((1 - ratio * p2.x + ratio * p1.x));
+  const y1 = ((1 - ratio * p2.y + ratio * p1.y));
+
+  const x2 = p1.x + x1;
+  const y2 = p1.y + y1;
+
+  return new Point(x2, y2);
+}
+
 module.exports = {
   angle,
   face_point,
@@ -54,4 +69,5 @@ module.exports = {
   random_number,
   random_bound,
   distance_between,
+  point_radius_away_from_point,
 };

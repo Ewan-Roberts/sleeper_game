@@ -8,10 +8,11 @@ const { Graphics  } = require('pixi.js');
 const { Sprite    } = require('pixi.js');
 const { Texture   } = require('pixi.js');
 const { filters   } = require('pixi.js');
+const { Point     } = require('pixi.js');
 
 // A reverse mask as a blend mode
 renderer.state.blendModes[20] = [ 0, renderer.gl.ONE_MINUS_SRC_ALPHA ];
-renderer.backgroundColor = 0x000000;
+// renderer.backgroundColor = 0x000000;
 
 function get_intersection(sprite, segment, angle) {
   // RAY in parametric: Point + Delta*T1
@@ -211,8 +212,11 @@ class Raycast extends Container {
     this._follow = value;
   }
 
+
   start() {
     const unique_points = this.segments.map(({ a, b }) => (a, b));
+
+    const current_point = new Point();
 
     // 60/30 for 30 fps
     const fps_delta = env.dev ? 2 : 1;
@@ -222,6 +226,11 @@ class Raycast extends Container {
       if(elapsedTime <= fps_delta) {
         return;
       }
+      if(current_point.equals(this.sprite.position)) {
+        return;
+      }
+      current_point.copy(this.sprite.position);
+
       this.raycast.clear();
       this.raycast.beginFill();
 

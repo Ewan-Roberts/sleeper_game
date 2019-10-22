@@ -6,9 +6,9 @@ class Click_Pad extends Element {
   constructor(data) {
     super({
       ...data,
-      'image_name': 'black_dot',
-      'alpha'     : (env.dev) ? 0.2 : 0,
-      'tint'      : 0xffff00,
+      'image_name': 'white_tiles',
+      'alpha'     : (env.dev) ? 0.9 : 0,
+      'tint'      : 0xff0000,
     });
     this.interactive = true;
     this.buttonMode  = true;

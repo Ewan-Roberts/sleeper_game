@@ -1,30 +1,24 @@
-const { extras, Texture } = require('pixi.js');
-const { sound           } = require('pixi.js');
-const { players         } = require('../../engine/pixi_containers');
-const { Animation       } = require('../attributes/animation');
-const { Keyboard        } = require('../attributes/keyboard');
-const { Mouse           } = require('../attributes/mouse');
-const { Inventory       } = require('../attributes/inventory');
-const { Vitals          } = require('../attributes/vitals');
-const { human_frames    } = require('../animations/human');
-const { damage_events   } = require('../../engine/damage_handler');
-const { item_events     } = require('../../engine/item_handler');
-const { Item_Manager    } = require('../../items/item_manager');
-const { Blood           } = require('../../effects/blood');
-const event               = require('events');
+const { extras        } = require('pixi.js');
+const { sound         } = require('pixi.js');
+const { players       } = require('../../engine/pixi_containers');
+const { Animation     } = require('../attributes/animation');
+const { Keyboard      } = require('../attributes/keyboard');
+const { Mouse         } = require('../attributes/mouse');
+const { MeleeBox    } = require('../../engine/melee');
+const { Inventory     } = require('../attributes/inventory');
+const { Vitals        } = require('../attributes/vitals');
+const { human_frames  } = require('../animations/human');
+const { damage_events } = require('../../engine/damage_handler');
+const { item_events   } = require('../../engine/item_handler');
+const { Item_Manager  } = require('../../items/item_manager');
+const { Blood         } = require('../../effects/blood');
+const { Nightmare         } = require('../../effects/environment');
 
-const create_texture
-  = (name, i) =>
-    Array(i)
-      .fill(name)
-      .map(
-        (filler, j) => Texture.fromFrame(j < 10 ? filler + '0' + j : filler + j)
-      );
-const nothing_idle = create_texture('Armature_nothing_idle_', 37);
+const event             = require('events');
 
 class Player extends extras.AnimatedSprite {
   constructor() {
-    super(nothing_idle);
+    super(human_frames.nothing_idle);
     this.id   = 1;
     this.name = 'player';
     this.events = new event();
@@ -32,23 +26,24 @@ class Player extends extras.AnimatedSprite {
     this.width  = 23;
     this.height = 35;
     this.anchor.set(0.5);
-    this.animationSpeed = 0.70;
 
     this.add_component(new Animation(this, human_frames));
-    this.animation.prefix = 'nothing';
-
     this.add_component(new Inventory());
     this.add_component(new Vitals());
+    this.add_component(new MeleeBox());
+
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
+
     this.vitals.health = 200;
+    this.animation.prefix = 'nothing';
+    this.animation.speed = 0.70;
 
     damage_events.on('damage', ({ id, damage }) => {
       if(this.id !== id) {
         return;
       }
       console.log('player hit');
-      console.log(this);
       this.damage(damage);
     });
 
@@ -64,7 +59,7 @@ class Player extends extras.AnimatedSprite {
 
     // GAME OVER
     this.events.on('killed', () => {
-      // debugger;
+      Nightmare.on();
     });
 
     item_events.on('equip_weapon', (id, {

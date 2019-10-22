@@ -1,21 +1,94 @@
-const { visuals } = require('../../engine/pixi_containers');
-const { items } = require('../../engine/pixi_containers');
-const { sleep    } = require('../../utils/time.js');
-const { random_bound } = require('../../utils/math.js');
+const { visuals         } = require('../../engine/pixi_containers');
+const { items           } = require('../../engine/pixi_containers');
+const { roofs           } = require('../../engine/pixi_containers');
+const { sleep           } = require('../../utils/time.js');
+const { random_bound    } = require('../../utils/math.js');
 const { Sprite, Texture } = require('pixi.js');
-const { Element   } = require('./model');
+const { Element         } = require('./model');
 const event = require('events');
+
+class Shine extends Sprite {
+  constructor() {
+    super(Texture.fromImage('LightStone_green30_kpl'));
+    this.height = 550;
+    this.width  = 550;
+    this.alpha  = 0.8;
+    this.anchor.set(0.4, 0.6);
+    visuals.addChild(this);
+  }
+}
+
+class Street_Lamp extends Element {
+  constructor(data) {
+    super(data);
+    this.texture = Texture.fromImage('street_light_00');
+    roofs.addChild(this);
+    this.cast_light = new Shine();
+    this.cast_light.position.copy(this);
+    this.cast_light.anchor.y = 1.25;
+    this.cast_light.anchor.y = 0.9;
+    this.cast_light.rotation = this.rotation;
+    this.events = new event();
+    this.turn_off();
+  }
+
+  turn_on() {
+    if(this.state === true) {
+      return;
+    }
+    this.state = true;
+    this.cast_light.alpha = 0.5;
+    this.events.emit('on');
+  }
+
+  turn_off() {
+    if(this.state === false) {
+      return;
+    }
+    this.state = false;
+    this.cast_light.alpha = 0;
+    this.events.emit('off');
+  }
+
+  flicker_for(milliseconds) {
+    this.flicker_running = true;
+
+    setTimeout(() => this.flicker_running = false, milliseconds);
+
+    this._flicker();
+  }
+
+  async _flicker() {
+    // breaks recursion
+    if(!this.flicker_running) {
+      return;
+    }
+    const randomiser = random_bound(10, 30);
+    this.turn_on();
+
+    await sleep(randomiser + 400);
+    this.turn_off();
+
+    await sleep(randomiser);
+    this.turn_on();
+
+    await sleep(randomiser * 2);
+    this.turn_off();
+
+    await sleep(randomiser ** 2);
+    this.turn_on();
+
+    this._flicker();
+  }
+}
+
 
 class Light extends Element {
   constructor(data) {
     super(data);
     this.events = new event();
 
-    this.cast_light = new Sprite(Texture.fromImage('LightStone_green30_kpl'));
-    this.cast_light.height = 250;
-    this.cast_light.width  = 250;
-    this.cast_light.alpha  = 1;
-    this.cast_light.anchor.set(0.4, 0.6);
+    this.cast_light = new Shine();
     this.cast_light.position.copy(this);
 
     items.addChild(this);
@@ -30,9 +103,9 @@ class Light extends Element {
     if(this.state === true) {
       return;
     }
-    this.state              = true;
-    this.texture            = this.lamp_on_texture;
-    this.cast_light = 1;
+    this.state            = true;
+    this.texture          = this.lamp_on_texture;
+    this.cast_light.alpha = 0.5;
     this.events.emit('on');
   }
 
@@ -40,9 +113,9 @@ class Light extends Element {
     if(this.state === false) {
       return;
     }
-    this.state              = false;
-    this.texture            = this.lamp_off_texture;
-    this.cast_light = 0;
+    this.state            = false;
+    this.texture          = this.lamp_off_texture;
+    this.cast_light.alpha = 0;
     this.events.emit('off');
   }
 
@@ -100,5 +173,6 @@ class Light extends Element {
 
 module.exports = {
   Light,
+  Street_Lamp,
 };
 

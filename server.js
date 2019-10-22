@@ -1,17 +1,16 @@
-
 const process  = require('process');
 const port     = process.env.PORT || 3000;
 const compress = require('compression');
 const express  = require('express');
 const app      = express();
-app.use(compress({level: 9, memLevel:9}));
+app.use(compress({ 'level': 9, 'memLevel': 9 }));
 
 const web_server = require('http').Server(app);
 web_server.listen(port, () =>
   console.log('server on:' + port)); // eslint-disable-line
 
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ 'extended': false }));
 
 app.use(express.static('./public'));
 

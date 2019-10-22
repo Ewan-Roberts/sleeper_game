@@ -88,7 +88,8 @@ class Keyboard {
     const a = keyboardManager.isDown(65);
     const s = keyboardManager.isDown(83);
     const d = keyboardManager.isDown(68);
-    if(!w && !a && !s && !d) {
+    const { shift } = keyboardManager.getHotKey();
+    if(!w && !a && !s && !d && !shift) {
       this.animation.idle();
     }
   }
@@ -152,8 +153,7 @@ class Keyboard {
       return this.animation.idle();
     }
 
-    this.speed = point_contains(this.sprite);
-    this.sprite.y -= this.speed;
+    this.sprite.y -= point_contains(this.sprite);
     this.animation.walk();
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }

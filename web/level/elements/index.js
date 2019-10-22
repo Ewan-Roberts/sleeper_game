@@ -6,15 +6,17 @@ const { Door        } = require('../elements/door');
 const { Roof        } = require('../elements/ceiling');
 const { Generator   } = require('../elements/shrine');
 const { Shroud      } = require('../elements/shroud');
+const { Click_Pad     } = require('../elements/click_pad');
 const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
 const { Trigger_Pad } = require('../elements/pad');
 const { Border      } = require('../elements/border');
-const { Light       } = require('../elements/light');
+const { Light, Street_Lamp       } = require('../elements/light');
 
 module.exports = {
   Border,
   Trigger_Pad,
+  Click_Pad,
   Wall,
   Decal,
   Background,
@@ -26,4 +28,5 @@ module.exports = {
   Floor,
   Generator,
   Light,
+  Street_Lamp,
 };

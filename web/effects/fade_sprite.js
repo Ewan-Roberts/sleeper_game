@@ -1,11 +1,12 @@
 const { visuals, decals, fades      } = require('../engine/pixi_containers');
+const { viewport } = require('../engine/app');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager                } = require('pixi.js');
 
 class FadeSprite extends Sprite {
   constructor({
     image_name,
-    rotation,
+    rotation = 0,
     alpha  = 1,
     height = 50,
     width  = 50,
@@ -91,12 +92,9 @@ class FadeSprite extends Sprite {
   }
 
   destroy() {
-    if(this.tween) {
-      this.tween.remove();
-    }
+    this.tween.remove();
     super.destroy();
   }
-
 
   bounce() {
     if(this._destroyed) {
@@ -118,8 +116,8 @@ function fill_screen_at(point, tint) {
   const overlay = new FadeSprite({ 'image_name': 'white_square' });
   overlay.anchor.set(0.3);
   overlay.tint   = tint;
-  overlay.width  = 3000;
-  overlay.height = 2000;
+  overlay.width  = viewport.worldHeight + 200;
+  overlay.height = viewport.worldWidth + 200;
   overlay.position.copy(point);
   visuals.addChild(overlay);
   return overlay;
@@ -128,11 +126,12 @@ function fill_screen_at(point, tint) {
 
 function flash_at(point, time = 400, tint = 0x000000, direction = 'out', delay = 0) {
   const overlay = new FadeSprite({ 'image_name': 'white_square' });
+  console.log(point);
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
   overlay.tint   = tint;
-  overlay.width  = 2000;
-  overlay.height = 2000;
+  overlay.width  = viewport.worldHeight + 200;
+  overlay.height = viewport.worldWidth + 200;
   overlay.delay  = delay;
   overlay.alpha = 1;
   if(direction === 'out') {

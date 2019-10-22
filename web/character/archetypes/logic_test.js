@@ -9,7 +9,9 @@ class LogicTest extends LogicSprite {
 
     this.add_component(new Animation(this, zombie_frames));
     this.animation.idle();
-    this.animationSpeed = 0.30;
+    this.animation.speed = 0.50;
+    this.width = 200;
+    this.height = 200;
     // TODO this will fire before the general logic
     // Which is what we want, its unique for each entities
     // behaviour, but this information is hidden, consider way of

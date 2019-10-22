@@ -11,7 +11,7 @@ class PathCrow extends PathSprite {
     this.height = 30;
     this.add_component(new Animation(this, bird_frames));
     this.animation.wait();
-    this.animationSpeed = 0.08;
+    this.animation.speed = 0.08;
     const random_start_frame = random_bound(0, 15);
     this.gotoAndPlay(random_start_frame);
     this._set_sound();
@@ -19,10 +19,11 @@ class PathCrow extends PathSprite {
 
   _set_sound() {
     this.fly_sound = sound.find('birds_fly_away');
-    this.fly_sound.volume = 0.40;
+    this.fly_sound.volume = 0.20;
   }
 
-  talk() {
+  start() {
+    super.start();
     this.fly_sound.play();
   }
 }

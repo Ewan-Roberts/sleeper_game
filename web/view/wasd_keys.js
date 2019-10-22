@@ -46,15 +46,15 @@ class WASD {
 
   set_position(point) {
     this.w_letter.position.copy(point);
-    this.w_letter.y - 50;
+    this.w_letter.y -= 50;
 
     this.a_letter.position.copy(point);
-    this.a_letter.x - 50;
+    this.a_letter.x -= 50;
 
     this.s_letter.position.copy(point);
 
     this.d_letter.position.copy(point);
-    this.d_letter.x + 50;
+    this.d_letter.x += 50;
   }
 
   press(key) {

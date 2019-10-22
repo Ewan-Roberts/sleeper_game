@@ -69,10 +69,9 @@ class Aiming_Cone extends Sprite {
 class Mouse {
   constructor(sprite) {
     this.name      = 'mouse';
-    this.animation = sprite.animation;
     this.sprite    = sprite;
+    this.melee     = sprite.melee;
     this.cone      = new Aiming_Cone();
-    this.melee     = new MeleeBox();
 
     viewport.interactive = true;
     viewport.on('mouseup',   event => this.mouse_up(event));
@@ -91,8 +90,8 @@ class Mouse {
     const mouse_position = event.data.getLocalPosition(viewport);
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
-    if(event.data.originalEvent.shiftKey && this.animation.prefix === 'bow') {
-      this.animation.ready();
+    if(event.data.originalEvent.shiftKey && this.sprite.animation.prefix === 'bow') {
+      this.sprite.animation.ready();
       this.cone.narrow();
     }
   }
@@ -112,9 +111,8 @@ class Mouse {
     }
     const mouse_position = event.data.getLocalPosition(viewport);
 
-    this.animation.idle();
     // TODO Weapon manager
-    if(this.animation.prefix === 'bow') {
+    if(this.sprite.animation.prefix === 'bow') {
       const { angle } = this.cone;
       const angle_to_offset = random_bound(-angle, angle) || 29;
       shoot_arrow(200, 20, this.sprite, {
@@ -124,10 +122,26 @@ class Mouse {
       return;
     }
 
-    if(this.animation.prefix === 'knife') {
-      this.melee.slash(200, 20, this.sprite);
+    if(this.sprite.animation.prefix === 'knife') {
+
+      if(this.slashing) {
+        return;
+      }
+      this.slashing = true;
+      keyboardManager.disable();
+
+      this.melee.slash(300, 20, this.sprite);
+      this.sprite.loop = false;
+      this.sprite.animation.attack();
+      this.sprite.onComplete = () => {
+        this.slashing = false;
+        this.sprite.loop = true;
+        this.sprite.animation.idle();
+        keyboardManager.enable();
+      };
       return;
     }
+    this.sprite.animation.idle();
   }
 
   mouse_move(event) {

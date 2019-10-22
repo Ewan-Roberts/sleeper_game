@@ -15,8 +15,8 @@ const StateMachine      = require('javascript-state-machine');
 class Door extends Element {
   constructor(data) {
     super(data);
-    this.interactive = true;
-    this.buttonMode = true;
+    this.interactive = false;
+    this.buttonMode = false;
     this.add_component(new Vitals());
     this.state = new StateMachine({
       'init'       : 'closed',
@@ -32,6 +32,8 @@ class Door extends Element {
     items.addChild(this);
 
     if(data.clickable) {
+      this.interactive = true;
+      this.buttonMode = true;
       this.closable = data.closable;
       this.on('click', () => {
         if(this.state.is('locked')) {

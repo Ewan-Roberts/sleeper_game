@@ -25,11 +25,9 @@ class Animation {
     this.sprite.play();
     this.state = action;
   }
-
   face_point(point) {
     this.sprite.rotation = radian(point, this.sprite);
   }
-
   ready()  {
     this.switch('shoot');
   }
@@ -53,7 +51,7 @@ class Animation {
   attack() {
     this.switch('attack');
   }
-  speed(value) {
+  set speed(value) {
     this.sprite.animationSpeed = value;
   }
   kill() {

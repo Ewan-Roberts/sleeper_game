@@ -63,8 +63,8 @@ class Description extends Text{
 class Item extends Sprite {
   constructor({ image_name }) {
     super(Texture.fromFrame(image_name));
-    this.height = 250;
-    this.width  = 250;
+    this.height = 80;
+    this.width  = 80;
     this.anchor.set(0.5);
     this.interactive = true;
     this.buttonMode  = true;
@@ -116,8 +116,6 @@ class View_Inventory {
     loot.forEach((loot_item, slot) => {
       const item = new Item(loot_item);
       item.click = () => {
-        console.log('click');
-        console.log(loot_item);
         item_events.emit('give', 1, { 'item': loot_item });
         description.visible = false;
         title.hide();

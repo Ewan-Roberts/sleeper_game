@@ -65,13 +65,13 @@ const options = {
     'fps'               : 0.03,
     'resolution'        : 0.4,
     'anti_alias'        : false,
-    'background_color'  : 0xffffff, // blue
+    'background_color'  : 0x0066CC, // blue
     'keyboard_additions': true,
     'visable_pads'      : true,
     'visable_borders'   : true,
     'brightness'        : 1,
     'inventory_openable': false,
-    'level_on_load'     : 'defend',
+    'level_on_load'     : 'street',
     'draw_paths'        : true,
     'player_speed'      : 309,
     'round_pixels'      : true,

@@ -8,7 +8,7 @@ class LogicZombie extends LogicSprite {
 
     this.add_component(new Animation(this, zombie_frames));
     this.animation.idle();
-    this.animationSpeed = 0.30;
+    this.animation.speed = 0.30;
   }
 }
 

@@ -6,6 +6,7 @@ const { Container    } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();
+container.name = 'progress_bar';
 container.x = viewport.screenWidth / 2;
 container.y = viewport.screenHeight;
 

@@ -1,10 +1,12 @@
-const { Texture, tween, tweenManager, extras } = require('pixi.js');
+const { Texture, Graphics, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { decals           } = require('../../engine/pixi_containers');
+const { MeleeBox         } = require('../../engine/melee');
 const { radian           } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
 const { distance_between } = require('../../utils/math');
+const { point_radius_away_from_point } = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -33,6 +35,7 @@ class LogicSprite extends extras.AnimatedSprite {
     this.tween = tweenManager.createTween();
     this.add_component(new Inventory({ items, random, equip }));
     this.add_component(new Vitals());
+    this.add_component(new MeleeBox());
     this.rotation_offset = 0;
     this.height = height || 50;
     this.width  = width  || 40;
@@ -104,9 +107,9 @@ class LogicSprite extends extras.AnimatedSprite {
   logic_start({
     speed = 1000,
   } = {}) {
-    this.tween.time   = speed;
+    this.tween.time   = speed * 2;
     this.tween.repeat = 20;
-    const path_tween = tweenManager.createTween(this);
+    const path_tween  = tweenManager.createTween(this);
 
     this.tween.on('repeat', async () => {
       // TODO this is a hack and shouldn't be done in here
@@ -121,38 +124,47 @@ class LogicSprite extends extras.AnimatedSprite {
       }
 
       path_tween.clear();
-      path_tween.time = speed;
-      this.rotation = radian(this._target, this) + this.rotation_offset;
+      path_tween.time = speed * 20;
 
       if(!this._target_far_away) {
         this.animation.attack();
         this.animation.face_point(this._target);
-        damage_events.emit('damage', { 'id': this._target.id, 'damage': 30 });
+        this.melee.slash(750, 20, this);
         return;
       }
 
       this.animation.move();
       if(this.sees_target) {
-        const { x, y } = this._target;
-        path_tween.from(this).to({ x, y }).start();
+        const { x, y } = point_radius_away_from_point(this._target, this, -50);
+
+        this.animation.face_point(this._target);
+        path_tween
+          .from(this)
+          .to({ x, y })
+          .start();
         return;
       }
 
       const normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);
       path_tween.path = new tween.TweenPath();
       path_tween.path.moveTo(this.x, this.y);
+      path_tween.time = speed * normal_path.length;
 
-      for (let i = 3; i < normal_path.length; i++) {
+      for (let i = 2; i < normal_path.length; i++) {
         path_tween.path.arcTo(
           normal_path[i - 1].x + 50,
           normal_path[i - 1].y + 50,
           normal_path[i].x + 50,
           normal_path[i].y + 50,
-          20);
+          90);
       }
 
+      this.animation.face_point(path_tween.path.getPoint(1));
       draw_path(path_tween.path);
-      this.tween.chain(path_tween).start();
+
+      return this.tween
+        .chain(path_tween)
+        .start();
     });
 
     this.tween.start();

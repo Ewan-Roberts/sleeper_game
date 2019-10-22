@@ -14,7 +14,6 @@ class Inventory extends View_Inventory {
     this.items = JSON.parse(items).map(
       ({ name, condition }) => Item_Manager.get_item(name, { condition })
     );
-    console.log(this.items);
 
     this.populate();
   }

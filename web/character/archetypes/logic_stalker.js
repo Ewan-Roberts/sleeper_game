@@ -25,7 +25,7 @@ class Stalker extends LogicZombie {
 
     this.hand_tween      = tweenManager.createTween(this);
     this.hand_tween.loop = true;
-    this.hand_tween.time = 200;
+    this.hand_tween.time = 100;
     this.hand_tween.expire = true;
 
     let hand_state = true;
@@ -38,7 +38,7 @@ class Stalker extends LogicZombie {
       });
       hands.rotation = this.rotation + 1.5,
       hands.position.copy(this);
-      hands.fade_out(2000);
+      hands.fade_out(1000);
 
       decals.addChild(hands);
 

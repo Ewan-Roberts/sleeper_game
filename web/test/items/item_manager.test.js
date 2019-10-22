@@ -102,3 +102,95 @@ describe('items/item_manager', function() {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+boolean: true, false
+
+string: 'a sentence'
+
+array: [1,2, 'things'];
+
+object: {
+ foo: bar,
+};
+
+interger: 1 2223423423423423121
+
+
+function() {
+
+}:
+
+
+make me a function that takes a number and times it by 2;
+
+
+
+function() {
+
+};
+
+
+
+if(userName === 'Jane') {
+  one
+} else {
+  two
+}
+
+
+let fakeName = 'poo';
+
+let userName = 'bitchface';
+
+let result = '';
+
+fakeName = userName;
+
+switch(fakeName) {
+  case 'poo':
+    result = 'cheese';
+    break;
+  case 'foo':
+    result = 'keto';
+    break;
+}
+
+console.log(result)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

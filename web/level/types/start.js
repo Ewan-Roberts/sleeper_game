@@ -13,7 +13,7 @@ const { random_bound } = require('../../utils/math.js');
 
 const { Overlay_Dialog } = require('../../effects/overlay_dialog.js');
 const { Fade           } = require('../../effects/fade.js');
-const { Nightmare      } = require('../../effects/nightmare.js');
+const { Nightmare      } = require('../../effects/environment.js');
 const { pulse_sprites  } = require('../../effects/fade_sprite.js');
 const { flash_at       } = require('../../effects/fade_sprite.js');
 const { random_word    } = require('../../effects/floor_word.js');
@@ -258,7 +258,7 @@ class StartRoom  {
       this.suspense_effect.play();
       this.eerie_song.play();
       this.theme_song.stop();
-      this.bed.remove();
+      this.bed.destroy();
 
       flash_at(this.player, 1590);
       await sleep(1490);

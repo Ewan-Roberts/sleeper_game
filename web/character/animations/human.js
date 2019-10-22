@@ -14,68 +14,6 @@ const human_frames = {
   'knife_attack': Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name + i)),
 };
 
-class PlayerAnimation {
-  constructor(sprite) {
-    this.name   = 'animation';
-    this.state  = 'bow';
-    this.sprite = sprite;
-    this.prefix = 'nothing';
-
-    this._set_sound();
-  }
-
-  _set_sound() {
-    // this.walk_sound = sound.find('walk_normal');
-    // this.walk_sound.loop = true;
-    // this.walk_sound.volume = 0.05;
-  }
-
-  switch(action) {
-    if(this.state === action) {
-      return;
-    }
-    this.sprite.textures = human_frames[action];
-
-    this.sprite.play();
-
-    this.state = action;
-  }
-
-  ready_weapon() {
-    this.switch(this.prefix + '_shoot');
-    this.sprite.loop = false;
-  }
-
-  attack() {
-    this.switch(this.prefix + '_walk');
-  }
-
-  idle() {
-    this.walk_sound.stop();
-    this.switch(this.prefix + '_idle');
-  }
-
-  walk() {
-    if(!this.walk_sound.isPlaying) {
-      // this.walk_sound.play();
-    }
-    this.switch(this.prefix + '_walk');
-  }
-
-  kill() {
-    this.switch(this.prefix + '_walk');
-  }
-
-  set current_weapon(weapon) {
-    this.weapon = weapon;
-  }
-
-  get current_weapon() {
-    return this.weapon;
-  }
-}
-
 module.exports = {
-  PlayerAnimation,
   human_frames,
 };

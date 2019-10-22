@@ -101,7 +101,7 @@ class Chest extends Element {
 
   remove() {
     this.button.destroy();
-    this.destroy();
+    super.destroy();
   }
 }
 
