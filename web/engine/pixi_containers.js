@@ -3,7 +3,7 @@ global.window.PIXI = PIXI;
 global.window.PIXI.default = PIXI;
 
 const { Container } = require('pixi.js');
-const { viewport  } = require('./app');
+const { viewport, cull  } = require('./app');
 
 // Its easier to edit, so sue me
 const {
@@ -18,67 +18,67 @@ const {
 
 // TODO consider depenancy injection
 const borders = new Container();
-borders.name   = 'borders';
+borders.name   = 'border';
 borders.zIndex = low;
 borders.interactiveChildren = false;
 
 const backgrounds  = new Container();
-backgrounds.name   = 'background_image';
+backgrounds.name   = 'background';
 backgrounds.zIndex = background;
 backgrounds.interactiveChildren = false;
 
 const decals  = new Container();
-decals.name   = 'decals_container';
+decals.name   = 'decal';
 decals.zIndex = floor;
 decals.interactiveChildren = false;
 
 const grids  = new Container();
-grids.name   = 'grid_container';
+grids.name   = 'grid';
 grids.zIndex = background;
 grids.interactiveChildren = false;
 
 const collisions  = new Container();
-collisions.name   = 'collision_items';
+collisions.name   = 'collision';
 collisions.zIndex = low;
 collisions.interactiveChildren = false;
 
 const enemys  = new Container();
-enemys.name   = 'enemy_container';
+enemys.name   = 'enemy';
 enemys.zIndex = medium;
 
 const items  = new Container();
-items.name   = 'non_collision_items';
+items.name   = 'non_collision';
 items.zIndex = medium;
 
 const players  = new Container();
-players.name   = 'player_container';
+players.name   = 'player';
 players.zIndex = medium;
 players.interactiveChildren = false;
 
 const roofs  = new Container();
-roofs.name   = 'roof_container';
+roofs.name   = 'roof';
 roofs.zIndex = close;
 roofs.interactiveChildren = false;
 
 const visuals  = new Container();
-visuals.name   = 'visuals';
+visuals.name   = 'visual';
 visuals.zIndex = close;
 
 const pads  = new Container();
-pads.name   = 'pad_container';
+pads.name   = 'pad';
 pads.zIndex = close;
 
 const shrouds  = new Container();
-shrouds.name   = 'shroud_container';
+shrouds.name   = 'shroud';
 shrouds.zIndex = closer;
 shrouds.interactiveChildren = false;
 
 const guis  = new Container();
-guis.name   = 'gui_container';
+guis.name   = 'gui';
 guis.zIndex = very_close;
 
 const fades = new Container();
-fades.name   = 'fades_container';
+fades.name   = 'fades';
 fades.zIndex = very_close;
 
 
@@ -103,11 +103,20 @@ viewport.updateLayersOrder();
 
 function clear_level_containers() {
   viewport.children.forEach(child => {
-    if(child.name === 'player_container') {
+    if(child.name === 'player') {
       return;
     }
     child.removeChildren();
   });
+}
+
+class World {
+  static add_to(name, sprite) {
+    console.log(viewport);
+    const container = viewport.getChildByName(name);
+    container.addChild(sprite);
+    cull.add(sprite);
+  }
 }
 
 module.exports = {
@@ -126,4 +135,5 @@ module.exports = {
   decals,
   fades,
   clear_level_containers,
+  World,
 };

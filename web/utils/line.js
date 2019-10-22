@@ -1,17 +1,17 @@
 const { Graphics } = require('pixi.js');
-const { guis     } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 
 function draw_path(path) {
   const graphical_path = new Graphics();
   graphical_path.lineStyle(3, 0xffffff, 0.5);
   graphical_path.drawPath(path);
 
-  guis.addChild(graphical_path);
+  World.add_to('gui', graphical_path);
 }
 
 function draw_line(point, point2) {
   const myGraph = new Graphics();
-  guis.addChild(myGraph);
+  World.add_to('gui', myGraph);
 
   // Move it to the beginning of the line
   myGraph.position.copy(point);

@@ -1,13 +1,11 @@
 const { players  } = require('../../engine/pixi_containers');
 const { pathfind    } = require('../../engine/pathfind.js');
-const { stage } = require('../../engine/app');
 const { LogicTest } = require('../../character/archetypes/logic_test');
 const { sound    } = require('pixi.js');
 const { flash_at } = require('../../effects/fade_sprite.js');
 const { Fade     } = require('../../effects/fade.js');
 const { env      } = require('../../../config');
 const { sleep    } = require('../../utils/time.js');
-const { random_bound } = require('../../utils/math.js');
 const { ActorHuman } = require('../../character/archetypes/logic_human');
 const { Night     } = require('../../effects/environment');
 const { PathCrow        } = require('../../character/archetypes/path_crow');
@@ -27,31 +25,6 @@ const {
   Click_Pad,
 } = require('../elements');
 
-const randomiser = random_bound(-10, 10);
-
-async function flicker(light) {
-  light.alpha = 0.7;
-
-  await sleep(20 + randomiser);
-  light.alpha = 0;
-
-  await sleep(15 + randomiser * 3);
-  light.alpha = 0;
-
-  await sleep(randomiser * 2);
-  light.alpha = 0.9;
-
-  await sleep(15 + randomiser);
-  light.alpha = 0;
-
-  await sleep(45 + randomiser * 2);
-  light.alpha = 1;
-
-  await sleep(5000 + (randomiser ** 2));
-
-  await flicker(light);
-}
-
 class StreetRoom {
   constructor(spawn_id) {
     this.name   = 'home_street';
@@ -64,13 +37,13 @@ class StreetRoom {
     this.collisions   = this.data.collision.map(data => new Collision(data));
     this.second_floor = this.data.second_floor.map(data => new Roof(data));
     this.roofs        = this.data.roof.map(data => new Roof(data));
+    this.backgrounds  = this.data.background.map(data => new Background(data));
     this.decals       = this.data.decal.map(data => new Decal(data));
     this.floors       = this.data.floor.map(data => new Floor(data));
     this.exit_pad     = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
     this.click_pad    = this.data.click_pad.map(data => new Click_Pad(data));
     this.crows        = this.data.birds.map(unit => new PathCrow(unit));
 
-    this.backgrounds  = this.data.background.map(data => new Background(data));
     this.doors        = this.data.door.map(data => new Door(data));
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id || 137);
 
@@ -134,7 +107,10 @@ class StreetRoom {
 
     this.click_pad
       .find(pad => pad.id === 691)
-      .click = () => zombie.logic_start({ 'speed': 1000 });
+      .click = () => {
+        zombie.logic_start({ 'speed': 1000 });
+        console.log(1);
+      };
 
     this.exit_pad
       .find(pad => pad.id === 716)

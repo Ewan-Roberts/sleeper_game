@@ -10,43 +10,92 @@ const { Roof        } = require('../elements/ceiling');
 const { Shroud      } = require('../elements/shroud');
 const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
+const { cull, viewport, ticker  } = require('../../engine/app');
+
+function add_cull_objects() {
+  viewport.children.forEach(child => {
+    cull.addList(child.children);
+  });
+}
+
+// TODO
+ticker.add(() => {
+  if(viewport.dirty) {
+    const bounds = viewport.getVisibleBounds();
+    bounds.height *= 3;
+    bounds.width *= 3;
+    bounds.x -= 400;
+    bounds.y -= (bounds.height / 2);
+
+    console.log(cull.stats());
+    cull.cull(bounds);
+
+    viewport.dirty = false;
+  }
+});
 
 class Level_Factory {
   static create(level_name, spawn_id) {
     this.clear();
 
-    const { IntroRoom      } = require('./intro');
     const { ItemsRoom      } = require('./item_room');
     const { StreetRoom     } = require('./street');
     const { HubRoom        } = require('./transition_room');
     const { DefendRoom     } = require('./defend_room');
     const { ParkRoom       } = require('./park_room');
     const { StartRoom      } = require('./start');
-    const { SimpleRoom     } = require('./simple_room');
+    // const { SimpleRoom     } = require('./simple_room');
     const { DevRoom        } = require('./dev_room');
     const { RanbirFloor0   } = require('./ranbir_flat_0');
     const { RanbirFloor1   } = require('./ranbir_flat_1');
     const { RanbirFloor2   } = require('./ranbir_flat_2');
     const { StalkerRoom    } = require('./stalker_room');
     const { BasketBallRoom } = require('./basketball_room');
+    const { IntroRoom      } = require('./intro');
 
     switch (level_name) {
-      case 'intro'     : return new IntroRoom();
-      case 'item'      : return new ItemsRoom();
-      case 'street'    : return new StreetRoom(spawn_id);
-      case 'transition': return new HubRoom();
-      case 'defend'    : return new DefendRoom();
-      case 'start'     : return new StartRoom();
-      case 'park'      : return new ParkRoom();
-      case 'ranbir_flat_0' : return new RanbirFloor0(spawn_id);
-      case 'ranbir_flat_1' : return new RanbirFloor1();
-      case 'ranbir_flat_2' : return new RanbirFloor2();
-      case 'dev'           : return new DevRoom(spawn_id);
-      case 'stalker'       : return new StalkerRoom();
-      case 'basketball'    : return new BasketBallRoom();
-
-      default: new SimpleRoom(level_name);
+      case 'intro':
+        new IntroRoom();
+        break;
+      case 'start':
+        new StartRoom();
+        break;
+      case 'street':
+        new StreetRoom(spawn_id);
+        break;
+      case 'item':
+        new ItemsRoom();
+        break;
+      case 'transition':
+        new HubRoom();
+        break;
+      case 'defend':
+        new DefendRoom();
+        break;
+      case 'park':
+        new ParkRoom();
+        break;
+      case 'ranbir_flat_0' :
+        new RanbirFloor0(spawn_id);
+        break;
+      case 'ranbir_flat_1' :
+        new RanbirFloor1();
+        break;
+      case 'ranbir_flat_2' :
+        new RanbirFloor2();
+        break;
+      case 'dev':
+        new DevRoom(spawn_id);
+        break;
+      case 'stalker':
+        new StalkerRoom();
+        break;
+      case 'basketball':
+        new BasketBallRoom();
+        break;
     }
+
+    add_cull_objects();
   }
 
   // TODO remove

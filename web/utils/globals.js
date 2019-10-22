@@ -5,20 +5,22 @@ const { visuals  } = require('../engine/pixi_containers');
 const { Vitals   } = require('../character/attributes/vitals');
 
 // Very loose function to just place a bunny (useful for testing)
-global.place_bunny = (
-  {
-    x = 0,
-    y = 0,
-  } = {}
-) => {
+global.place_bunny = ({
+  x = 0,
+  y = 0,
+  width,
+  height,
+} = {}, place_in_container) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.copy({ x, y });
-  bunny.anchor.set(0.5);
-  bunny.width  = 100;
-  bunny.height = 100;
+  // bunny.anchor.set(0.5);
+  bunny.width  = width || 100;
+  bunny.height = height || 100;
   bunny.vitals = new Vitals();
 
-  visuals.addChild(bunny);
+  if(place_in_container) {
+    visuals.addChild(bunny);
+  }
   return bunny;
 };
 

@@ -1,9 +1,8 @@
-const { Texture, Graphics, tween, tweenManager, extras } = require('pixi.js');
+const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { decals           } = require('../../engine/pixi_containers');
 const { MeleeBox         } = require('../../engine/melee');
-const { radian           } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
 const { distance_between } = require('../../utils/math');
 const { point_radius_away_from_point } = require('../../utils/math');
@@ -113,6 +112,8 @@ class LogicSprite extends extras.AnimatedSprite {
 
     this.tween.on('repeat', async () => {
       // TODO this is a hack and shouldn't be done in here
+      console.log(this);
+
       if(
         this._destroyed
         || this._target._destroyed

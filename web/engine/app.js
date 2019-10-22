@@ -3,7 +3,6 @@ const { Application, settings } = PIXI;
 const { env      } = require('../../config');
 const { Viewport } = require('pixi-viewport');
 
-
 const {
   'innerWidth':  window_width,
   'innerHeight': window_height,
@@ -56,6 +55,9 @@ ticker.add(delta => {
 
 global.document.body.appendChild(view);
 
+const Cull = require('pixi-cull');
+const cull = new Cull.Simple();
+
 // Load project libraries
 require('pixi-keyboard');
 require('pixi-sound');
@@ -69,5 +71,6 @@ module.exports = {
   screen,
   renderer,
   stage,
+  cull,
 };
 

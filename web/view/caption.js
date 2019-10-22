@@ -1,5 +1,6 @@
 const { stage     } = require('../engine/app');
 const { viewport  } = require('../engine/app');
+const { ticker  } = require('../engine/app');
 const { Sprite    } = require('pixi.js');
 const { Texture   } = require('pixi.js');
 const { Container } = require('pixi.js');
@@ -35,6 +36,7 @@ dialog.y -= 5;
 dialog.anchor.set(0.5, 1);
 
 // TODO handle gui elements in pixi_containers
+container.name = 'her';
 container.addChild(
   background,
   dialog,
