@@ -2,8 +2,7 @@ const { Sprite, Texture, tweenManager } = require('pixi.js');
 const { radian, random_bound } = require('../../utils/math');
 const { viewport    } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
-const { MeleeBox    } = require('../../engine/melee');
-const { guis        } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { keyboardManager } = require('pixi.js');
 
 class Aiming_Cone extends Sprite {
@@ -13,7 +12,7 @@ class Aiming_Cone extends Sprite {
     this.alpha    = 0;
     this.original_width = this.width;
 
-    guis.addChild(this);
+    World.add_to('gui', this);
   }
 
   narrow(time = 3000) {
@@ -71,7 +70,7 @@ class Mouse {
     this.name      = 'mouse';
     this.sprite    = sprite;
     this.melee     = sprite.melee;
-    this.cone      = new Aiming_Cone();
+    // this.cone      = new Aiming_Cone();
 
     viewport.interactive = true;
     viewport.on('mouseup',   event => this.mouse_up(event));
@@ -92,7 +91,7 @@ class Mouse {
 
     if(event.data.originalEvent.shiftKey && this.sprite.animation.prefix === 'bow') {
       this.sprite.animation.ready();
-      this.cone.narrow();
+      // this.cone.narrow();
     }
   }
 
@@ -109,16 +108,16 @@ class Mouse {
     if(!event.data.originalEvent.shiftKey) {
       return;
     }
-    const mouse_position = event.data.getLocalPosition(viewport);
+    // const mouse_position = event.data.getLocalPosition(viewport);
 
     // TODO Weapon manager
     if(this.sprite.animation.prefix === 'bow') {
-      const { angle } = this.cone;
-      const angle_to_offset = random_bound(-angle, angle) || 29;
-      shoot_arrow(200, 20, this.sprite, {
-        'x': mouse_position.x + angle_to_offset,
-        'y': mouse_position.y + angle_to_offset,
-      });
+      // /const { angle } = this.cone;
+      // const angle_to_offset = random_bound(-angle, angle) || 29;
+      // shoot_arrow(200, 20, this.sprite, {
+      //   'x': mouse_position.x + angle_to_offset,
+      //   'y': mouse_position.y + angle_to_offset,
+      // });
       return;
     }
 
@@ -155,8 +154,8 @@ class Mouse {
 
     const rotation = radian(mouse_position, this.sprite);
     this.sprite.rotation = rotation;
-    this.cone.position   = this.sprite;
-    this.cone.rotation   = rotation;
+    // this.cone.position   = this.sprite;
+    // this.cone.rotation   = rotation;
   }
 }
 

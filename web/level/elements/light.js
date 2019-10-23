@@ -1,6 +1,4 @@
-const { visuals         } = require('../../engine/pixi_containers');
-const { items           } = require('../../engine/pixi_containers');
-const { roofs           } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { sleep           } = require('../../utils/time.js');
 const { random_bound    } = require('../../utils/math.js');
 const { Sprite, Texture } = require('pixi.js');
@@ -14,7 +12,7 @@ class Shine extends Sprite {
     this.width  = 550;
     this.alpha  = 0.8;
     this.anchor.set(0.4, 0.6);
-    visuals.addChild(this);
+    World.add_to('visual', this);
   }
 }
 
@@ -22,7 +20,7 @@ class Street_Lamp extends Element {
   constructor(data) {
     super(data);
     this.texture = Texture.fromImage('street_light_00');
-    roofs.addChild(this);
+    World.add_to('roof', this);
     this.cast_light = new Shine();
     this.cast_light.position.copy(this);
     this.cast_light.anchor.y = 1.25;
@@ -91,8 +89,8 @@ class Light extends Element {
     this.cast_light = new Shine();
     this.cast_light.position.copy(this);
 
-    items.addChild(this);
-    visuals.addChild(this.cast_light);
+    World.add_to('item', this);
+    World.add_to('visual', this.cast_light);
 
     this._textures();
     this._random_flickering();
@@ -169,7 +167,6 @@ class Light extends Element {
     this.lamp_off_texture = Texture.fromImage('MI01_FurnitureFloorLampOff_05x05[lamp, floor lamp, lamp off, lamp turned off, standing lamp, upright lamp, room lamp]');
   }
 }
-
 
 module.exports = {
   Light,

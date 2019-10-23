@@ -36,13 +36,13 @@ function point_contains(player) {
   if(pad) {
     player.animation.speed = 0.60;
     pad.events.emit('trigger');
-    return pad.speed;
+    return 50;
   }
 
   if(env.dev) {
-    return 30;
+    return 50;
   }
-  return 3;
+  return 50;
 }
 
 class Keyboard {

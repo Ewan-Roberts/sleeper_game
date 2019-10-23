@@ -1,5 +1,5 @@
 const { Text, Sprite, Texture } = require('pixi.js');
-const { guis } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 
 // TODO move to seperate file
 class Label extends Text{
@@ -13,7 +13,7 @@ class Label extends Text{
     });
 
     this.anchor.set(0.5);
-    guis.addChild(this);
+    World.add_to('gui', this);
   }
 }
 
@@ -54,7 +54,7 @@ class Button extends Sprite {
 
     // Start invisible
     this.visible = false;
-    guis.addChild(this);
+    World.add_to('gui', this);
   }
 
   set_position({ x, y }) {

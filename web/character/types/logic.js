@@ -157,7 +157,7 @@ class LogicSprite extends extras.AnimatedSprite {
           normal_path[i - 1].y + 50,
           normal_path[i].x + 50,
           normal_path[i].y + 50,
-          90);
+          50);
       }
 
       this.animation.face_point(path_tween.path.getPoint(1));

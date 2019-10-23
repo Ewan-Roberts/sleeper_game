@@ -12,27 +12,14 @@ const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
 const { cull, viewport, ticker  } = require('../../engine/app');
 
-function add_cull_objects() {
-  viewport.children.forEach(child => {
-    cull.addList(child.children);
-  });
-}
-
-// TODO
-ticker.add(() => {
-  if(viewport.dirty) {
-    const bounds = viewport.getVisibleBounds();
-    bounds.height *= 3;
-    bounds.width *= 3;
-    bounds.x -= 400;
-    bounds.y -= (bounds.height / 2);
-
-    console.log(cull.stats());
-    cull.cull(bounds);
-
-    viewport.dirty = false;
-  }
-});
+// function add_cull_objects() {
+//   viewport.children.forEach(child => {
+//     if(child.name === 'player_container') {
+//       return;
+//     }
+//     cull.addList(child.children);
+//   });
+// }
 
 class Level_Factory {
   static create(level_name, spawn_id) {
@@ -94,8 +81,6 @@ class Level_Factory {
         new BasketBallRoom();
         break;
     }
-
-    add_cull_objects();
   }
 
   // TODO remove

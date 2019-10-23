@@ -1,7 +1,7 @@
 const PIXI = require('pixi.js');
 global.window.PIXI.default = PIXI;
 
-const { visuals  } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { Vitals   } = require('../character/attributes/vitals');
 
 // Very loose function to just place a bunny (useful for testing)
@@ -19,7 +19,7 @@ global.place_bunny = ({
   bunny.vitals = new Vitals();
 
   if(place_in_container) {
-    visuals.addChild(bunny);
+    World.add_to('visual', this);
   }
   return bunny;
 };

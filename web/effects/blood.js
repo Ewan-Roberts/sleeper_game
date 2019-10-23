@@ -1,5 +1,5 @@
 const { Sprite, Texture } = require('pixi.js');
-const { decals } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { random_bound } = require('../utils/math.js');
 const { tweenManager } = require('pixi.js');
 
@@ -27,7 +27,7 @@ class Blood extends Sprite {
     sprite.position.copy(point);
     sprite.rotation = random_bound(0, 3);
 
-    decals.addChild(sprite);
+    World.add_to('decal', sprite);
   }
 
   static pool_at(point) {
@@ -51,7 +51,7 @@ class Blood extends Sprite {
     tween.start();
     tween.expire = true;
 
-    decals.addChild(sprite);
+    World.add_to('decal', sprite);
   }
 }
 

@@ -1,6 +1,6 @@
 const { Texture, tween, tweenManager, extras } = require('pixi.js');
 
-const { enemys    } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { radian    } = require('../../utils/math');
 const { draw_path } = require('../../utils/line');
 
@@ -27,7 +27,7 @@ class PathSprite extends extras.AnimatedSprite {
       this.path = polyline.map(({ x, y }) => ({ 'x': this.x + x, 'y': this.y + y }));
     }
     this.turn = true;
-    enemys.addChild(this);
+    World.add_to('enemy', this);
   }
 
   set path(path_array) {

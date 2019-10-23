@@ -1,5 +1,5 @@
 const { Texture, Sprite, Text } = require('pixi.js');
-const { guis     } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { viewport    } = require('../engine/app');
 const { Fade     } = require('../effects/fade');
 const PIXI = require('pixi.js');
@@ -10,7 +10,7 @@ class Background extends Sprite {
     this.width  = global.window.innerWidth;
     this.height = global.window.innerHeight;
     this.anchor.set(0.5);
-    guis.addChild(this);
+    World.add_to('gui', this);
   }
 
   set_position({ x, y }) {
@@ -78,7 +78,7 @@ class Note {
       Fade.out_destroy(this.text);
     });
 
-    guis.addChild(this.sprite, this.text);
+    World.add_to('gui', this.sprite, this.text);
   }
 }
 

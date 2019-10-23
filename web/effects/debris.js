@@ -1,4 +1,4 @@
-const { backgrounds } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { random_bound } = require('../utils/math');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
@@ -26,7 +26,7 @@ class Debris extends Sprite {
     this.tween.time = 500;
     this.tween.start();
 
-    backgrounds.addChild(this);
+    World.add_to('background', this);
   }
 }
 

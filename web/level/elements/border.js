@@ -1,4 +1,4 @@
-const { borders } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { env     } = require('../../../config');
 const { Element } = require('./model');
 
@@ -11,7 +11,7 @@ class Border extends Element {
       'alpha'     : (env.visable_borders) ? 0.2 : 0,
     });
 
-    borders.addChild(this);
+    World.add_to('border', this);
   }
 }
 

@@ -47,7 +47,7 @@ enemys.name   = 'enemy';
 enemys.zIndex = medium;
 
 const items  = new Container();
-items.name   = 'non_collision';
+items.name   = 'item';
 items.zIndex = medium;
 
 const players  = new Container();
@@ -78,7 +78,7 @@ guis.name   = 'gui';
 guis.zIndex = very_close;
 
 const fades = new Container();
-fades.name   = 'fades';
+fades.name   = 'fade';
 fades.zIndex = very_close;
 
 
@@ -102,20 +102,26 @@ viewport.addChild(
 viewport.updateLayersOrder();
 
 function clear_level_containers() {
-  viewport.children.forEach(child => {
-    if(child.name === 'player') {
+  viewport.children.forEach(container => {
+    if(container.name === 'player') {
       return;
     }
-    child.removeChildren();
+    container.children.forEach(child => cull.remove(child));
+    container.removeChildren();
   });
 }
 
 class World {
-  static add_to(name, sprite) {
-    console.log(viewport);
-    const container = viewport.getChildByName(name);
-    container.addChild(sprite);
-    cull.add(sprite);
+  static add_to(name, ...args) {
+    viewport
+      .getChildByName(name)
+      .addChild(...args);
+
+    cull.add(...args);
+  }
+
+  static get_container(name) {
+    return viewport.getChildByName(name);
   }
 }
 

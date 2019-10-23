@@ -1,5 +1,6 @@
 const { filters  } = require('pixi.js');
 const { renderer } = require('../engine/app.js');
+// TODO
 const { decals   } = require('../engine/pixi_containers.js');
 const { roofs    } = require('../engine/pixi_containers.js');
 const { collisions    } = require('../engine/pixi_containers.js');
@@ -22,10 +23,10 @@ class Night {
   }
 
   static off(amount = 0.5) {
-    roofs.filters = [];
-    collisions.filters = [];
-    decals.filters = [];
-    backgrounds.filters = [];
+    roofs.filters = null;
+    collisions.filters = null;
+    decals.filters = null;
+    backgrounds.filters = null;
     night_matrix.alpha = amount;
     roofs.children.forEach(roof => roof.tint = 0xffffff);
   }

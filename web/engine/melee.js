@@ -1,9 +1,6 @@
 const { tweenManager } = require('pixi.js');
 const { Sprite, Texture } = require('pixi.js');
-const { guis            } = require('./pixi_containers');
-const { enemys          } = require('./pixi_containers');
-const { players         } = require('./pixi_containers');
-const { items           } = require('./pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { damage_events   } = require('./damage_handler');
 const { env             } = require('../../config');
 
@@ -22,7 +19,7 @@ class Box extends Sprite {
     this.tween.delay  = speed;
     this.tween.expire = true;
 
-    guis.addChild(this);
+    World.add_to('gui', this);
   }
 
   destroy() {
@@ -58,7 +55,7 @@ class MeleeBox{
 
       this.box.position.copy(origin);
       this.box.rotation = origin.rotation;
-      const player = players.children.find(player =>
+      const player = World.get_container('player').children.find(player =>
         this.box.containsPoint(player.getGlobalPosition()));
 
       if(player) {
@@ -69,7 +66,7 @@ class MeleeBox{
         }
       }
 
-      const found = enemys.children.find(enemy => this.box.containsPoint(enemy.getGlobalPosition()));
+      const found = World.get_container('enemy').children.find(enemy => this.box.containsPoint(enemy.getGlobalPosition()));
       if(found) {
         if(found.id !== origin.id) {
           damage_events.emit('damage', { 'id': found.id, damage });
@@ -78,7 +75,7 @@ class MeleeBox{
         }
       }
 
-      const item = items.children.find(item => this.box.containsPoint(item.getGlobalPosition()));
+      const item = World.get_container('item').children.find(item => this.box.containsPoint(item.getGlobalPosition()));
       if(item) {
         if(item.id !== origin.id) {
           damage_events.emit('damage', { 'id': item.id, damage });

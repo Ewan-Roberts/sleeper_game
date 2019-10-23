@@ -1,4 +1,4 @@
-const { pads          } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('../types/level_factory');
 const { env           } = require('../../../config');
 const { Element       } = require('./model');
@@ -40,7 +40,7 @@ class Trigger_Pad extends Element {
       });
     }
 
-    pads.addChild(this);
+    World.add_to('pad', this);
   }
 
   set text(value) {

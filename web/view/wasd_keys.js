@@ -1,4 +1,4 @@
-const { visuals    } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { FadeSprite } = require('../effects/fade_sprite.js');
 const { Text       } = require('pixi.js');
 
@@ -15,7 +15,7 @@ class KeyboardKey extends FadeSprite {
 
     this.fired = false;
     this.addChild(text);
-    visuals.addChild(this);
+    World.add_to('visual', this);
   }
 
   bounce_out() {

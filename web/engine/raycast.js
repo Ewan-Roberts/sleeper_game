@@ -1,14 +1,15 @@
 const { viewport  } = require('./app');
-const { ticker    } = require('./app');
 const { renderer  } = require('./app');
-const { env       } = require('../../config');
-const { visuals   } = require('./pixi_containers');
+// const { env       } = require('../../config');
+const { World } = require('./pixi_containers');
 const { Container } = require('pixi.js');
 const { Graphics  } = require('pixi.js');
 const { Sprite    } = require('pixi.js');
 const { Texture   } = require('pixi.js');
 const { filters   } = require('pixi.js');
-const { Point     } = require('pixi.js');
+const { ticker } = require('pixi.js');
+const { env      } = require('../../config');
+// const { Point     } = require('pixi.js');
 
 // A reverse mask as a blend mode
 renderer.state.blendModes[20] = [ 0, renderer.gl.ONE_MINUS_SRC_ALPHA ];
@@ -111,7 +112,10 @@ function get_unique_points(sprite, unique_points) {
   return unique_angles;
 }
 
-
+let local_tick = new ticker.Ticker();
+local_tick.speed = 0.1;
+local_tick.maxFPS = 2;
+const index = 0;
 /*
  * creates raycasting light and shadow around it
  * @param  {Sprite}
@@ -173,7 +177,9 @@ class Raycast extends Container {
     // this.filters = [new filters.BlurFilter(1)];
     this.filters = [ new filters.AlphaFilter() ];
 
-    visuals.addChild(this);
+    World.add_to('visual', this);
+
+    this.unique_points = this.segments.map(({ a, b }) => (a, b));
 
     this.start();
   }
@@ -212,39 +218,40 @@ class Raycast extends Container {
     this._follow = value;
   }
 
+  tick() {
+    if(
+      !viewport.dirty
+      || !viewport.ready
+    ) {
+      return;
+    }
+    this.raycast.clear();
+    this.raycast.beginFill();
+    index + 1;
+    console.log(index);
+
+    const intersects = get_intersects(this.sprite, this.segments, this.unique_points);
+    this.raycast.moveTo(intersects[0].x, intersects[0].y);
+
+    intersects.forEach(inter => this.raycast.lineTo(inter.x, inter.y));
+
+    if(this._follow) {
+      this.light.x = this.sprite.x - this.light.width / 2;
+      this.light.y = this.sprite.y - this.light.height / 2;
+    }
+  }
 
   start() {
-    const unique_points = this.segments.map(({ a, b }) => (a, b));
+    if(local_tick.started) {
+      local_tick.destroy();
+      local_tick = new ticker.Ticker();
+      local_tick.speed = 0.1;
+      local_tick.maxFPS = 2;
+      console.log(local_tick);
+    }
 
-    const current_point = new Point();
-
-    // 60/30 for 30 fps
-    const fps_delta = env.dev ? 2 : 1;
-    let elapsedTime = 0;
-    ticker.add(delta => {
-      elapsedTime += delta;
-      if(elapsedTime <= fps_delta) {
-        return;
-      }
-      if(current_point.equals(this.sprite.position)) {
-        return;
-      }
-      current_point.copy(this.sprite.position);
-
-      this.raycast.clear();
-      this.raycast.beginFill();
-
-      const intersects = get_intersects(this.sprite, this.segments, unique_points);
-      this.raycast.moveTo(intersects[0].x, intersects[0].y);
-
-      intersects.forEach(inter => this.raycast.lineTo(inter.x, inter.y));
-
-      if(this._follow) {
-        this.light.x = this.sprite.x - this.light.width / 2;
-        this.light.y = this.sprite.y - this.light.height / 2;
-      }
-    });
-    elapsedTime = 0;
+    local_tick.add(() => this.tick());
+    local_tick.start();
   }
 }
 

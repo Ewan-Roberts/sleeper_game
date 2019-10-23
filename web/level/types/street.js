@@ -6,7 +6,7 @@ const { flash_at } = require('../../effects/fade_sprite.js');
 const { Fade     } = require('../../effects/fade.js');
 const { env      } = require('../../../config');
 const { sleep    } = require('../../utils/time.js');
-const { ActorHuman } = require('../../character/archetypes/logic_human');
+const { ActorHuman } = require('../../character/archetypes/actor_human');
 const { Night     } = require('../../effects/environment');
 const { PathCrow        } = require('../../character/archetypes/path_crow');
 
@@ -54,7 +54,7 @@ class StreetRoom {
     this.zombies      = this.data.prey.map(unit => new LogicTest(unit));
     this.grid         = pathfind.create_level_grid(this.data.grid[0]);
 
-    this._set_sounds();
+    // this._set_sounds();
     this._set_elements();
     this._set_cutscene();
     if(env.dev) {
@@ -74,11 +74,10 @@ class StreetRoom {
   _set_sounds() {
     this.theme_song = sound.find('start_theme');
     this.theme_song.volume = 0.01;
+    this.theme_song.play();
   }
 
   _set_elements() {
-    this.theme_song.play();
-
     this.player.position.copy(this.entry_point);
     this.truck_roof.tint = 0xffffff;
     this.matress_roof.tint = 0xA8A8A8;
@@ -107,10 +106,7 @@ class StreetRoom {
 
     this.click_pad
       .find(pad => pad.id === 691)
-      .click = () => {
-        zombie.logic_start({ 'speed': 1000 });
-        console.log(1);
-      };
+      .click = () => zombie.logic_start({ 'speed': 1000 });
 
     this.exit_pad
       .find(pad => pad.id === 716)

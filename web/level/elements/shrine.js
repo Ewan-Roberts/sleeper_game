@@ -1,5 +1,4 @@
-const { collisions   } = require('../../engine/pixi_containers');
-const { items        } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { Inventory    } = require('../../character/attributes/inventory');
 const { Element      } = require('./model');
 const { sound        } = require('pixi.js');
@@ -15,7 +14,7 @@ class Shrine extends Element {
     this.buttonMode  = true;
     this.max         = 100;
 
-    collisions.addChild(this);
+    World.add_to('collision', this);
   }
 
   give_blood(vial) {
@@ -41,7 +40,7 @@ class Generator extends Element {
 
     this.label(data);
 
-    items.addChild(this);
+    World.add_to('item', this);
 
     this.tween = tweenManager.createTween();
     this._set_sounds();

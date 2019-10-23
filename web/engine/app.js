@@ -46,10 +46,25 @@ const fps_delta = env.dev ? 2 : 1;
 let elapsed_time = 0;
 ticker.add(delta => {
   elapsed_time += delta;
+  viewport.ready = false;
   if(elapsed_time >= fps_delta) {
     PIXI.tweenManager.update();
     PIXI.keyboardManager.update();
     elapsed_time = 0;
+    viewport.ready = true;
+
+    if(viewport.dirty) {
+      const bounds = viewport.getVisibleBounds();
+      bounds.height *= 3;
+      bounds.width *= 3;
+      bounds.x -= 400;
+      bounds.y -= (bounds.height / 2);
+
+      console.log(cull.stats());
+      cull.cull(bounds);
+
+      viewport.dirty = false;
+    }
   }
 });
 

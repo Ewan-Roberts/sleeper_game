@@ -1,4 +1,4 @@
-const { collisions } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { Element    } = require('./model');
 
 class Wall extends Element {
@@ -10,7 +10,7 @@ class Wall extends Element {
       'tint'      : 0x000000,
     });
 
-    collisions.addChild(this);
+    World.add_to('collision', this);
   }
 }
 

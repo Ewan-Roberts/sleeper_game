@@ -1,7 +1,6 @@
 const { Sprite     } = require('pixi.js');
 const { Texture    } = require('pixi.js');
-const { grids      } = require('../engine/pixi_containers');
-const { collisions } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { env } = require('../../config');
 
 // this is for y axis 1
@@ -66,7 +65,7 @@ class Grid {
       }
       grid_x++;
 
-      collisions.children.forEach(object => {
+      World.get_container('collision').children.forEach(object => {
         if(check(tile, object)) {
           tile.passable = false;
           if(object.door) {
@@ -76,7 +75,7 @@ class Grid {
         }
       });
 
-      grids.addChild(tile);
+      World.add_to('grid', tile);
     }
   }
 
@@ -87,7 +86,7 @@ class Grid {
     let binary_line = [];
     let sprite_line = [];
 
-    grids.children.forEach((tile, i) => {
+    World.get_container('grid').children.forEach((tile, i) => {
       if(!tile.passable) {
         if(env.show_grid) {
           tile.alpha = 0.3;

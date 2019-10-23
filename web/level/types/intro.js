@@ -1,4 +1,4 @@
-const { visuals         } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { sound, filters  } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
 const { Caption         } = require('../../view/caption');
@@ -7,7 +7,6 @@ const { viewport        } = require('../../engine/app');
 const { FadeSprite      } = require('../../effects/fade_sprite.js');
 const { env             } = require('../../../config');
 const { Raycast         } = require('../../engine/raycast');
-const first = true;
 const data = require('../data/intro_room.json');
 data.states = {
   'start_cutscene': false,
@@ -117,7 +116,7 @@ class IntroRoom {
     const hand = new FadeSprite(data.white_hands[0]);
     hand.filters = [ white_filter ];
     hand.fade_in_wait_out(100, 500, 4000);
-    visuals.addChild(hand);
+    World.add_to('visual', hand);
 
     keyboardManager.disable();
     setTimeout(() => keyboardManager.enable(), 5000);

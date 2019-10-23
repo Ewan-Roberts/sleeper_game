@@ -1,4 +1,4 @@
-const { backgrounds  } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { Text, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
@@ -103,7 +103,7 @@ function random_word({
   const fade_in   = bounds(fade_lower, fade_higher);
   const fade_wait = bounds(fade_lower, fade_higher);
   const fade_out  = bounds(fade_lower, fade_higher);
-  backgrounds.addChild(word);
+  World.add_to('background', word);
   word.fade_in_wait_out(fade_in, fade_wait, fade_out);
 }
 
@@ -117,7 +117,7 @@ const pulse_words = array => {
       'fill': 'white',
     });
     delay += 60;
-    backgrounds.addChild(word);
+    World.add_to('background', word);
     word.fade_in_wait_out(delay);
   });
 };

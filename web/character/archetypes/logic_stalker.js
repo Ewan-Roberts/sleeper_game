@@ -1,7 +1,7 @@
 const { LogicZombie              } = require('./logic_zombie');
 const { random_word         } = require('../../effects/floor_word.js');
 const { FadeSprite          } = require('../../effects/fade_sprite.js');
-const { decals              } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { sound, tweenManager } = require('pixi.js');
 
 class Stalker extends LogicZombie {
@@ -40,7 +40,7 @@ class Stalker extends LogicZombie {
       hands.position.copy(this);
       hands.fade_out(1000);
 
-      decals.addChild(hands);
+      World.add_to('decal', hands);
 
       if(this.floor_words) {
         random_word({

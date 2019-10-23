@@ -1,4 +1,4 @@
-const { pads    } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { env     } = require('../../../config');
 const { Element } = require('./model');
 
@@ -13,7 +13,7 @@ class Click_Pad extends Element {
     this.interactive = true;
     this.buttonMode  = true;
 
-    pads.addChild(this);
+    World.add_to('pad', this);
   }
 }
 

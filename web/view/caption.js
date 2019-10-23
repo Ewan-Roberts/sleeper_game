@@ -1,11 +1,9 @@
 const { stage     } = require('../engine/app');
 const { viewport  } = require('../engine/app');
-const { ticker  } = require('../engine/app');
 const { Sprite    } = require('pixi.js');
 const { Texture   } = require('pixi.js');
 const { Container } = require('pixi.js');
 const { Text      } = require('pixi.js');
-const { filters      } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 const container = new Container();

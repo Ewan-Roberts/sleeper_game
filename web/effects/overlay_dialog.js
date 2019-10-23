@@ -1,5 +1,5 @@
 const { fill_screen_at } = require('../effects/fade_sprite');
-const { visuals   } = require('../engine/pixi_containers');
+const { World } = require('../engine/pixi_containers');
 const { FloorWord } = require('../effects/floor_word');
 const { sleep     } = require('../utils/time.js');
 const { keyboardManager } = require('pixi.js');
@@ -33,7 +33,7 @@ class Overlay_Dialog {
 
     await sleep(5000);
     this.button.fade_in();
-    visuals.addChild(this.button);
+    World.add_to('visual', this.button);
   }
 
   async * generator() {
@@ -56,7 +56,7 @@ class Overlay_Dialog {
 
       word.position.copy(this.point);
 
-      visuals.addChild(word);
+      World.add_to('visual', word);
       word.fade_in();
       yield;
       word.fade_out();

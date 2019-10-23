@@ -1,4 +1,4 @@
-const { items        } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 const { sound        } = require('pixi.js');
 
@@ -29,7 +29,7 @@ class Door extends Element {
       ],
     });
 
-    items.addChild(this);
+    World.add_to('item', this);
 
     if(data.clickable) {
       this.interactive = true;

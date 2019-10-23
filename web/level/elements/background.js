@@ -1,5 +1,5 @@
 const { Texture, extras, DEG_TO_RAD } = require('pixi.js');
-const { backgrounds     } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 
 class Background extends extras.TilingSprite {
   constructor({
@@ -18,9 +18,6 @@ class Background extends extras.TilingSprite {
     this.rotation = rotation * DEG_TO_RAD;
     this.anchor.set(0, 1);
     this.position.copy({ x, y });
-
-    // this.tileScale.x = 0.3;
-    // this.tileScale.y = 0.3;
 
     if(image_name === 'tile_floor') {
       this.tileScale.x = 0.10;
@@ -54,7 +51,6 @@ class Background extends extras.TilingSprite {
       this.tint = 0xA9A9A9;
     }
 
-    console.log(image_name);
     if(image_name === 'DirtCobble1_dgw-a') {
       this.tileScale.x = 0.7;
       this.tileScale.y = 0.7;
@@ -63,12 +59,9 @@ class Background extends extras.TilingSprite {
 
     if(image_name === 'road') {
       this.tileScale.x = 1.9;
-      // this.tileScale.y = 0.2;
-      // this.tint = 0xA9A9A9;
-      // this.anchor.set(1);
     }
 
-    backgrounds.addChild(this);
+    World.add_to('background', this);
   }
 }
 

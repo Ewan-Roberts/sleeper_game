@@ -1,5 +1,4 @@
-const { items       } = require('../../engine/pixi_containers');
-const { collisions  } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { item_events } = require('../../engine/item_handler');
 
 const { Inventory } = require('../../character/attributes/inventory');
@@ -72,10 +71,10 @@ class Chest extends Element {
       this.container(data);
     }
     if(collision) {
-      collisions.addChild(this);
+      World.add_to('collision', this);
     }
 
-    items.addChild(this);
+    World.add_to('item', this);
   }
 
   container() {

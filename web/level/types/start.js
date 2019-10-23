@@ -273,7 +273,6 @@ class StartRoom  {
 
     this.birds_pad.once('trigger', () => {
       this.crows.forEach(unit => {
-        unit.talk();
         unit.delay = random_bound(0, 500);
         unit.start();
       });

@@ -1,4 +1,4 @@
-const { decals } = require('../../engine/pixi_containers');
+const { World } = require('../../engine/pixi_containers');
 const { Element } = require('./model');
 
 class Decal extends Element {
@@ -6,7 +6,7 @@ class Decal extends Element {
     super(data);
     this.tint = data.tint || 0xA9A9A9;
 
-    decals.addChild(this);
+    World.add_to('decal', this);
   }
 }
 
