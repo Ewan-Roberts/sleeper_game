@@ -43,43 +43,43 @@ class Level_Factory {
     switch (level_name) {
       case 'intro':
         new IntroRoom();
-        break;
+        return;
       case 'start':
         new StartRoom();
-        break;
+        return;
       case 'street':
         new StreetRoom(spawn_id);
-        break;
+        return;
       case 'item':
         new ItemsRoom();
-        break;
+        return;
       case 'transition':
         new HubRoom();
-        break;
+        return;
       case 'defend':
         new DefendRoom();
-        break;
+        return;
       case 'park':
         new ParkRoom();
-        break;
+        return;
       case 'ranbir_flat_0' :
         new RanbirFloor0(spawn_id);
-        break;
+        return;
       case 'ranbir_flat_1' :
         new RanbirFloor1();
-        break;
+        return;
       case 'ranbir_flat_2' :
         new RanbirFloor2();
-        break;
+        return;
       case 'dev':
         new DevRoom(spawn_id);
-        break;
+        return;
       case 'stalker':
         new StalkerRoom();
-        break;
+        return;
       case 'basketball':
         new BasketBallRoom();
-        break;
+        return;
     }
   }
 

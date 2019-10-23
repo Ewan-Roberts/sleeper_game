@@ -8,7 +8,7 @@ class Border extends Element {
       ...data,
 
       'image_name': 'black_dot',
-      'alpha'     : (env.visable_borders) ? 0.2 : 0,
+      'alpha'     : (env.visable_borders) ? 1 : 0.5,
     });
 
     World.add_to('border', this);

@@ -7,7 +7,10 @@ const {
   items,
   borders,
   pads,
+  // roofs,
 } = require('../../engine/pixi_containers');
+
+let current_roof;
 
 function point_collides(position) {
   const collision_hit = collisions.children.find(child => child.containsPoint(position));
@@ -25,8 +28,19 @@ function point_collides(position) {
     return true;
   }
 
+  if(current_roof) {
+    current_roof.alpha = 1;
+  }
+
+  // const roof_hit = roofs.children.find(child => child.containsPoint(position));
+  // if(roof_hit) {
+  //   current_roof = roof_hit;
+  //   roof_hit.alpha = 0.6;
+  // }
+
   return false;
 }
+const speed = 50;
 
 // TODO this could be more performant using proximity
 // and this logic should be split out or put in ceiling
@@ -36,13 +50,13 @@ function point_contains(player) {
   if(pad) {
     player.animation.speed = 0.60;
     pad.events.emit('trigger');
-    return 50;
+    return speed;
   }
 
   if(env.dev) {
-    return 50;
+    return speed;
   }
-  return 50;
+  return 5;
 }
 
 class Keyboard {
@@ -52,7 +66,7 @@ class Keyboard {
     this.sprite         = sprite;
     this.animation      = animation;
     this.speed          = vitals.speed;
-    this.buffer         = 15;
+    this.buffer         = speed;
     this.vitals         = vitals;
     this.inventory      = inventory;
 

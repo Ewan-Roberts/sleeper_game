@@ -9,6 +9,8 @@ const { sleep    } = require('../../utils/time.js');
 const { ActorHuman } = require('../../character/archetypes/actor_human');
 const { Night     } = require('../../effects/environment');
 const { PathCrow        } = require('../../character/archetypes/path_crow');
+const { viewport    } = require('../../engine/app');
+const { keyboardManager } = require('pixi.js');
 
 const {
   Trigger_Pad,
@@ -23,6 +25,7 @@ const {
   Floor,
   Street_Lamp,
   Click_Pad,
+  Border,
 } = require('../elements');
 
 class StreetRoom {
@@ -43,6 +46,7 @@ class StreetRoom {
     this.exit_pad     = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
     this.click_pad    = this.data.click_pad.map(data => new Click_Pad(data));
     this.crows        = this.data.birds.map(unit => new PathCrow(unit));
+    this.borders      = this.data.border.map(data => new Border(data));
 
     this.doors        = this.data.door.map(data => new Door(data));
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id || 137);
@@ -111,6 +115,23 @@ class StreetRoom {
     this.exit_pad
       .find(pad => pad.id === 716)
       .once('trigger', () => this.crows.forEach(unit => unit.start()));
+
+    this.exit_pad
+      .find(pad => pad.id === 860)
+      .once('trigger', () => {
+        const car = this.items
+          .find(pad => pad.id === 682);
+
+        keyboardManager.disable();
+        viewport.snap(car.x, car.y, {
+          'time'             : 3000,
+          'removeOnComplete' : true,
+          'removeOnInterrupt': true,
+        });
+        viewport.on('snap-end', () => {
+          keyboardManager.enable();
+        });
+      });
 
     const timing = 500;
 

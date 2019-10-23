@@ -16,7 +16,7 @@ function check(rect1, rect2) {
 
 class Tile extends Sprite {
   constructor() {
-    super(Texture.WHITE);
+    super(Texture.EMPTY);
     this.width    = 100;
     this.height   = 100;
     this.passable = true;

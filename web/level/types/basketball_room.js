@@ -6,6 +6,7 @@ const { sleep } = require('../../utils/time');
 const { Trigger_Pad } = require('../elements/pad');
 const { LogicTest } = require('../../character/archetypes/logic_test');
 const { ActorHuman } = require('../../character/archetypes/actor_human');
+const { PathCrow } = require('../../character/archetypes/path_crow');
 const { players     } = require('../../engine/pixi_containers');
 const { viewport    } = require('../../engine/app');
 const { flash_at       } = require('../../effects/fade_sprite.js');
@@ -44,6 +45,7 @@ class BasketBallRoom  {
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === 269);
     this.zombies      = this.data.prey.map(unit => new LogicTest(unit));
     this.obstacles    = this.data.obstacle.map(unit => new Collision(unit));
+    this.bird         = this.data.birds.map(unit => new PathCrow(unit));
 
     const lamps  = this.data.lamp.map(lamp => new Street_Lamp(lamp));
     const actors = this.data.actor.map(actor => new ActorHuman(actor));
@@ -145,18 +147,31 @@ class BasketBallRoom  {
     //   ).start();
     // });
 
+    console.log(this.bird[0]);
+    this.bird[0].tween.loop = true;
+    this.bird[0].start();
+
+
     const zombie1 = this.zombies[1];
     zombie1.target(zombie);
     zombie1.animation.eat();
     // zombie1.logic_start({ 'speed': 1000 });
 
-    // this.attack_pad.once('trigger', () => {
-    //   this.zombies.forEach(zombie => {
-    //     zombie.animation.eat();
-    //     zombie.target(this.player);
-    //     zombie.logic_start({ 'speed': 10000 });
-    //   });
-    // });
+
+    this.attack_pad.once('trigger', () => {
+      viewport.snap(this.bird[0].x, this.bird[0].y, {
+        'removeOnComplete' : true,
+        'removeOnInterrupt': true,
+      });
+      // this.bird[0].tween.on('update', () => {
+      // });
+      // viewport.follow(this.bird[0]);
+      // this.zombies.forEach(zombie => {
+      //   zombie.animation.eat();
+      //   zombie.target(this.player);
+      //   zombie.logic_start({ 'speed': 10000 });
+      // });
+    });
   }
 }
 

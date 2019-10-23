@@ -12,8 +12,7 @@ const { damage_events } = require('../../engine/damage_handler');
 const { item_events   } = require('../../engine/item_handler');
 const { Item_Manager  } = require('../../items/item_manager');
 const { Blood         } = require('../../effects/blood');
-const { Nightmare         } = require('../../effects/environment');
-
+const { Nightmare     } = require('../../effects/environment');
 const event             = require('events');
 
 class Player extends extras.AnimatedSprite {
@@ -31,7 +30,6 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Inventory());
     this.add_component(new Vitals());
     this.add_component(new MeleeBox());
-
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
 

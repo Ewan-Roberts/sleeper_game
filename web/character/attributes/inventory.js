@@ -128,4 +128,3 @@ class Inventory extends View_Inventory {
 module.exports = {
   Inventory,
 };
-
