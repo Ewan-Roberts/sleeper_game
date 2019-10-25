@@ -60,13 +60,13 @@ roofs.name   = 'roof';
 roofs.zIndex = close;
 roofs.interactiveChildren = false;
 
-const visuals  = new Container();
-visuals.name   = 'visual';
-visuals.zIndex = close;
-
 const pads  = new Container();
 pads.name   = 'pad';
 pads.zIndex = close;
+
+const visuals  = new Container();
+visuals.name   = 'visual';
+visuals.zIndex = closer;
 
 const shrouds  = new Container();
 shrouds.name   = 'shroud';
@@ -112,12 +112,15 @@ function clear_level_containers() {
 }
 
 class World {
-  static add_to(name, ...args) {
+  static add_to(name, sprite, { cull_sprite = true } = {}) {
     viewport
       .getChildByName(name)
-      .addChild(...args);
+      .addChild(sprite);
 
-    cull.add(...args);
+    if(!cull_sprite) {
+      return;
+    }
+    cull.add(sprite);
   }
 
   static get_container(name) {

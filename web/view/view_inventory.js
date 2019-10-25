@@ -18,14 +18,14 @@ class Title extends Text {
     super('', { 'fontSize': 18, 'fill': 'grey' });
     this.y += 48;
     this.x -= 30;
-    this.visible = false;
+    this.renderable = false;
 
     this.background = new Sprite(Texture.WHITE);
     this.background.tint  = 0x29241F;
     this.background.height = 35;
     this.background.y += 40;
     this.background.x -= 40;
-    this.background.visible = false;
+    this.background.renderable = false;
   }
 
   set width(value) {
@@ -33,13 +33,13 @@ class Title extends Text {
   }
 
   show() {
-    this.background.visible = true;
-    this.visible = true;
+    this.background.renderable = true;
+    this.renderable = true;
   }
 
   hide() {
-    this.background.visible = false;
-    this.visible = false;
+    this.background.renderable = false;
+    this.renderable = false;
   }
 }
 
@@ -51,7 +51,7 @@ class Description extends Text{
     });
     this.y += 76;
     this.x -= 40;
-    this.visible = false;
+    this.renderable = false;
   }
 
   set width(value) {
@@ -79,9 +79,13 @@ class Item extends Sprite {
 class View_Inventory {
   constructor() {
     this.slot_container = new Container();
+    this.slot_container.name = 'slot_container';
+    this.slot_container.renderable = false;
+
     this.slot_container.interactive = true;
     this.slot_container.buttonMode  = true;
     this.slot_container.on('mouseout', () => {
+      this.slot_container.visible = false;
       Fade.out(this.slot_container);
     });
     this.slots = [];
@@ -117,15 +121,15 @@ class View_Inventory {
       const item = new Item(loot_item);
       item.click = () => {
         item_events.emit('give', 1, { 'item': loot_item });
-        description.visible = false;
+        description.renderable = false;
         title.hide();
         item.destroy();
       };
 
       item.on('mouseover', () => {
-        item.visible = true;
+        item.renderable = true;
         title.show();
-        description.visible = true;
+        description.renderable = true;
         description.text = loot_item.description;
 
         title.text = loot_item.visual_name;

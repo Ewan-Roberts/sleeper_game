@@ -11,7 +11,7 @@ const items = [
     'cost'          : 50,
     'category'      : 'weapon',
     'range'         : 20,
-    'damage'        : 10,
+    'damage'        : 40,
     'speed'         : 400,
 
     'visual_name': 'rusty knife',
@@ -26,7 +26,7 @@ const items = [
     'cost'          : 50,
     'category'      : 'weapon',
     'range'         : 20,
-    'damage'        : 20,
+    'damage'        : 40,
     'speed'         : 400,
 
     'visual_name': 'rusty knife',

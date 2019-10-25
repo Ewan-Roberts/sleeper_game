@@ -79,7 +79,7 @@ class Chest extends Element {
 
   container() {
     this.on('click', () => {
-      this.button.visible = false;
+      this.button.renderable = false;
       this.inventory.set_position(this);
       this.inventory.fade_in();
     });

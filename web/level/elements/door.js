@@ -179,7 +179,7 @@ class Door extends Element {
       if(door_tile.id === this.id) {
         if(this.health < 30) {
           delete door_tile.door;
-          this.visible = false;
+          this.renderable = false;
           const broken_door = new Floor({ 'image_name': 'door_broken' });
 
           broken_door.position.copy(this);

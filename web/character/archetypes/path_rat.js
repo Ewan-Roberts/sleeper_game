@@ -6,6 +6,7 @@ const { Inventory     } = require('../attributes/inventory');
 const { Blood         } = require('../../effects/blood');
 const { damage_events } = require('../../engine/damage_handler');
 const { Button        } = require('../../view/button');
+const { World         } = require('../../engine/pixi_containers');
 
 class PathRat extends PathSprite {
   constructor(data) {
@@ -24,6 +25,7 @@ class PathRat extends PathSprite {
     });
 
     this.animation.idle();
+    World.add_to('enemy', this, { 'cull_sprite': false });
   }
 
   damage(damage) {

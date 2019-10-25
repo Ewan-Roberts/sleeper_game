@@ -59,8 +59,7 @@ class BasketBallRoom  {
         const lamp = lamps[i];
         const actor = actors[i];
         // actor.tint = 0x000000;
-        actor.alpha = 0.8;
-        actor.visible = false;
+        actor.renderable = true;
 
         await sleep(timing);
         lamp.flicker_for(4000 + timing);
@@ -71,7 +70,7 @@ class BasketBallRoom  {
             count_flicker > 7
             && count_flicker < 10
           ) {
-            actor.visible = true;
+            actor.renderable = true;
           }
           if(count_flicker > 12) {
             lamp.turn_off();
@@ -81,7 +80,7 @@ class BasketBallRoom  {
           count_flicker++;
           actor.face_point(this.player);
           if(count_flicker > 12) {
-            actor.visible = false;
+            actor.renderable = true;
           }
         });
       });

@@ -78,7 +78,8 @@ class Note {
       Fade.out_destroy(this.text);
     });
 
-    World.add_to('gui', this.sprite, this.text);
+    World.add_to('gui', this.sprite);
+    World.add_to('gui', this.text);
   }
 }
 

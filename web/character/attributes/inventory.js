@@ -83,7 +83,7 @@ class Inventory extends View_Inventory {
   }
 
   fade_in() {
-    this.slot_container.visible = true;
+    this.slot_container.renderable = true;
     Fade.in(this.slot_container);
   }
 

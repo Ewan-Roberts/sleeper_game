@@ -21,7 +21,7 @@ class Element extends Sprite {
     this.rotation = rotation * DEG_TO_RAD;
     this.tint     = tint;
     this.alpha    = alpha;
-    this.visible  = !hidden;
+    this.renderable  = !hidden;
     this.anchor.set(0, 1);
     this.position.copy({ x, y });
   }

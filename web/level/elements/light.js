@@ -12,7 +12,7 @@ class Shine extends Sprite {
     this.width  = 550;
     this.alpha  = 0.8;
     this.anchor.set(0.4, 0.6);
-    World.add_to('visual', this);
+    World.add_to('visual', this, { 'cull_sprite': false });
   }
 }
 
@@ -35,7 +35,7 @@ class Street_Lamp extends Element {
       return;
     }
     this.state = true;
-    this.cast_light.alpha = 0.5;
+    this.cast_light.alpha = 0.3;
     this.events.emit('on');
   }
 
@@ -103,7 +103,7 @@ class Light extends Element {
     }
     this.state            = true;
     this.texture          = this.lamp_on_texture;
-    this.cast_light.alpha = 0.5;
+    this.cast_light.alpha = 0.3;
     this.events.emit('on');
   }
 

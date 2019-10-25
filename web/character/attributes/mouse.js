@@ -29,7 +29,7 @@ class Aiming_Cone extends Sprite {
     this.tween.time   = time;
 
     this.angle_of_cone  = 90;
-    this.visible = true;
+    this.renderable = true;
     this.alpha   = 0;
 
     this.tween.from({
@@ -46,7 +46,7 @@ class Aiming_Cone extends Sprite {
 
     this.tween.on('end', () => {
       this.width = this.original_width;
-      this.visible = false;
+      this.renderable = false;
       this.tween.remove();
     });
 
@@ -58,7 +58,7 @@ class Aiming_Cone extends Sprite {
   }
 
   finish() {
-    this.visible = false;
+    this.renderable = false;
     if(this.tween) {
       this.tween.remove();
     }

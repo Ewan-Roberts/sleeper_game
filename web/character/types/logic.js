@@ -13,6 +13,7 @@ const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood            } = require('../../effects/blood');
+const event             = require('events');
 
 
 class LogicSprite extends extras.AnimatedSprite {
@@ -28,8 +29,9 @@ class LogicSprite extends extras.AnimatedSprite {
     equip,
   }) {
     super([ Texture.fromFrame(image_name) ]);
-    this.name = 'zombie';
     this.id   = id;
+    this.name = 'zombie';
+    this.events = new event();
 
     this.tween = tweenManager.createTween();
     this.add_component(new Inventory({ items, random, equip }));
@@ -51,7 +53,7 @@ class LogicSprite extends extras.AnimatedSprite {
     if(this.id !== id) {
       return;
     }
-    this.damage(damage);
+    console.log(this.vitals);
     this.vitals.damage(damage);
     if(Math.random() >= 0.5) {
       Blood.random_at(this.position);
@@ -63,10 +65,12 @@ class LogicSprite extends extras.AnimatedSprite {
   }
 
   kill() {
+    console.log('i thinkg');
     if(this.tween) {
       this.tween.stop();
     }
     this.inventory.populate();
+    this.events.emit('killed');
 
     this.interactive = true;
     this.button = new Button(this, {
@@ -139,11 +143,10 @@ class LogicSprite extends extras.AnimatedSprite {
         const { x, y } = point_radius_away_from_point(this._target, this, -50);
 
         this.animation.face_point(this._target);
-        path_tween
+        return path_tween
           .from(this)
           .to({ x, y })
           .start();
-        return;
       }
 
       const normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);

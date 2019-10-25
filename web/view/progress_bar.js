@@ -55,12 +55,12 @@ class ProgressBar {
   }
 
   static show() {
-    container.visible = true;
+    container.renderable = true;
     return this;
   }
 
   static hide() {
-    container.visible = false;
+    container.renderable = false;
   }
 
   static pause() {

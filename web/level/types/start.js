@@ -88,7 +88,7 @@ class StartRoom  {
 
     this.gore_layer  = this.data.gore_layer.map(item => {
       const gore_item = new Floor(item);
-      gore_item.visible = false;
+      gore_item.renderable = false;
       return gore_item;
     });
 
@@ -149,7 +149,7 @@ class StartRoom  {
 
   async * iterate() {
     Nightmare.on();
-    this.gore_layer.forEach(item => item.visible = true);
+    this.gore_layer.forEach(item => item.renderable = true);
     this.hands_pad.forEach(pad => pad.once('trigger', () => this.generator.next()));
 
     this.pop_up_pads.forEach(pad => {
@@ -167,7 +167,7 @@ class StartRoom  {
     this.microphone_prompt.render();
 
     this.cursor = new Cursor();
-    this.cursor.visible = true;
+    this.cursor.renderable = true;
     this.cursor.position.copy(this.player);
     const tween = tweenManager.createTween(this.cursor);
     tween.time = 5000;

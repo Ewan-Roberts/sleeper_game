@@ -12,11 +12,13 @@ class PathSprite extends extras.AnimatedSprite {
     y,
     x,
     polyline,
+    tint,
   }) {
     super([ Texture.fromFrame(image_name || 'bird_8') ]);
     this.id = id;
 
     this.rotation = 1;
+    this.tint = tint;
     this.anchor.set(0.5);
     this.animationSpeed = 0.29;
     this.tween = tweenManager.createTween(this);
@@ -27,7 +29,6 @@ class PathSprite extends extras.AnimatedSprite {
       this.path = polyline.map(({ x, y }) => ({ 'x': this.x + x, 'y': this.y + y }));
     }
     this.turn = true;
-    World.add_to('enemy', this);
   }
 
   set path(path_array) {

@@ -7,6 +7,7 @@ class Fade {
     movement.expire = true;
     movement.to({ 'alpha': 1 });
     movement.start();
+    sprite.visible = true;
   }
 
   static to(sprite, value) {
@@ -43,8 +44,9 @@ class Fade {
     movement.start();
 
     movement.on('end', () => {
-      movement.remove();
+      sprite.renderable = visible_on_end;
       sprite.visible = visible_on_end;
+      movement.remove();
     });
   }
 }

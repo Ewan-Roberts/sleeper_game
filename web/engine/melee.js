@@ -10,7 +10,7 @@ class Box extends Sprite {
     this.name    = 'box';
     this.width   = 100;
     this.height  = 50;
-    this.visible = env.dev;
+    this.renderable = env.dev;
     this.alpha   = 0.2;
     this.anchor.set(0, 0.5);
 

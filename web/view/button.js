@@ -12,6 +12,7 @@ class Label extends Text{
       'strokeThickness': 4,
     });
 
+    this.renderable = false;
     this.anchor.set(0.5);
     World.add_to('gui', this);
   }
@@ -52,8 +53,8 @@ class Button extends Sprite {
       this.description_label = new Label(label_description);
     }
 
-    // Start invisible
-    this.visible = false;
+    // Start inrenderable
+    this.renderable = false;
     World.add_to('gui', this);
   }
 
@@ -69,22 +70,22 @@ class Button extends Sprite {
   }
 
   hide() {
-    this.visible = false;
+    this.renderable = false;
     if(this.action_label) {
-      this.action_label.visible = false;
+      this.action_label.renderable = false;
     }
     if(this.description_label) {
-      this.description_label.visible = false;
+      this.description_label.renderable = false;
     }
   }
 
   show() {
-    this.visible = true;
+    this.renderable = true;
     if(this.action_label) {
-      this.action_label.visible = true;
+      this.action_label.renderable = true;
     }
     if(this.description_label) {
-      this.description_label.visible = true;
+      this.description_label.renderable = true;
     }
   }
 
