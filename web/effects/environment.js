@@ -16,7 +16,7 @@ class Night {
   static on(amount = 0.45) {
     roofs.children.forEach(roof => roof.tint = 0xa9a9a9);
     backgrounds.filters = [ night_matrix ];
-    // roofs.filters = [ night_matrix ];
+    roofs.filters = [ night_matrix ];
     collisions.filters = [ night_matrix ];
     decals.filters = [ night_matrix ];
     night_matrix.alpha = amount;

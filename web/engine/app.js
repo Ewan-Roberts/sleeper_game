@@ -23,12 +23,12 @@ const {
   'antialias'      : env.anti_alias,
 });
 
-settings.ROUND_PIXELS               = env.round_pixels;
-settings.RESOLUTION                 = env.resolution;
-settings.TARGET_FPMS                = env.fps;
-renderer.roundPixels                = env.round_pixels;
-renderer.resolution                 = env.resolution;
-renderer.options.roundPixels        = env.round_pixels;
+settings.ROUND_PIXELS        = env.round_pixels;
+settings.RESOLUTION          = env.resolution;
+settings.TARGET_FPMS         = env.fps;
+renderer.roundPixels         = env.round_pixels;
+renderer.resolution          = env.resolution;
+renderer.options.roundPixels = env.round_pixels;
 
 const viewport = new Viewport();
 viewport.updateLayersOrder = function () {

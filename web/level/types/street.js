@@ -40,7 +40,7 @@ class StreetRoom {
     this.items        = this.data.item.map(data => new Chest(data));
     this.collisions   = this.data.collision.map(data => new Collision(data));
     this.second_floor = this.data.second_floor.map(data => new Roof(data));
-    this.lamps  = this.data.lamps.map(lamp => new Street_Lamp(lamp));
+    this.lamps        = this.data.lamps.map(lamp => new Street_Lamp(lamp));
     this.roofs        = this.data.roof.map(data => new Roof(data));
     this.backgrounds  = this.data.background.map(data => new Background(data));
     this.decals       = this.data.decal.map(data => new Decal(data));
@@ -49,23 +49,18 @@ class StreetRoom {
     this.click_pad    = this.data.click_pad.map(data => new Click_Pad(data));
     this.crows        = this.data.birds.map(unit => new PathCrow(unit));
     this.borders      = this.data.border.map(data => new Border(data));
-
     this.doors        = this.data.door.map(data => new Door(data));
     this.entry_point  = this.data.player_spawn.find(spawns => spawns.id === spawn_id || 137);
-
-    this.truck_exit   = new Trigger_Pad(this.data.truck_pad[0]);
-    this.truck_enter  = new Trigger_Pad(this.data.truck_pad[1]);
-    this.truck_roof   = this.roofs.find(roof => roof.id === 443);
     this.zombies      = this.data.prey.map(unit => new LogicTest(unit));
+
     this.grid         = pathfind.create_level_grid(this.data.grid[0]);
 
-    // this._set_sounds();
+    this._set_sounds();
     this._set_elements();
     this._set_cutscene();
     if(env.dev) {
       this._set_dev_settings();
     }
-    // Night.on();
   }
 
   _set_cutscene() {
@@ -84,51 +79,43 @@ class StreetRoom {
 
   _set_elements() {
     this.player.position.copy(this.entry_point);
-    this.truck_roof.tint = 0xffffff;
 
-    this.truck_exit.on('trigger', () => {
-      Fade.to(this.truck_roof, 1);
-    });
+    const truck_roof   = this.roofs.find(roof => roof.id === 443);
+    const truck_exit   = new Trigger_Pad(this.data.truck_pad[0]);
+    const truck_enter  = new Trigger_Pad(this.data.truck_pad[1]);
 
-    this.truck_enter.on('trigger', () => {
-      Fade.to(this.truck_roof, 0.3);
-    });
-
-    const actors = this.data.actors.map(actor => new ActorHuman(actor));
+    truck_exit.on('trigger', () => Fade.to(truck_roof, 1));
+    truck_enter.on('trigger', () => Fade.to(truck_roof, 0.3));
 
     const zombie = this.zombies[0];
     zombie.target(this.player);
     zombie.animation.eat();
-    pathfind.no_highlights();
+    // pathfind.no_highlights();
 
     const car = this.items
       .find(pad => pad.id === 682)
-      .on('click', async () => {
-        Caption.render('lets get home');
+      .on('click', async () => Caption.render('lets get home'));
+    car.interactive = false;
+    global.place_bunny(car);
+
+    zombie.events
+      .on('killed', () => {
+        car.interactive = true;
+        this.block_exits.forEach(unit => unit.destroy());
       });
 
     this.exit_pad
       .find(pad => pad.id === 960)
       .once('trigger', async () => {
+        this.block_exits = this.data.block_exits.map(unit => new Border(unit));
         console.log('bang bang');
         await sleep(4000);
         zombie.logic_start({ 'speed': 1000 });
       });
 
-    car.interactive = false;
-
-    zombie.events
-      .on('killed', () => {
-        car.interactive = true;
-      });
-
     this.click_pad
       .find(pad => pad.id === 125)
       .on('click', () => Night.off());
-
-    // this.click_pad
-    //   .find(pad => pad.id === 691)
-    //   .click = () => zombie.logic_start({ 'speed': 1000 });
 
     this.exit_pad
       .find(pad => pad.id === 716)
@@ -137,7 +124,6 @@ class StreetRoom {
     this.exit_pad
       .find(pad => pad.id === 860)
       .once('trigger', () => {
-
         keyboardManager.disable();
         viewport.snap(car.x, car.y, {
           'time'            : 3000,
@@ -145,47 +131,41 @@ class StreetRoom {
           'interrupt'       : false,
         });
 
-        viewport.on('snap-end', () => {
-          keyboardManager.enable();
-        });
+        viewport.on('snap-end', () => keyboardManager.enable());
       });
-
-    const timing = 500;
 
     this.exit_pad
       .find(pad => pad.id === 954)
       .once('trigger', () => {
+        keyboardManager.disable();
 
-        const point =  this.roofs
+        const point = this.roofs
           .find(pad => pad.id === 666);
 
-        keyboardManager.disable();
         viewport.snap(point.x, point.y, {
           'time'            : 3000,
           'removeOnComplete': true,
           'interrupt'       : false,
         });
 
-        viewport.on('snap-end', () => {
-          keyboardManager.enable();
-        });
+        viewport.on('snap-end', () => keyboardManager.enable());
       });
 
-
+    const timing = 500;
+    const actors = this.data.actors.map(actor => new ActorHuman(actor));
+    let alpha = 0;
     this.exit_pad
       .find(pad => pad.id === 628)
       .once('trigger', () => {
-
         keyboardManager.disable();
+
         viewport.snap(actors[1].x, actors[1].y, {
           'time'            : 3000,
           'removeOnComplete': true,
           'interrupt'       : false,
         });
 
-        viewport.on('snap-end', () => {
-          keyboardManager.enable();
-        });
+        viewport.on('snap-end', () => keyboardManager.enable());
 
         this.lamps.forEach(async (lamp, i) => {
           let count_flicker = 0;
@@ -193,13 +173,15 @@ class StreetRoom {
           const actor = actors[i];
           actor.renderable = false;
           actor.tint = 0x000000;
-          actor.alpha = 0.5;
+          actor.alpha = 0;
 
           await sleep(timing);
           lamp.flicker_for(4000 + timing);
           lamp.events.on('on', () => {
             actor.face_point(this.player);
             count_flicker++;
+            alpha += 0.05;
+            actor.alpha = alpha;
             if(
               count_flicker > 7
               && count_flicker < 10

@@ -10,18 +10,16 @@ global.place_bunny = ({
   y = 0,
   width,
   height,
-} = {}, place_in_container) => {
+} = {}) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.name = 'bunny';
   bunny.position.copy({ x, y });
-  // bunny.anchor.set(0.5);
+  bunny.anchor.set(0.5);
   bunny.width  = width || 100;
   bunny.height = height || 100;
   bunny.vitals = new Vitals();
 
-  if(place_in_container) {
-    World.add_to('gui', this);
-  }
+  World.add_to('visual', bunny);
   return bunny;
 };
 

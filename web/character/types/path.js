@@ -1,6 +1,4 @@
 const { Texture, tween, tweenManager, extras } = require('pixi.js');
-
-const { World } = require('../../engine/pixi_containers');
 const { radian    } = require('../../utils/math');
 const { draw_path } = require('../../utils/line');
 
@@ -51,12 +49,12 @@ class PathSprite extends extras.AnimatedSprite {
 
   start() {
     this.tween.start();
-    // this.tween.expire = true;
+    this.tween.expire = true;
     this.animation.move();
     this.play();
     this.tween.on('end', () => {
-      // this.destroy();
-      // this.tween.remove();
+      this.destroy();
+      this.tween.remove();
     });
   }
 

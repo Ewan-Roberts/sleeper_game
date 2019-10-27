@@ -63,7 +63,7 @@ const options = {
   'dev_medium': new EnvironmentConfig({
     'dev'               : true,
     'fps'               : 0.03,
-    'resolution'        : 0.4,
+    'resolution'        : 1,
     'anti_alias'        : false,
     'background_color'  : 0x0066CC, // blue
     'keyboard_additions': true,

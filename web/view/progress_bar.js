@@ -14,7 +14,7 @@ const background = new Sprite(Texture.WHITE);
 background.width = 500;
 background.height = 30;
 background.anchor.set(0.5, 1);
-background.alpha = 0.1;
+background.alpha = 1;
 
 const maximum_width = background.width - 20;
 
@@ -56,11 +56,13 @@ class ProgressBar {
 
   static show() {
     container.renderable = true;
+    container.visible = true;
     return this;
   }
 
   static hide() {
     container.renderable = false;
+    container.visible = false;
   }
 
   static pause() {

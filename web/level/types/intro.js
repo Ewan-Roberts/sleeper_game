@@ -63,11 +63,10 @@ class IntroRoom {
     this._set_elements();
     if(!data.states.start_cutscene) {
       this._set_cutscene();
-      data.states.start_cutscene = true;
-      const spawn_point = data.player_spawn.find(spawn => spawn.id === 564);
-      this.player.position.copy(spawn_point);
-      viewport.moveCenter(this.player.x, this.player.y);
     } else {
+      const spawn_point = data.player_spawn.find(spawn => spawn.id === 383);
+      this.player.position.copy(spawn_point);
+      viewport.moveCenter(spawn_point.x, spawn_point.y);
       this._main_room();
       this.light.turn_on();
       this.shadow.alpha = 0.5;
@@ -109,6 +108,11 @@ class IntroRoom {
   }
 
   _set_cutscene() {
+    data.states.start_cutscene = true;
+    const spawn_point = data.player_spawn.find(spawn => spawn.id === 564);
+    this.player.position.copy(spawn_point);
+    viewport.moveCenter(this.player.x, this.player.y);
+
     const white_filter = new filters.ColorMatrixFilter();
     white_filter.greyscale(3);
 
@@ -151,7 +155,9 @@ class IntroRoom {
       this._main_room();
       this.light.flicker_for(3000);
       this.shadow.alpha = 0.5;
-      this.decals.find(decal => decal.id === 606).destroy();
+      this.decals
+        .find(decal => decal.id === 606)
+        .destroy();
     });
 
     this.exit_door
@@ -184,8 +190,8 @@ class IntroRoom {
     this.theme_song.stop();
     this.key.click = () => console.log(this.player.inventory);
 
-    this.study_door.position.x   += 40;
-    this.study_door.interactive  = true;
+    this.study_door.position.x  += 40;
+    this.study_door.interactive = true;
     keyboardManager.enable();
   }
 }

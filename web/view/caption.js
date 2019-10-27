@@ -17,7 +17,6 @@ background.width = viewport.screenWidth;
 background.height = 35;
 background.anchor.set(0.5, 1);
 background.alpha = 0.2;
-background.renderable = false;
 
 const overlay = new Sprite(Texture.fromImage('shadow_square_large'));
 overlay.name = 'overlay_background';
@@ -69,7 +68,7 @@ class Caption {
 }
 
 // start hidden
-// Caption.hide();
+Caption.hide();
 
 module.exports = {
   Caption,

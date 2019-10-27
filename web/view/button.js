@@ -71,20 +71,26 @@ class Button extends Sprite {
 
   hide() {
     this.renderable = false;
+    this.visible = false;
     if(this.action_label) {
+      this.action_label.visible = false;
       this.action_label.renderable = false;
     }
     if(this.description_label) {
+      this.description_label.visible = false;
       this.description_label.renderable = false;
     }
   }
 
   show() {
     this.renderable = true;
+    this.visible = true;
     if(this.action_label) {
+      this.action_label.visible = true;
       this.action_label.renderable = true;
     }
     if(this.description_label) {
+      this.description_label.visible = true;
       this.description_label.renderable = true;
     }
   }

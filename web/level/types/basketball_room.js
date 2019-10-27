@@ -10,6 +10,7 @@ const { PathCrow } = require('../../character/archetypes/path_crow');
 const { players     } = require('../../engine/pixi_containers');
 const { viewport    } = require('../../engine/app');
 const { flash_at       } = require('../../effects/fade_sprite.js');
+const { Debris       } = require('../../effects/debris.js');
 const { point_radius_away_from_point } = require('../../utils/math');
 // const { Raycast         } = require('../../engine/raycast');
 
@@ -24,6 +25,7 @@ const {
   Collision,
   Floor,
   Street_Lamp,
+  Click_Pad,
 } = require('../elements');
 
 class BasketBallRoom  {
@@ -46,44 +48,8 @@ class BasketBallRoom  {
     this.zombies      = this.data.prey.map(unit => new LogicTest(unit));
     this.obstacles    = this.data.obstacle.map(unit => new Collision(unit));
     this.bird         = this.data.birds.map(unit => new PathCrow(unit));
+    this.click_pad    = this.data.click_pad.map(data => new Click_Pad(data));
 
-    const lamps  = this.data.lamp.map(lamp => new Street_Lamp(lamp));
-    const actors = this.data.actor.map(actor => new ActorHuman(actor));
-
-    const timing = 500;
-    Array(lamps.length)
-      .fill()
-      .forEach(async (_, i) => {
-        let count_flicker = 0;
-
-        const lamp = lamps[i];
-        const actor = actors[i];
-        // actor.tint = 0x000000;
-        actor.renderable = true;
-
-        await sleep(timing);
-        lamp.flicker_for(4000 + timing);
-        lamp.events.on('on', () => {
-          actor.face_point(this.player);
-          count_flicker++;
-          if(
-            count_flicker > 7
-            && count_flicker < 10
-          ) {
-            actor.renderable = true;
-          }
-          if(count_flicker > 12) {
-            lamp.turn_off();
-          }
-        });
-        lamp.events.on('off', () => {
-          count_flicker++;
-          actor.face_point(this.player);
-          if(count_flicker > 12) {
-            actor.renderable = true;
-          }
-        });
-      });
 
     //  TODO
     // this.shadow      = new Raycast(this.player, {
@@ -146,10 +112,44 @@ class BasketBallRoom  {
     //   ).start();
     // });
 
-    console.log(this.bird[0]);
     this.bird[0].tween.loop = true;
     this.bird[0].start();
 
+    const foo = this.click_pad
+      .find(pad => pad.id === 300);
+    foo.alpha = 0.2;
+
+    let thing = false;
+    const soo = this.collisions
+      .find(collision => collision.id === 301);
+
+    const loo = this.collisions
+      .find(collision => collision.id === 302);
+
+    foo.on('mouseover', () => {
+      soo.tint = 0xffffff;
+      loo.tint = 0xffffff;
+    });
+
+
+    foo.on('mouseout', () => {
+      soo.tint = 0xA9A9A9;
+      loo.tint = 0xA9A9A9;
+    });
+
+    foo.on('click', () => {
+      if(!thing) {
+        new Debris(soo);
+
+        soo.destroy();
+        thing = true;
+        return;
+      }
+
+      new Debris(loo);
+      loo.destroy();
+      foo.destroy();
+    });
 
     const zombie1 = this.zombies[1];
     zombie1.target(zombie);
@@ -158,18 +158,54 @@ class BasketBallRoom  {
 
 
     this.attack_pad.once('trigger', () => {
-      viewport.snap(this.bird[0].x, this.bird[0].y, {
+      const lamps  = this.data.lamp.map(lamp => new Street_Lamp(lamp));
+      const actors = this.data.actor.map(actor => new ActorHuman(actor));
+
+      viewport.snap(this.attack_pad.x, this.attack_pad.y, {
         'removeOnComplete' : true,
         'removeOnInterrupt': true,
       });
-      // this.bird[0].tween.on('update', () => {
-      // });
-      // viewport.follow(this.bird[0]);
-      // this.zombies.forEach(zombie => {
-      //   zombie.animation.eat();
-      //   zombie.target(this.player);
-      //   zombie.logic_start({ 'speed': 10000 });
-      // });
+
+
+      const timing = 500;
+      let alpha = 0;
+      Array(lamps.length)
+        .fill()
+        .forEach(async (_, i) => {
+          let count_flicker = 0;
+
+          const lamp = lamps[i];
+          const actor = actors[i];
+          actor.tint = 0x000000;
+          actor.face_point(this.player);
+          actor.alpha = 0;
+
+          await sleep(timing);
+          lamp.flicker_for(4000 + timing);
+          lamp.events.on('on', () => {
+            actor.renderable = true;
+            alpha += 0.05;
+            actor.alpha = alpha;
+            count_flicker++;
+            if(
+              count_flicker > 7
+            && count_flicker < 10
+            ) {
+              actor.renderable = true;
+            }
+            if(count_flicker > 12) {
+              lamp.turn_off();
+            }
+          });
+          lamp.events.on('off', () => {
+            count_flicker++;
+            actor.renderable = false;
+            actor.face_point(this.player);
+            if(count_flicker > 12) {
+              actor.renderable = false;
+            }
+          });
+        });
     });
   }
 }

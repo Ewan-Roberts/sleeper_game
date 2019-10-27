@@ -1,4 +1,3 @@
-// from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
 class Sight {
   static _getCenter(o, dimension, axis) {
     if(o.anchor !== undefined) {

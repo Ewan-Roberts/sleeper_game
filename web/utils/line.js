@@ -10,14 +10,14 @@ function draw_path(path) {
 }
 
 function draw_line(point, point2) {
-  const myGraph = new Graphics();
-  World.add_to('gui', myGraph);
+  const my_graph = new Graphics();
+  World.add_to('gui', my_graph);
 
   // Move it to the beginning of the line
-  myGraph.position.copy(point);
+  my_graph.position.copy(point);
 
   // Draw the line (endPoint should be relative to myGraph's position)
-  myGraph.lineStyle(2, 0xffffff)
+  my_graph.lineStyle(2, 0xffffff)
     .moveTo(0, 0)
     .lineTo(point2.x, point2.y);
 }

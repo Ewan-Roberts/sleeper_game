@@ -11,6 +11,10 @@ class Level_Loader {
     console.assert(!dev, 'in development');
 
     Level_Factory.create(level_on_load, player);
+
+    console.log(
+      global.window.sessionStorage.getItem('key')
+    );
   }
 }
 

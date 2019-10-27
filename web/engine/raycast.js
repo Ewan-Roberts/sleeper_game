@@ -221,14 +221,12 @@ class Raycast extends Container {
   tick() {
     if(
       !viewport.dirty
-      || !viewport.ready
     ) {
       return;
     }
     this.raycast.clear();
     this.raycast.beginFill();
     index + 1;
-    console.log(index);
 
     const intersects = get_intersects(this.sprite, this.segments, this.unique_points);
     this.raycast.moveTo(intersects[0].x, intersects[0].y);

@@ -112,7 +112,7 @@ class Mouse {
 
     // TODO Weapon manager
     if(this.sprite.animation.prefix === 'bow') {
-      // /const { angle } = this.cone;
+      // const { angle } = this.cone;
       // const angle_to_offset = random_bound(-angle, angle) || 29;
       // shoot_arrow(200, 20, this.sprite, {
       //   'x': mouse_position.x + angle_to_offset,
