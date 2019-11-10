@@ -23,11 +23,11 @@ const { WASD            } = require('../../view/wasd_keys');
 const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { PathCrow        } = require('../../character/archetypes/path_crow');
 const { keyboardManager } = require('pixi.js');
-const { tweenManager } = require('pixi.js');
+const { tweenManager    } = require('pixi.js');
 const { sound           } = require('pixi.js');
-const { Text } = require('pixi.js');
-const { Sprite } = require('pixi.js');
-const { Texture } = require('pixi.js');
+const { Text            } = require('pixi.js');
+const { Sprite          } = require('pixi.js');
+const { Texture         } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
 const { env             } = require('../../../config');
 
@@ -47,7 +47,11 @@ const {
 class Video extends Sprite {
   constructor(point) {
     // TODO how to remove texture
-    super(Texture.fromVideo('/video.mp4'));
+    const video =  global.document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.preload = '';
+    video.src = '/video.mp4';
+    super(Texture.fromVideo(video));
     this.width  = screen.width;
     this.height = screen.height;
     this.anchor.set(0.5);
@@ -102,7 +106,6 @@ class StartRoom  {
     this.microphone_prompt = new MicrophonePrompt();
     this.script            = new Overlay_Dialog([
       '...',
-      '...place holder...',
       'lorium ipsum',
     ], this.player);
 
@@ -175,7 +178,6 @@ class StartRoom  {
       'x': this.microphone_prompt.allow_button.x,
       'y': this.microphone_prompt.allow_button.y,
     });
-    tween.start();
     tween.on('end', () => {
       this.generator.next();
     });
@@ -185,10 +187,12 @@ class StartRoom  {
     viewport.interactive = true;
     viewport.cursor = 'pointer';
     viewport.on('mousemove', ({ data }) => tween.from(data.global));
+    tween.start();
 
     yield;
+    // TODO remove
+    // this.cursor.destroy();
     tween.remove();
-    this.cursor.destroy();
     interaction.cursorStyles.pointer = 'url(), auto';
     this.microphone_prompt.destroy();
 
@@ -226,7 +230,7 @@ class StartRoom  {
   async _start() {
     this.theme_song.play();
     keyboardManager.disable();
-    flash_at(this.player, 10000, 0xffffff, 'out');
+    this.entery_flash = flash_at(this.player, 10000, 0xffffff, 'out');
 
     await sleep(5000);
     this.controls_prompt.fade_in(2000);
@@ -344,7 +348,9 @@ class StartRoom  {
     this.eerie_song.volume      = 0.01;
     this.suspense_effect.volume = 0.01;
     this.click_effect.volume    = 0.1;
-    this.microphone_prompt.opacity = 0;
+    this.microphone_prompt.opacity = 1;
+    this.microphone_prompt.render();
+    this.entery_flash.destroy();
 
     keyboardManager.on('released', event => {
       if(event === 13) {

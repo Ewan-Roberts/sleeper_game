@@ -72,7 +72,7 @@ const options = {
     'visable_borders'   : true,
     'brightness'        : 1,
     'inventory_openable': false,
-    'level_on_load'     : 'transition',
+    'level_on_load'     : 'start',
     'draw_paths'        : true,
     'player_speed'      : 309,
     'round_pixels'      : true,
@@ -46828,7 +46828,6 @@ class LogicSprite extends extras.AnimatedSprite {
   }
 
   kill() {
-    console.log('i thinkg');
     if(this.tween) {
       this.tween.stop();
     }
@@ -46879,8 +46878,6 @@ class LogicSprite extends extras.AnimatedSprite {
 
     this.tween.on('repeat', async () => {
       // TODO this is a hack and shouldn't be done in here
-      console.log(this);
-
       if(
         this._destroyed
         || this._target._destroyed
@@ -46892,12 +46889,13 @@ class LogicSprite extends extras.AnimatedSprite {
       }
 
       path_tween.clear();
-      path_tween.time = speed * 20;
+      const distance = distance_between(this._target, this);
+      path_tween.time = speed * (distance / 100);
 
       if(!this._target_far_away) {
         this.animation.attack();
         this.animation.face_point(this._target);
-        this.melee.slash(750, 20, this);
+        this.melee.slash(50, 20, this);
         return;
       }
 
@@ -46905,6 +46903,7 @@ class LogicSprite extends extras.AnimatedSprite {
       if(this.sees_target) {
         const { x, y } = point_radius_away_from_point(this._target, this, -50);
 
+        console.log('here1');
         this.animation.face_point(this._target);
         return path_tween
           .from(this)
@@ -46912,6 +46911,7 @@ class LogicSprite extends extras.AnimatedSprite {
           .start();
       }
 
+      console.log('here');
       const normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);
       path_tween.path = new tween.TweenPath();
       path_tween.path.moveTo(this.x, this.y);
@@ -51226,6 +51226,7 @@ module.exports = {
 };
 
 },{"../../../config":1,"../../character/archetypes/logic_stalker":207,"../../effects/fade_sprite.js":224,"../../engine/app":227,"../../engine/pixi_containers":234,"../../engine/raycast":236,"../../view/progress_bar":294,"../data/stalker_room.json":251,"../elements":263}],281:[function(require,module,exports){
+(function (global){
 const { screen      } = require('../../engine/app');
 const { renderer    } = require('../../engine/app');
 const { stage       } = require('../../engine/app');
@@ -51251,11 +51252,11 @@ const { WASD            } = require('../../view/wasd_keys');
 const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { PathCrow        } = require('../../character/archetypes/path_crow');
 const { keyboardManager } = require('pixi.js');
-const { tweenManager } = require('pixi.js');
+const { tweenManager    } = require('pixi.js');
 const { sound           } = require('pixi.js');
-const { Text } = require('pixi.js');
-const { Sprite } = require('pixi.js');
-const { Texture } = require('pixi.js');
+const { Text            } = require('pixi.js');
+const { Sprite          } = require('pixi.js');
+const { Texture         } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
 const { env             } = require('../../../config');
 
@@ -51275,7 +51276,11 @@ const {
 class Video extends Sprite {
   constructor(point) {
     // TODO how to remove texture
-    super(Texture.fromVideo('/video.mp4'));
+    const video =  global.document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.preload = '';
+    video.src = '/video.mp4';
+    super(Texture.fromVideo(video));
     this.width  = screen.width;
     this.height = screen.height;
     this.anchor.set(0.5);
@@ -51330,7 +51335,6 @@ class StartRoom  {
     this.microphone_prompt = new MicrophonePrompt();
     this.script            = new Overlay_Dialog([
       '...',
-      '...place holder...',
       'lorium ipsum',
     ], this.player);
 
@@ -51403,7 +51407,6 @@ class StartRoom  {
       'x': this.microphone_prompt.allow_button.x,
       'y': this.microphone_prompt.allow_button.y,
     });
-    tween.start();
     tween.on('end', () => {
       this.generator.next();
     });
@@ -51413,10 +51416,12 @@ class StartRoom  {
     viewport.interactive = true;
     viewport.cursor = 'pointer';
     viewport.on('mousemove', ({ data }) => tween.from(data.global));
+    tween.start();
 
     yield;
+    // TODO remove
+    // this.cursor.destroy();
     tween.remove();
-    this.cursor.destroy();
     interaction.cursorStyles.pointer = 'url(), auto';
     this.microphone_prompt.destroy();
 
@@ -51454,7 +51459,7 @@ class StartRoom  {
   async _start() {
     this.theme_song.play();
     keyboardManager.disable();
-    flash_at(this.player, 10000, 0xffffff, 'out');
+    this.entery_flash = flash_at(this.player, 10000, 0xffffff, 'out');
 
     await sleep(5000);
     this.controls_prompt.fade_in(2000);
@@ -51572,7 +51577,9 @@ class StartRoom  {
     this.eerie_song.volume      = 0.01;
     this.suspense_effect.volume = 0.01;
     this.click_effect.volume    = 0.1;
-    this.microphone_prompt.opacity = 0;
+    this.microphone_prompt.opacity = 1;
+    this.microphone_prompt.render();
+    this.entery_flash.destroy();
 
     keyboardManager.on('released', event => {
       if(event === 13) {
@@ -51594,6 +51601,7 @@ module.exports = {
   StartRoom,
 };
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../../config":1,"../../character/archetypes/logic_stalker":207,"../../character/archetypes/path_crow":210,"../../effects/environment.js":222,"../../effects/fade.js":223,"../../effects/fade_sprite.js":224,"../../effects/floor_word.js":225,"../../effects/overlay_dialog.js":226,"../../engine/app":227,"../../engine/pixi_containers":234,"../../engine/pixi_containers.js":234,"../../utils/math.js":288,"../../utils/time.js":289,"../../view/microphone_box":292,"../../view/wasd_keys":296,"../data/start.json":252,"../elements":263,"./level_factory":275,"pixi.js":155}],282:[function(require,module,exports){
 (function (global){
 const { players  } = require('../../engine/pixi_containers');
@@ -52483,6 +52491,62 @@ const { stage   } = require('../engine/app');
 const { Text    } = require('pixi.js');
 const { Sprite  } = require('pixi.js');
 const { Texture } = require('pixi.js');
+const { RoundedRectangle } = require('pixi.js');
+const { Container } = require('pixi.js');
+const { Graphics } = require('pixi.js');
+
+const margin_x = 20;
+const margin_y = 5;
+
+class Button extends Container {
+  constructor({
+    point,
+    height,
+    width,
+    text,
+    tint = 0xffffff,
+    rounding = 20,
+  }) {
+    super();
+    this.position.copy(point);
+
+    this.background = new Graphics();
+    this.background.lineStyle(1.5, 0x000000, 0.3);
+    this.background.beginFill(tint);
+    this.background.drawRoundedRect(-width, -height, width * 2, height * 2, rounding);
+    // this.background.lineColor = '';
+
+
+    this.background.endFill();
+
+    this.text = new Text(text, {
+      'align'   : 'center',
+      'fontSize': 15,
+    });
+    this.text.x -= width / 3.5;
+    this.text.y -= height / 2;
+
+    this.interactive = true;
+    this.cursor = 'pointer';
+    this.on('mouseover', function() {
+      this.tint = tint;
+    });
+
+    this.on('mouseout', function () {
+      this.tint = 0xffffff;
+    });
+
+    this.addChild(
+      this.background,
+      this.text
+    );
+  }
+
+  set tint(value) {
+    this.background.tint = value;
+  }
+}
+
 
 // TODO put in container
 class MicrophonePrompt {
@@ -52491,56 +52555,64 @@ class MicrophonePrompt {
     this.prompt_text = new Text('Use take control of your browser', { 'fontSize': 50 });
     this.microphone_icon = new Sprite.fromFrame('microphone');
     this.allow_button = new Sprite.fromFrame('allow_button');
-    this.allow_button_2 = new Sprite.fromFrame('allow_button');
     this.background = new Sprite(Texture.WHITE);
+    this.background_drop_shadow = new Sprite(Texture.WHITE);
 
     this._set_position();
   }
 
   _set_position() {
-    this.website_text.x += 20;
-    this.website_text.y += 20;
+    this.website_text.x += margin_x + 20;
+    this.website_text.y += margin_y + 20;
     this.website_text.width = 250;
-    this.website_text.height = 25;
+    this.website_text.height = 24;
 
-    this.prompt_text.x += 70;
-    this.prompt_text.y += 65;
-    this.prompt_text.width = 280;
-    this.prompt_text.height = 25;
+    this.prompt_text.x += margin_x + 70;
+    this.prompt_text.y += margin_y + 65;
+    this.prompt_text.width = 290;
+    this.prompt_text.height = 24;
 
-    this.microphone_icon.x += 20;
-    this.microphone_icon.y += 60;
+    this.microphone_icon.x += margin_x + 20;
+    this.microphone_icon.y += margin_y + 60;
     this.microphone_icon.width = 30;
     this.microphone_icon.height = 30;
 
-    this.allow_button.x += 385;
-    this.allow_button.y += 150;
-    this.allow_button.height = 35;
-    this.allow_button.width = 100;
-    this.allow_button.interactive = true;
-    this.allow_button.on('mouseover', function() {
-      this.tint = 0xff0000;
+    this.allow_button = new Button({
+      'point': {
+        'x': margin_x + 385,
+        'y': margin_y +  140,
+      },
+      'text'    : 'Allow',
+      'width'   : 50,
+      'height'  : 15,
+      'rounding': 5,
+      'tint'    : 0xE8E8E8,
     });
 
-    this.allow_button.on('mouseout', function() {
-      this.tint = 0xffffff;
+    this.block_button = new Button({
+      'point': {
+        'x': margin_x + 280,
+        'y': margin_y +  140,
+      },
+      'text'    : 'Block',
+      'width'   : 50,
+      'height'  : 15,
+      'rounding': 5,
+      'tint'    : 0xE8E8E8,
     });
 
-    this.allow_button_2.x += 280;
-    this.allow_button_2.y += 150;
-    this.allow_button_2.height = 35;
-    this.allow_button_2.width = 100;
-    this.allow_button_2.interactive = true;
-    this.allow_button_2.on('mouseover', function() {
-      this.tint = 0xff0000;
-    });
+    this.background.width = 450;
+    this.background.height = 180;
+    this.background.x += margin_x;
+    this.background.y += margin_y;
 
-    this.allow_button_2.on('mouseout', function () {
-      this.tint = 0xffffff;
-    });
-
-    this.background.width = 500;
-    this.background.height = 200;
+    this.background_drop_shadow.position.copy(this.background);
+    this.background_drop_shadow.width = this.background.width + 4;
+    this.background_drop_shadow.height = this.background.height + 4;
+    this.background_drop_shadow.x += 5;
+    this.background_drop_shadow.y += 5;
+    this.background_drop_shadow.alpha = 0.2;
+    this.background_drop_shadow.tint = 0x000000;
   }
 
   destroy() {
@@ -52548,18 +52620,20 @@ class MicrophonePrompt {
     this.prompt_text.destroy();
     this.microphone_icon.destroy();
     this.allow_button.destroy();
-    this.allow_button_2.destroy();
+    this.block_button.destroy();
     this.background.destroy();
   }
 
   render() {
+
     stage.addChild(
+      this.background_drop_shadow,
       this.background,
       this.microphone_icon,
       this.website_text,
       this.prompt_text,
       this.allow_button,
-      this.allow_button_2
+      this.block_button
     );
   }
 }

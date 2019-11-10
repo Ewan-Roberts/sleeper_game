@@ -65,7 +65,6 @@ class LogicSprite extends extras.AnimatedSprite {
   }
 
   kill() {
-    console.log('i thinkg');
     if(this.tween) {
       this.tween.stop();
     }
@@ -116,8 +115,6 @@ class LogicSprite extends extras.AnimatedSprite {
 
     this.tween.on('repeat', async () => {
       // TODO this is a hack and shouldn't be done in here
-      console.log(this);
-
       if(
         this._destroyed
         || this._target._destroyed
@@ -129,12 +126,13 @@ class LogicSprite extends extras.AnimatedSprite {
       }
 
       path_tween.clear();
-      path_tween.time = speed * 20;
+      const distance = distance_between(this._target, this);
+      path_tween.time = speed * (distance / 100);
 
       if(!this._target_far_away) {
         this.animation.attack();
         this.animation.face_point(this._target);
-        this.melee.slash(750, 20, this);
+        this.melee.slash(50, 20, this);
         return;
       }
 
@@ -142,6 +140,7 @@ class LogicSprite extends extras.AnimatedSprite {
       if(this.sees_target) {
         const { x, y } = point_radius_away_from_point(this._target, this, -50);
 
+        console.log('here1');
         this.animation.face_point(this._target);
         return path_tween
           .from(this)
@@ -149,6 +148,7 @@ class LogicSprite extends extras.AnimatedSprite {
           .start();
       }
 
+      console.log('here');
       const normal_path = await pathfind.get_sprite_to_sprite_path(this, this._target);
       path_tween.path = new tween.TweenPath();
       path_tween.path.moveTo(this.x, this.y);
